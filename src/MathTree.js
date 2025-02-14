@@ -1,3 +1,5 @@
+const CURSOR = {class:"cursor"};
+
 function getFormula(node){
     if (node.selected) return `\\color{red}{${node.symbol}}`;
     if (node.class === "symbol") return `\\cssId{math-${node.id}}{${node.symbol}}`;
@@ -16,6 +18,7 @@ function applyToAllNodes(node, func) {// Not inplace
   return newnode;
 }
 
+
 function modifyChildren(node, func){// Not inplace
   const newnode = {
     ...node,
@@ -24,8 +27,13 @@ function modifyChildren(node, func){// Not inplace
   return newnode;
 }
 
-function deleteSelectedNode(node){
-  return modifyChildren(node,children => children.filter(child=>!child.selected))
+function unselect(tree){
+  return applyToAllNodes(tree,n => n.selected=false);
+}
+
+function deleteSelectedNode(tree,replaceWithCursor){
+  if (replaceWithCursor) return modifyChildren(tree,children => children.map(child => child.selected ? CURSOR : child));
+  else return modifyChildren(tree,children => children.filter(child=>!child.selected));
 }
 
 function insertAtCursor(node,newnode){
@@ -35,9 +43,31 @@ function insertAtCursor(node,newnode){
       children.splice(index, 0, newnode);
     }
     return children;}
-  return modifyChildren(node,inserter);
+  let newtree =  modifyChildren(node,inserter);
+  setUids(newtree);
+  return newtree;
 }
 
+function removeCursor(tree){
+  return modifyChildren(tree,children => children.filter(child=>!(child.class=="cursor")))
+}
+
+function selectedToCursor(tree,side){ // Add cursor next to selected
+  const inserter = (children) => {
+    const index = children.findIndex(child => child.selected);
+    const index_shift = (side==="right") ? 1 : 0;
+    if (index !== -1) {
+      children.splice(index+index_shift, 0, CURSOR);
+    }
+    return children;
+  }
+  let newtree =  modifyChildren(tree,inserter);
+  return unselect(newtree);
+}
+
+function setSelectedNode(tree,id){
+  return applyToAllNodes(tree,(n)=>{n.selected=(n.id===id)});
+}
 
 function setUids(node,nextUid=0){// Inplace
   if (node.class === "symbol"){ // clickable
@@ -52,4 +82,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {getFormula,applyToAllNodes,setUids,deleteSelectedNode,insertAtCursor}
+export default {getFormula,applyToAllNodes,setUids,deleteSelectedNode,insertAtCursor,removeCursor,setSelectedNode,selectedToCursor,unselect}
