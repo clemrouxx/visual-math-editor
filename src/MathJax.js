@@ -5,7 +5,7 @@ import Keyboard from "./Keyboard";
 
 const MathComponent = () => {
     const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
-    const [mathTree,setMathTree] = useState({children:[MathTree.CURSOR]});
+    const [mathTree,setMathTree] = useState({isroot:true,children:[MathTree.CURSOR]});
     const [formula,setFormula] = useState("");
 
     const handleClick =  (event) => {

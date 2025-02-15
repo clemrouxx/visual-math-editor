@@ -83,7 +83,6 @@ function insertAtCursor(node,newnode){
       const index = children.findIndex(child => child.iscursor);
       if (index !== -1) {
         children.splice(index, 0, newnode);
-        console.log(children);
       }
       return {children,stopModify:index !== -1};}
   }
@@ -109,30 +108,45 @@ function selectedToCursor(tree,side){ // Add cursor next to selected
   return unselect(newtree);
 }
 
-function shiftCursor(tree,direction){
-  var shift = direction==="right" ? 1 : -1;
-  const cursorShifter = (children) => {
-    const index = children.findIndex(child => child.iscursor);
-    if (index !== -1){
-      var nextnode = children[index+shift];
-      if (nextnode){ // Still in the array
-        if (nextnode.children){// We need to go down
-          children.splice(index,1);
+function recursiveShiftCursor(node,shift) {
+  // node is NOT cursor
+  const newnode = { // Make copy
+    ...node,
+  };
+  if (node.children){
+    const index = node.children.findIndex(child => child.iscursor);// Looking for the cursor
+    if (index===-1){// Not found among direct children. recursion.
+      newnode.children = [];
+      node.children.forEach(child => {
+        let results = recursiveShiftCursor(child,shift);
+        if (shift===-1 && results.justFoundCursor) newnode.children.push(CURSOR);
+        newnode.children.push(results.node);
+        if (shift===1 && results.justFoundCursor) newnode.children.push(CURSOR);
+      });
+    }
+    else{
+      var nextnode = newnode.children[index+shift];
+      if (nextnode){ // Simple case : we don't leave this branch
+        if (nextnode.children){// We need to go down the tree, and insert the cursor as a new leaf
+          newnode.children.splice(index,1); // Remove the cursor
           nextnode.children.splice((shift===1)?0:nextnode.children.length,0,CURSOR);
         }
         else{// Just exchange CURSOR and nextnode
-          [children[index],children[index+shift]] = [nextnode,CURSOR];
+          [newnode.children[index],newnode.children[index+shift]] = [nextnode,CURSOR];
         }
       }
-      else{
-        // We need to go up...
+      else{ // We need to go up the tree. We do that by returning a flag saying we just found the cursor
+        if (!node.isroot) newnode.children.splice(index,1); // Remove the cursor (except if we are the root node)
+        return {node:newnode,justFoundCursor:true};
       }
     }
-    return {children,stopModify:index!==-1};
-  };
-  return modifyChildren(tree,cursorShifter).node;
+  }
+  return {node:newnode,justFoundCursor:false};
 }
 
+function shiftCursor(tree,direction){
+  return recursiveShiftCursor(tree,direction==="right"?1:-1).node;
+}
 
 
 function setUids(node,nextUid=0){// Inplace
