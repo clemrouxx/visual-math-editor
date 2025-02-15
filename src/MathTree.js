@@ -59,6 +59,15 @@ function deleteSelectedNode(tree,replaceWithCursor){
   else return modifyChildren(tree,children => {return {children:children.filter(child=>!child.selected),stopModify:children.some((c=>c.selected))}}).node;
 }
 
+function replaceSelectedNode(tree,node){ // Replaces the selected node with 'node', and places the cursor just after.
+  const replacer = (children) => {
+    const index = children.findIndex(child => child.selected);
+    if (index !== -1) children.splice(index,1,node,CURSOR);
+    return {children,stopModify:index!==-1};
+  }
+  return modifyChildren(tree,replacer).node;
+}
+
 function deleteNextToCursor(tree,direction){
   const index_shift = (direction==="right") ? 1 : -1;
   const deleter = (children) => {
@@ -162,4 +171,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,Symbol,Modifier,getFormula,applyToAllNodes,setUids,deleteSelectedNode,deleteNextToCursor,insertAtCursor,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}
+export default {CURSOR,Symbol,Modifier,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}

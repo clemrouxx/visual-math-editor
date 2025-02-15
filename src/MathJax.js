@@ -48,6 +48,12 @@ const MathComponent = () => {
             }
         }
         else if (editMode==="selection"){ // "special" keys in selection mode
+            if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included (here : replaced)
+            {
+                var newtree = MathTree.replaceSelectedNode(mathTree,MathTree.Symbol(event.key));
+                setMathTree(newtree);
+                setEditMode("cursor");
+            }
             switch (event.key){
                 case "Delete":
                 case "Backspace":
@@ -83,7 +89,7 @@ const MathComponent = () => {
             document.querySelectorAll(".mjx-mi, .mjx-mn, .mjx-mo").forEach((el) => {
                 el.addEventListener("click",handleClick);
             });
-        }, 500); // Small delay to allow rendering
+        }, 500); // Small delay to allow rendering. TODO : change this
 
         // Keyboard handling
         window.addEventListener("keydown", handleKeyDown);
@@ -96,12 +102,10 @@ const MathComponent = () => {
         });
     };
 
-    useEffect(() => { // Change in math tree (equation)
+    useEffect(() => { // Times where I need to change the listeners...
         console.log(mathTree);
         setFormula(MathTree.getFormula(mathTree));
-
         addListeners();
-
         return () => {
             removeListener();
         }
