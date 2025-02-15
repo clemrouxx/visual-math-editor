@@ -108,7 +108,6 @@ const MathComponent = () => {
     }, [mathTree,command]);
 
   return (
-    
       <div>
         <MathJax.Provider>
             <MathJax.Node formula={formula} />
