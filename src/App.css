@@ -40,3 +40,7 @@
 .mjx-mi, .mjx-mo, .mjx-mn{
   cursor: pointer;
 }
+
+.MathJax_Preview{
+  display: none;
+}

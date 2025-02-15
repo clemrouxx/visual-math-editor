@@ -13,13 +13,11 @@ const MathComponent = () => {
         var id = parseInt(event.target.parentElement.id.split("-").pop());
         var newtree = MathTree.removeCursor(mathTree);
         newtree = MathTree.setSelectedNode(newtree,id);
-        console.log(newtree);
         setEditMode("selection");
         setMathTree(newtree);
     };
 
     const handleKeyDown = (event) => {
-        event.preventDefault();
         console.log(event);
 
         if (editMode=="cursor"){ 
@@ -29,14 +27,20 @@ const MathComponent = () => {
                 setMathTree(newtree);
             }
             switch (event.key){
-                case "_":
-                    setMathTree(MathTree.insertAtCursor(mathTree,MathTree.Modifier(event.key)));
-                    break;
                 case "ArrowRight":
                     setMathTree(MathTree.shiftCursor(mathTree,"right"));
                     break;
                 case "ArrowLeft":
                     setMathTree(MathTree.shiftCursor(mathTree,"left"));
+                    break;
+                case "Backspace":
+                    setMathTree(MathTree.deleteNextToCursor(mathTree,"left"));
+                    break;
+                case "Delete":
+                    setMathTree(MathTree.deleteNextToCursor(mathTree,"right"));
+                    break;
+                case "_":
+                    setMathTree(MathTree.insertAtCursor(mathTree,MathTree.Modifier(event.key)));
                     break;
             }
             
@@ -44,6 +48,7 @@ const MathComponent = () => {
         else if (editMode==="selection"){ // "special" keys in selection mode
             switch (event.key){
                 case "Delete":
+                case "Backspace":
                     setMathTree(MathTree.deleteSelectedNode(mathTree,true));
                     setEditMode("cursor");
                     break;
@@ -63,7 +68,6 @@ const MathComponent = () => {
     useEffect(() => { // Change in math tree (equation)
         console.log(mathTree);
         setFormula(MathTree.getFormula(mathTree));
-        console.log(formula);
         // Ensure MathJax renders first
         setTimeout(() => {
             document.querySelectorAll(".mjx-mi, .mjx-mn, .mjx-mo").forEach((el) => {
