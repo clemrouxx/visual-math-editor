@@ -28,10 +28,18 @@ const MathComponent = () => {
                 var newtree = MathTree.insertAtCursor(mathTree,MathTree.Symbol(event.key));
                 setMathTree(newtree);
             }
-            else if (event.key==="_"){
-                var newtree = MathTree.insertAtCursor(mathTree,MathTree.Modifier(event.key));
-                setMathTree(newtree);
+            switch (event.key){
+                case "_":
+                    setMathTree(MathTree.insertAtCursor(mathTree,MathTree.Modifier(event.key)));
+                    break;
+                case "ArrowRight":
+                    setMathTree(MathTree.shiftCursor(mathTree,"right"));
+                    break;
+                case "ArrowLeft":
+                    setMathTree(MathTree.shiftCursor(mathTree,"left"));
+                    break;
             }
+            
         }
         else if (editMode==="selection"){ // "special" keys in selection mode
             switch (event.key){

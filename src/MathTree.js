@@ -66,9 +66,9 @@ function removeCursor(tree){
 }
 
 function selectedToCursor(tree,side){ // Add cursor next to selected
+  const index_shift = (side==="right") ? 1 : 0;
   const inserter = (children) => {
     const index = children.findIndex(child => child.selected);
-    const index_shift = (side==="right") ? 1 : 0;
     if (index !== -1) {
       children.splice(index+index_shift, 0, CURSOR);
     }
@@ -76,6 +76,29 @@ function selectedToCursor(tree,side){ // Add cursor next to selected
   }
   let newtree =  modifyChildren(tree,inserter);
   return unselect(newtree);
+}
+
+function shiftCursor(tree,direction){
+  var shift = direction==="right" ? 1 : -1;
+  const cursorShifter = (children) => {
+    const index = children.findIndex(child => child.iscursor);
+    if (index !== -1){
+      var nextnode = children[index+shift];
+      if (nextnode){ // Still in the array
+        if (nextnode.children){// We need to go down
+
+        }
+        else{// Just exchange CURSOR and nextnode
+          [children[index],children[index+shift]] = [nextnode,CURSOR];
+        }
+      }
+      else{
+        // We need to go up...
+      }
+    }
+    return children;
+  };
+  return modifyChildren(tree,cursorShifter);
 }
 
 function setSelectedNode(tree,id){
@@ -95,4 +118,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,Symbol,Modifier,getFormula,applyToAllNodes,setUids,deleteSelectedNode,insertAtCursor,removeCursor,setSelectedNode,selectedToCursor,unselect}
+export default {CURSOR,Symbol,Modifier,getFormula,applyToAllNodes,setUids,deleteSelectedNode,insertAtCursor,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}
