@@ -3,7 +3,7 @@ const Symbol = (symbol) => {return {symbol:symbol}};
 const Modifier = (command) => {return {command:command,children:[]}}
 
 function getFormula(node){
-    if (node.iscursor) return "\\color{red}|";
+    if (node.iscursor) return "\\class{math_cursor}|";
 
     var string = "";
     if (node.symbol) string += `\\cssId{math-${node.id}}{${node.symbol}}`;
@@ -12,7 +12,7 @@ function getFormula(node){
       if (node.command || node.symbol) string += `{${node.children.map(getFormula).join("")}}`;
       else string += node.children.map(getFormula).join(""); // Just a simple grouping
     }
-    if (node.selected) string = `\\color{red}{${string}}`;
+    if (node.selected) string = `\\class{math_selected}{${string}}`;
     return string;
 }
 

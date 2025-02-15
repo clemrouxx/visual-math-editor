@@ -44,3 +44,16 @@
 .MathJax_Preview{
   display: none;
 }
+
+.math_cursor {
+  color:blue;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.math_selected{
+  color: red;
+}
