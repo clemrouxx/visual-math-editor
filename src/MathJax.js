@@ -4,9 +4,10 @@ import MathTree from "./MathTree";
 import Keyboard from "./Keyboard";
 
 const MathComponent = () => {
-    const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
+    const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"|"command"
     const [mathTree,setMathTree] = useState({isroot:true,children:[MathTree.CURSOR]});
     const [formula,setFormula] = useState("");
+    const [command,setCommand] = useState("");
 
     const handleClick =  (event) => {
         event.preventDefault();
@@ -18,8 +19,6 @@ const MathComponent = () => {
     };
 
     const handleKeyDown = (event) => {
-        console.log(event);
-
         if (editMode=="cursor"){ 
             if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
             {
@@ -42,8 +41,11 @@ const MathComponent = () => {
                 case "_":
                     setMathTree(MathTree.insertAtCursor(mathTree,MathTree.Modifier(event.key)));
                     break;
+                case "\\":
+                    setEditMode("command");
+                    setCommand("\\");
+                    break;
             }
-            
         }
         else if (editMode==="selection"){ // "special" keys in selection mode
             switch (event.key){
@@ -62,12 +64,20 @@ const MathComponent = () => {
                     break;
             }
         }
-        
+        else if (editMode==="command"){
+            console.log(event.key);
+            if (/^[a-zA-Z]$/.test(event.key)){
+                setCommand(command+event.key); // letter
+            }
+            else if (event.key==="Enter"){
+                setMathTree(MathTree.insertAtCursor(mathTree,MathTree.Symbol(command)));
+                setCommand("");
+                setEditMode("cursor");
+            } 
+        }
     }
 
-    useEffect(() => { // Change in math tree (equation)
-        console.log(mathTree);
-        setFormula(MathTree.getFormula(mathTree));
+    const addListeners = () => {
         // Ensure MathJax renders first
         setTimeout(() => {
             document.querySelectorAll(".mjx-mi, .mjx-mn, .mjx-mo").forEach((el) => {
@@ -77,14 +87,25 @@ const MathComponent = () => {
 
         // Keyboard handling
         window.addEventListener("keydown", handleKeyDown);
+    };
+
+    const removeListener = () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        document.querySelectorAll(".mjx-mi, .mjx-mn, .mjx-mo").forEach((el) => {
+            el.removeEventListener("click",handleClick); // Remove listeners on unmount
+        });
+    };
+
+    useEffect(() => { // Change in math tree (equation)
+        console.log(mathTree);
+        setFormula(MathTree.getFormula(mathTree));
+
+        addListeners();
 
         return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-            document.querySelectorAll(".mjx-mi, .mjx-mn, .mjx-mo").forEach((el) => {
-                el.removeEventListener("click",handleClick); // Remove listeners on unmount
-            });
+            removeListener();
         }
-    }, [mathTree]);
+    }, [mathTree,command]);
 
   return (
     
@@ -92,6 +113,7 @@ const MathComponent = () => {
         <MathJax.Provider>
             <MathJax.Node formula={formula} />
         </MathJax.Provider>
+        <span>{command}</span>
       </div>
   );
 };
