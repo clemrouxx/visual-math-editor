@@ -1,12 +1,17 @@
-const CURSOR = {class:"cursor"};
+const CURSOR = {iscursor:true};
+const Symbol = (symbol) => {return {symbol:symbol}};
+const Modifier = (command) => {return {command:command,children:[]}}
 
 function getFormula(node){
-    if (node.selected) return `\\color{red}{${node.symbol}}`;
-    if (node.class === "symbol") return `\\cssId{math-${node.id}}{${node.symbol}}`;
-    else if (node.class === "cursor") return "\\color{red}|";
-    else if (node.children){
-        return node.children.map(getFormula).join("");
+    if (node.iscursor) return "\\color{red}|";
+    
+    var string = "";
+    if (node.symbol) string += `\\cssId{math-${node.id}}{${node.symbol}}`;    
+    if (node.children){
+        string += "{"+node.children.map(getFormula).join("")+"}";
     }
+    if (node.selected) string = `\\color{red}{${string}}`;
+    return string;
 }
 
 function applyToAllNodes(node, func) {// Not inplace
@@ -37,19 +42,25 @@ function deleteSelectedNode(tree,replaceWithCursor){
 }
 
 function insertAtCursor(node,newnode){
-  const inserter = (children) => {
-    const index = children.findIndex(child => child.class === "cursor");
-    if (index !== -1) {
-      children.splice(index, 0, newnode);
-    }
-    return children;}
-  let newtree =  modifyChildren(node,inserter);
+  if (newnode.children){// I will then place the cursor as last child (maybe special case for fixed-children ?)
+    newnode.children.push(CURSOR);
+    var inserter = (children) => children.map((child) => child.iscursor ? newnode : child);
+  }
+  else{
+    var inserter = (children) => {
+      const index = children.findIndex(child => child.iscursor);
+      if (index !== -1) {
+        children.splice(index, 0, newnode);
+      }
+      return children;}
+  }
+  var newtree =  modifyChildren(node,inserter);
   setUids(newtree);
   return newtree;
 }
 
 function removeCursor(tree){
-  return modifyChildren(tree,children => children.filter(child=>!(child.class=="cursor")))
+  return modifyChildren(tree,children => children.filter(child=>!(child.iscursor)))
 }
 
 function selectedToCursor(tree,side){ // Add cursor next to selected
@@ -70,7 +81,7 @@ function setSelectedNode(tree,id){
 }
 
 function setUids(node,nextUid=0){// Inplace
-  if (node.class === "symbol"){ // clickable
+  if (node.symbol){ // clickable
     node.id = nextUid;
     nextUid++;
   }
@@ -82,4 +93,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {getFormula,applyToAllNodes,setUids,deleteSelectedNode,insertAtCursor,removeCursor,setSelectedNode,selectedToCursor,unselect}
+export default {CURSOR,Symbol,getFormula,applyToAllNodes,setUids,deleteSelectedNode,insertAtCursor,removeCursor,setSelectedNode,selectedToCursor,unselect}

@@ -5,16 +5,7 @@ import Keyboard from "./Keyboard";
 
 const MathComponent = () => {
     const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
-    var exampleTree = {class:"group",children:[
-        {class:"symbol",symbol:"E"},
-        {class:"symbol",symbol:"="},
-        {class:"symbol",symbol:"m"},
-        {class:"cursor"},
-        {class:"symbol",symbol:"c"},
-        {class:"symbol",symbol:"2"}
-        ]};
-    MathTree.setUids(exampleTree); // Need to be done if a new element is added
-    const [mathTree,setMathTree] = useState(exampleTree);
+    const [mathTree,setMathTree] = useState({children:[MathTree.CURSOR]});
     const [formula,setFormula] = useState("");
 
     const handleClick =  (event) => {
@@ -32,10 +23,9 @@ const MathComponent = () => {
         console.log(event);
 
         if (Keyboard.DIRECT_INPUT.includes(event.key)){ // Can be directly included
-            let newnode = {class:"symbol",symbol : event.key};
             if (editMode==="cursor")
             {
-                var newtree = MathTree.insertAtCursor(mathTree,newnode);
+                var newtree = MathTree.insertAtCursor(mathTree,MathTree.Symbol(event.key));
                 setMathTree(newtree);
             }
             // else if ... replace
@@ -61,7 +51,8 @@ const MathComponent = () => {
 
     useEffect(() => { // Change in math tree (equation)
         console.log(mathTree);
-        setFormula(MathTree.getFormula(mathTree))
+        setFormula(MathTree.getFormula(mathTree));
+        console.log(formula);
         // Ensure MathJax renders first
         setTimeout(() => {
             document.querySelectorAll(".mjx-mi, .mjx-mn, .mjx-mo").forEach((el) => {
