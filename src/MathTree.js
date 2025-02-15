@@ -117,7 +117,8 @@ function shiftCursor(tree,direction){
       var nextnode = children[index+shift];
       if (nextnode){ // Still in the array
         if (nextnode.children){// We need to go down
-
+          children.splice(index,1);
+          nextnode.children.splice((shift===1)?0:nextnode.children.length,0,CURSOR);
         }
         else{// Just exchange CURSOR and nextnode
           [children[index],children[index+shift]] = [nextnode,CURSOR];
