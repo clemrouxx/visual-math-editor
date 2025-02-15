@@ -22,13 +22,16 @@ const MathComponent = () => {
         event.preventDefault();
         console.log(event);
 
-        if (Keyboard.DIRECT_INPUT.includes(event.key)){ // Can be directly included
-            if (editMode==="cursor")
+        if (editMode=="cursor"){ 
+            if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
             {
                 var newtree = MathTree.insertAtCursor(mathTree,MathTree.Symbol(event.key));
                 setMathTree(newtree);
             }
-            // else if ... replace
+            else if (event.key==="_"){
+                var newtree = MathTree.insertAtCursor(mathTree,MathTree.Modifier(event.key));
+                setMathTree(newtree);
+            }
         }
         else if (editMode==="selection"){ // "special" keys in selection mode
             switch (event.key){

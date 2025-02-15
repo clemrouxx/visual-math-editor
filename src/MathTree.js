@@ -4,11 +4,13 @@ const Modifier = (command) => {return {command:command,children:[]}}
 
 function getFormula(node){
     if (node.iscursor) return "\\color{red}|";
-    
+
     var string = "";
-    if (node.symbol) string += `\\cssId{math-${node.id}}{${node.symbol}}`;    
+    if (node.symbol) string += `\\cssId{math-${node.id}}{${node.symbol}}`;
+    if (node.command) string += node.command;
     if (node.children){
-        string += "{"+node.children.map(getFormula).join("")+"}";
+      if (node.command || node.symbol) string += `{${node.children.map(getFormula).join("")}}`;
+      else string += node.children.map(getFormula).join(""); // Just a simple grouping
     }
     if (node.selected) string = `\\color{red}{${string}}`;
     return string;
@@ -28,7 +30,7 @@ function modifyChildren(node, func){// Not inplace
   const newnode = {
     ...node,
   };
-  if (node.children) newnode.children = func(node.children).map(child => modifyChildren(child,func));
+  if (node.children) newnode.children = func(node.children.map(child => modifyChildren(child,func)));
   return newnode;
 }
 
@@ -93,4 +95,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,Symbol,getFormula,applyToAllNodes,setUids,deleteSelectedNode,insertAtCursor,removeCursor,setSelectedNode,selectedToCursor,unselect}
+export default {CURSOR,Symbol,Modifier,getFormula,applyToAllNodes,setUids,deleteSelectedNode,insertAtCursor,removeCursor,setSelectedNode,selectedToCursor,unselect}
