@@ -74,7 +74,6 @@ const MathComponent = () => {
             }
         }
         else if (editMode==="command"){
-            console.log(event.key);
             if (/^[a-zA-Z]$/.test(event.key)){
                 setCommand(command+event.key); // letter
             }
@@ -108,6 +107,7 @@ const MathComponent = () => {
     useEffect(() => { // Times where I need to change the listeners...
         console.log(mathTree);
         setFormula(MathTree.getFormula(mathTree));
+        console.log(formula);
         addListeners();
         return () => {
             removeListener();
@@ -117,7 +117,7 @@ const MathComponent = () => {
   return (
       <div>
         <MathJax.Provider>
-            <MathJax.Node formula={formula} />
+            <MathJax.Node formula={formula} inline={false}/>
         </MathJax.Provider>
         <span>{command}</span>
       </div>
