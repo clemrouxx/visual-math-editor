@@ -76,12 +76,13 @@ function deleteSelectedNode(tree,replaceWithCursor){
   else return modifyChildren(tree,children => {return {children:children.filter(child=>!child.selected),stopModify:children.some((c=>c.selected))}}).node;
 }
 
-function deleteNode(tree,id){
+function deleteNode(tree,id,replaceWithCursor=false){
   const deleter = (children) => {
     var stopModify = false;
     const index = children.findIndex(child => child.id === id);
     if (index !== -1){
-      children.splice(index,1); // For now, this deletes the node entirely, including its children.
+      if (replaceWithCursor) children.splice(index,1,CURSOR);
+      else children.splice(index,1); // For now, this deletes the node entirely, including its children.
       stopModify = true;
     }
     return {children,stopModify};
@@ -104,6 +105,9 @@ function deleteNextToCursor(tree,direction){
   const index = cursorParent.children.findIndex(child => child.iscursor);
   if (cursorParent.children[index+index_shift]){ // Found something to delete !
     return deleteNode(tree,cursorParent.children[index+index_shift].id); // Less optimal, but far easier to maintain
+  }
+  else if (index+index_shift === -1){// Allow deleting parent when going to the left
+    return deleteNode(tree,cursorParent.id,true);
   }
   return tree;
 }
@@ -185,10 +189,9 @@ function shiftCursor(tree,direction){
 
 
 function setUids(node,nextUid=0){// Inplace
-  if (node.symbol){ // clickable
-    node.id = nextUid;
-    nextUid++;
-  }
+  // Let's just give ids to all nodes
+  node.id = nextUid;
+  nextUid++;
   if (node.children){
     node.children.forEach(childnode => {
       nextUid = setUids(childnode,nextUid);
