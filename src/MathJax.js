@@ -25,7 +25,7 @@ const MathComponent = () => {
         if (editMode=="cursor"){ 
             if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
             {
-                var newtree = MathTree.insertAtCursor(mathTree,MathTree.Symbol(event.key));
+                var newtree = MathTree.insertAtCursor(mathTree,MathTree.getNode(event.key));
                 setMathTree(newtree);
             }
             switch (event.key){
@@ -42,7 +42,7 @@ const MathComponent = () => {
                     setMathTree(MathTree.deleteNextToCursor(mathTree,"right"));
                     break;
                 case "_":
-                    setMathTree(MathTree.insertAtCursor(mathTree,MathTree.ParentSymbol("\\sqrt")));
+                    setMathTree(MathTree.insertAtCursor(mathTree,MathTree.getNode("_")));
                     break;
                 case "\\":
                     setEditMode("command");
@@ -53,7 +53,7 @@ const MathComponent = () => {
         else if (editMode==="selection"){ // "special" keys in selection mode
             if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included (here : replaced)
             {
-                var newtree = MathTree.replaceSelectedNode(mathTree,MathTree.Symbol(event.key));
+                var newtree = MathTree.replaceSelectedNode(mathTree,MathTree.getNode(event.key));
                 setMathTree(newtree);
                 setEditMode("cursor");
             }
@@ -79,7 +79,7 @@ const MathComponent = () => {
                 setCommand(command+event.key); // letter
             }
             else if (event.key==="Enter"){
-                setMathTree(MathTree.insertAtCursor(mathTree,MathTree.Symbol(command)));
+                setMathTree(MathTree.insertAtCursor(mathTree,MathTree.getNode(command)));
                 setCommand("");
                 setEditMode("cursor");
             } 

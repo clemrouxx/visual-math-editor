@@ -1,6 +1,14 @@
+import Keyboard from "./Keyboard";
+
 const CURSOR = {iscursor:true};
 const Symbol = (symbol) => {return {symbol:symbol}};
-const ParentSymbol = (symbol) => {return {symbol:symbol,children:[]}};
+const ParentSymbol = (symbol,isaccent=false) => {return {symbol:symbol,children:[],isaccent}};
+
+function getNode(symbol){
+  if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol);
+  else if (Keyboard.ACCENTS.includes(symbol)) return ParentSymbol(symbol,true);
+  return Symbol(symbol);
+}
 
 function getFormula(node){
     if (node.iscursor) return "\\class{math_cursor}|";
@@ -90,7 +98,7 @@ function deleteNode(tree,id,replaceWithCursor=false){
     const index = children.findIndex(child => child.id === id);
     if (index !== -1){
       const nodeToDelete = children[index];
-      if (nodeToDelete.children){ // We will make it "explode" (ie leave its children)
+      if (nodeToDelete.children && !nodeToDelete.isaccent){ // We will make it "explode" (ie leave its children). Except if it is an accent
         children.splice(index,1,...nodeToDelete.children);
       }
       else{
@@ -120,7 +128,7 @@ function deleteNextToCursor(tree,direction){
   const toDelete = cursorParent.children[index+index_shift]
   if (toDelete){ // Found something to delete !
     // Specific case for when the node has children, and only a symbol on the left (no 'rightsymbol') : do nothing if going left !
-    if (direction==="left" && toDelete.children && !(toDelete.rightSymbol)) return tree;
+    if (direction==="left" && toDelete.children && !(toDelete.rightSymbol || toDelete.isaccent)) return tree;
     return deleteNode(tree,toDelete.id);
   }
   else if (index+index_shift === -1){// Allow deleting parent when going to the left.
@@ -217,4 +225,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,Symbol,ParentSymbol,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}
+export default {CURSOR,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}
