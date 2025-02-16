@@ -96,7 +96,6 @@ function deleteNode(tree,id,replaceWithCursor=false){
       else{
         children.splice(index,1);
       }
-
       if (replaceWithCursor) children.splice(index,0,CURSOR);
       stopModify = true;
     }
@@ -118,11 +117,14 @@ function deleteNextToCursor(tree,direction){
   const index_shift = (direction==="right") ? 1 : -1;
   const cursorParent = findCursorParent(tree);
   const index = cursorParent.children.findIndex(child => child.iscursor);
-  if (cursorParent.children[index+index_shift]){ // Found something to delete !
-    return deleteNode(tree,cursorParent.children[index+index_shift].id); // Less optimal, but far easier to maintain
+  const toDelete = cursorParent.children[index+index_shift]
+  if (toDelete){ // Found something to delete !
+    // Specific case for when the node has children, and only a symbol on the left (no 'rightsymbol') : do nothing if going left !
+    if (direction==="left" && toDelete.children && !(toDelete.rightSymbol)) return tree;
+    return deleteNode(tree,toDelete.id);
   }
   else if (index+index_shift === -1){// Allow deleting parent when going to the left.
-    return deleteNode(tree,cursorParent.id,true);
+    return deleteNode(tree,cursorParent.id,false);// The cursor will already be placed as for any other child
   }
   return tree;
 }

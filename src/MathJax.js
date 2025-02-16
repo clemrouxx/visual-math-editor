@@ -11,7 +11,10 @@ const MathComponent = () => {
 
     const handleClick =  (event) => {
         event.preventDefault();
-        var id = parseInt(event.target.parentElement.id.split("-").pop());
+        // We need to go up the tree until we find an element with id 'math-...'
+        var element = event.target;
+        while (!element.id || element.id.split("-")[0]!=="math") element = element.parentElement;
+        var id = parseInt(element.id.split("-").pop());
         var newtree = MathTree.removeCursor(mathTree);
         newtree = MathTree.setSelectedNode(newtree,id);
         setEditMode("selection");
@@ -86,7 +89,7 @@ const MathComponent = () => {
     const addListeners = () => {
         // Ensure MathJax renders first
         setTimeout(() => {
-            document.querySelectorAll(".mjx-mi, .mjx-mn, .mjx-mo").forEach((el) => {
+            document.querySelectorAll(".mjx-char").forEach((el) => {
                 el.addEventListener("click",handleClick);
             });
         }, 500); // Small delay to allow rendering. TODO : change this
@@ -97,7 +100,7 @@ const MathComponent = () => {
 
     const removeListener = () => {
         window.removeEventListener("keydown", handleKeyDown);
-        document.querySelectorAll(".mjx-mi, .mjx-mn, .mjx-mo").forEach((el) => {
+        document.querySelectorAll(".mjx-char").forEach((el) => {
             el.removeEventListener("click",handleClick); // Remove listeners on unmount
         });
     };
