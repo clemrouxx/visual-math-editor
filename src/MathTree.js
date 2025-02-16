@@ -46,6 +46,23 @@ function modifyChildren(node, func, stopModify=false){// Not inplace
   return {node:newnode,stopModify};
 }
 
+function findCursorParent(node){
+  if (node.children){
+    var isCursorParent = false;
+    var toReturn = false;
+    node.children.forEach((child)=>{
+      if (child.iscursor) isCursorParent=true;
+      if (child.children) {
+        var result = findCursorParent(child);
+        if (result) toReturn = result;
+      }
+    });
+    if (isCursorParent) return node;
+    if (toReturn) return toReturn;
+  }
+  return false;
+}
+
 function unselect(tree){
   return applyToAllNodes(tree,n => n.selected=false);
 }
@@ -59,6 +76,19 @@ function deleteSelectedNode(tree,replaceWithCursor){
   else return modifyChildren(tree,children => {return {children:children.filter(child=>!child.selected),stopModify:children.some((c=>c.selected))}}).node;
 }
 
+function deleteNode(tree,id){
+  const deleter = (children) => {
+    var stopModify = false;
+    const index = children.findIndex(child => child.id === id);
+    if (index !== -1){
+      children.splice(index,1); // For now, this deletes the node entirely, including its children.
+      stopModify = true;
+    }
+    return {children,stopModify};
+  }
+  return modifyChildren(tree,deleter).node;
+}
+
 function replaceSelectedNode(tree,node){ // Replaces the selected node with 'node', and places the cursor just after.
   const replacer = (children) => {
     const index = children.findIndex(child => child.selected);
@@ -70,16 +100,12 @@ function replaceSelectedNode(tree,node){ // Replaces the selected node with 'nod
 
 function deleteNextToCursor(tree,direction){
   const index_shift = (direction==="right") ? 1 : -1;
-  const deleter = (children) => {
-    const index = children.findIndex(child => child.iscursor);
-    var stopModify = false;
-    if (index !== -1 && children[index+index_shift]){ // Found something to delete !
-      children.splice(index+index_shift,1);
-      stopModify = true;
-    }
-    return {children,stopModify};
+  const cursorParent = findCursorParent(tree);
+  const index = cursorParent.children.findIndex(child => child.iscursor);
+  if (cursorParent.children[index+index_shift]){ // Found something to delete !
+    return deleteNode(tree,cursorParent.children[index+index_shift].id); // Less optimal, but far easier to maintain
   }
-  return modifyChildren(tree,deleter).node;
+  return tree;
 }
 
 function insertAtCursor(node,newnode){
