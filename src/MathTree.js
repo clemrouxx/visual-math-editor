@@ -1,17 +1,17 @@
 const CURSOR = {iscursor:true};
 const Symbol = (symbol) => {return {symbol:symbol}};
-const Modifier = (command) => {return {command:command,children:[]}}
+const ParentSymbol = (symbol) => {return {symbol:symbol,children:[]}};
 
 function getFormula(node){
     if (node.iscursor) return "\\class{math_cursor}|";
 
-    var string = "";
-    if (node.symbol) string += `\\cssId{math-${node.id}}{${node.symbol}}`;
-    if (node.command) string += node.command;
+    var string =  `\\cssId{math-${node.id}}{`;
+    if (node.symbol) string += node.symbol;
     if (node.children){
-      if (node.command || node.symbol) string += `{${node.children.map(getFormula).join("")}}`;
+      if (node.symbol) string += `{${node.children.map(getFormula).join("")}}`;
       else string += node.children.map(getFormula).join(""); // Just a simple grouping
     }
+    string += "}";
     if (node.selected) string = `\\class{math_selected}{${string}}`;
     return string;
 }
@@ -63,6 +63,15 @@ function findCursorParent(node){
   return false;
 }
 
+function findSelectedNode(node){
+  if (node.selected) return node;
+  if (node.children){
+    var results = node.children.map(findSelectedNode).filter(r=>r);
+    if (results.length>0) return results[0];
+  }
+  return false;
+}
+
 function unselect(tree){
   return applyToAllNodes(tree,n => n.selected=false);
 }
@@ -72,8 +81,7 @@ function setSelectedNode(tree,id){
 }
 
 function deleteSelectedNode(tree,replaceWithCursor){
-  if (replaceWithCursor) return modifyChildren(tree,children => {return {children:children.map(child => child.selected ? CURSOR : child),stopModify:children.some((c=>c.selected))}}).node;
-  else return modifyChildren(tree,children => {return {children:children.filter(child=>!child.selected),stopModify:children.some((c=>c.selected))}}).node;
+  return deleteNode(tree,findSelectedNode(tree).id,replaceWithCursor);
 }
 
 function deleteNode(tree,id,replaceWithCursor=false){
@@ -81,8 +89,15 @@ function deleteNode(tree,id,replaceWithCursor=false){
     var stopModify = false;
     const index = children.findIndex(child => child.id === id);
     if (index !== -1){
-      if (replaceWithCursor) children.splice(index,1,CURSOR);
-      else children.splice(index,1); // For now, this deletes the node entirely, including its children.
+      const nodeToDelete = children[index];
+      if (nodeToDelete.children){ // We will make it "explode" (ie leave its children)
+        children.splice(index,1,...nodeToDelete.children);
+      }
+      else{
+        children.splice(index,1);
+      }
+
+      if (replaceWithCursor) children.splice(index,0,CURSOR);
       stopModify = true;
     }
     return {children,stopModify};
@@ -106,7 +121,7 @@ function deleteNextToCursor(tree,direction){
   if (cursorParent.children[index+index_shift]){ // Found something to delete !
     return deleteNode(tree,cursorParent.children[index+index_shift].id); // Less optimal, but far easier to maintain
   }
-  else if (index+index_shift === -1){// Allow deleting parent when going to the left
+  else if (index+index_shift === -1){// Allow deleting parent when going to the left.
     return deleteNode(tree,cursorParent.id,true);
   }
   return tree;
@@ -200,4 +215,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,Symbol,Modifier,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}
+export default {CURSOR,Symbol,ParentSymbol,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}

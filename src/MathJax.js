@@ -39,7 +39,7 @@ const MathComponent = () => {
                     setMathTree(MathTree.deleteNextToCursor(mathTree,"right"));
                     break;
                 case "_":
-                    setMathTree(MathTree.insertAtCursor(mathTree,MathTree.Modifier(event.key)));
+                    setMathTree(MathTree.insertAtCursor(mathTree,MathTree.ParentSymbol("\\sqrt")));
                     break;
                 case "\\":
                     setEditMode("command");
