@@ -78,7 +78,12 @@ const MathComponent = () => {
                 setCommand(command+event.key); // letter
             }
             else if (event.key==="Enter"){
-                setMathTree(MathTree.insertAtCursor(mathTree,MathTree.getNode(command)));
+                if (Keyboard.ACCENTS.includes(command)){
+                    setMathTree(MathTree.modifyNodeBeforeCursor(mathTree,MathTree.getNode(command)));
+                }
+                else{
+                    setMathTree(MathTree.insertAtCursor(mathTree,MathTree.getNode(command)));
+                }
                 setCommand("");
                 setEditMode("cursor");
             } 
