@@ -2,11 +2,12 @@ import Keyboard from "./Keyboard";
 
 const CURSOR = {iscursor:true};
 const Symbol = (symbol) => {return {symbol:symbol}};
-const ParentSymbol = (symbol,isaccent=false) => {return {symbol:symbol,children:[],isaccent}};
+const ParentSymbol = (symbol) => {return {symbol:symbol,children:[],nodeletionfromright:true}};
+const Accent = (symbol) => {return {symbol:symbol,children:[],singlechild:true}}
 
 function getNode(symbol){
   if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol);
-  else if (Keyboard.ACCENTS.includes(symbol)) return ParentSymbol(symbol,true);
+  else if (Keyboard.ACCENTS.includes(symbol)) return Accent(symbol);
   return Symbol(symbol);
 }
 
@@ -89,20 +90,20 @@ function setSelectedNode(tree,id){
 }
 
 function deleteSelectedNode(tree,replaceWithCursor){
-  return deleteNode(tree,findSelectedNode(tree).id,replaceWithCursor);
+  return deleteNode(tree,findSelectedNode(tree).id,"selection",replaceWithCursor);
 }
 
-function deleteNode(tree,id,replaceWithCursor=false){
+function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor"
   const deleter = (children) => {
     var stopModify = false;
     const index = children.findIndex(child => child.id === id);
     if (index !== -1){
       const nodeToDelete = children[index];
-      if (nodeToDelete.children && !nodeToDelete.isaccent){ // We will make it "explode" (ie leave its children). Except if it is an accent
-        children.splice(index,1,...nodeToDelete.children);
-      }
-      else{
+      if (!nodeToDelete.children || (nodeToDelete.singlechild && deletionMode==="selection")){
         children.splice(index,1);
+      }
+      else { // We will make it "explode" (ie leave its children).
+        children.splice(index,1,...nodeToDelete.children);
       }
       if (replaceWithCursor) children.splice(index,0,CURSOR);
       stopModify = true;
@@ -125,14 +126,14 @@ function deleteNextToCursor(tree,direction){
   const index_shift = (direction==="right") ? 1 : -1;
   const cursorParent = findCursorParent(tree);
   const index = cursorParent.children.findIndex(child => child.iscursor);
-  const toDelete = cursorParent.children[index+index_shift]
+  const toDelete = cursorParent.children[index+index_shift];
   if (toDelete){ // Found something to delete !
     // Specific case for when the node has children, and only a symbol on the left (no 'rightsymbol') : do nothing if going left !
     if (direction==="left" && toDelete.children && !(toDelete.rightSymbol || toDelete.isaccent)) return tree;
-    return deleteNode(tree,toDelete.id);
+    return deleteNode(tree,toDelete.id,"cursor");
   }
-  else if (index+index_shift === -1){// Allow deleting parent when going to the left.
-    return deleteNode(tree,cursorParent.id,false);// The cursor will already be placed as for any other child
+  else if (index+index_shift === -1){// Allow deleting parent when going to the left. (deletion 'from inside')
+    return deleteNode(tree,cursorParent.id,"cursor",false);// The cursor will already be placed as for any other child
   }
   return tree;
 }

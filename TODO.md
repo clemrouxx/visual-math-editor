@@ -8,9 +8,9 @@
 
 ### Provisional list of math tokens types
 - Simple symbols (vis, no child) : `a` -> symbol
-- Parent symbol (vis, has children, "explode" upon deletion, no deletion from outside on the right) : `\sqrt` -> symbol, children
+- Parent symbol (vis, has children, "explode" upon deletion, no deletion from outside on the right) : `\sqrt` -> symbol, children, nodeletionfromright
 NB : `_` and `^` should probably be identified as parent symbol despite being invisible.
-- Delimiter (vis, has children, "explode" upon deletion, has a second symbol, can be modified to include `\left` and `\right`) : `(` -> leftsymbol, rightsymbol, children, adaptative
+- Delimiter (vis, has children, "explode" upon deletion, has a second symbol, can be modified to include `\left` and `\right`) : `(` -> lefstsymbol, rightsymbol, children, adaptative
 - Single-element modifier (invis, 1 child, "implode" upon deletion) : `\mathcal` -> symbol, children, singlechild
 - Accent (vis, 1 child, "implode" upon cursor deletion, "explode" upon selected deletion) : `\hat` -> symbol, children, singlechild
 NB : In the code, single-element modifiers and accents can therefore be mixed. They should also prevent the cursor to be one of their children (except at creation).
