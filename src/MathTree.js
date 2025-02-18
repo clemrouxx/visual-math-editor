@@ -3,7 +3,7 @@ import Keyboard from "./Keyboard";
 const CURSOR = {iscursor:true};
 const Symbol = (symbol) => {return {symbol:symbol}};
 const ParentSymbol = (symbol) => {return {symbol:symbol,children:[],nodeletionfromright:true}};
-const Accent = (symbol) => {return {symbol:symbol,children:[],singlechild:true}}
+const Accent = (symbol) => {return {symbol:symbol,children:[],hassinglechild:true}}
 
 function getNode(symbol){
   if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol);
@@ -99,7 +99,7 @@ function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ /
     const index = children.findIndex(child => child.id === id);
     if (index !== -1){
       const nodeToDelete = children[index];
-      if (!nodeToDelete.children || (nodeToDelete.singlechild && deletionMode==="selection")){
+      if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor")){
         children.splice(index,1);
       }
       else { // We will make it "explode" (ie leave its children).
@@ -134,11 +134,14 @@ function deleteNextToCursor(tree,direction){
   const toDelete = cursorParent.children[index+index_shift];
   if (toDelete){ // Found something to delete !
     // Specific case for when the node has children, and only a symbol on the left (no 'rightsymbol') : do nothing if going left !
-    if (direction==="left" && toDelete.children && !(toDelete.rightSymbol || toDelete.isaccent)) return tree;
+    if (direction==="left" && toDelete.nodeletionfromright) return tree; // Should we then "enter" and delete the last child then ?
     return deleteNode(tree,toDelete.id,"cursor");
   }
   else if (index+index_shift === -1){// Allow deleting parent when going to the left. (deletion 'from inside')
     return deleteNode(tree,cursorParent.id,"cursor",false);// The cursor will already be placed as for any other child
+  }
+  else if (index+index_shift === cursorParent.children.length && cursorParent.nodeletionfromright){// Idem to the right
+    return deleteNode(tree,cursorParent.id,"cursor",false);
   }
   return tree;
 }
@@ -232,7 +235,6 @@ function recursiveShiftCursor(node,shift) {
 function shiftCursor(tree,direction){
   return recursiveShiftCursor(tree,direction==="right"?1:-1).node;
 }
-
 
 function setUids(node,nextUid=0){// Inplace
   // Let's just give ids to all nodes
