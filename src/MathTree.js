@@ -123,8 +123,11 @@ function replaceSelectedNode(tree,node){ // Replaces the selected node with 'nod
 }
 
 function replaceNode(tree,id,node){
-  node.id = id;
-  return applyToAllNodes(tree,n => n.id===id ? node : n);
+  return applyToAllNodes(tree, n => {
+    if (n.id === id) {
+      Object.assign(n, node); // Mutate node directly
+    }
+  });
 }
 
 function deleteNextToCursor(tree,direction){
@@ -165,7 +168,6 @@ function insertAtCursor(node,newnode){
 }
 
 function adoptNodeBeforeCursor(tree,newnode){ // Add an accent or modifier on the node before the cursor
-  console.log("ok");
   const modifier = children => {
     const index = children.findIndex(child => child.iscursor);
     if (index >= 1) {
@@ -175,8 +177,19 @@ function adoptNodeBeforeCursor(tree,newnode){ // Add an accent or modifier on th
     }
     return {children,stopModify:index !== -1};
   }
-  var newtree =  modifyChildren(tree,modifier).node;
+  var newtree = modifyChildren(tree,modifier).node;
   setUids(newtree);
+  return newtree;
+}
+
+function adoptSelectedNode(tree,newnode){
+  var selectedNode = findSelectedNode(tree);
+  newnode.children=[selectedNode];
+  console.log(tree,selectedNode.id);
+  var newtree = replaceNode(tree,selectedNode.id,newnode);
+  console.log(newtree);
+  setUids(newtree);
+  
   return newtree;
 }
 
@@ -249,4 +262,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}
+export default {CURSOR,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}

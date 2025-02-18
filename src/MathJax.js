@@ -18,8 +18,13 @@ const MathComponent = () => {
             else setMathTree(MathTree.insertAtCursor(mathTree,newnode));
         }
         else if (editMode==="selection"){
-            setMathTree(MathTree.replaceSelectedNode(mathTree,newnode));
-            setEditMode("cursor");
+            if (Keyboard.ACCENTS.includes(symbol)){
+                setMathTree(MathTree.adoptSelectedNode(mathTree,newnode));
+            }
+            else{
+                setMathTree(MathTree.replaceSelectedNode(mathTree,newnode));
+                setEditMode("cursor");
+            }
         }
     }
 
@@ -41,6 +46,7 @@ const MathComponent = () => {
             {
                 addSymbol(event.key);
             }
+            else if (event.key==="\\") setCommand("\\");
             else if (editMode==="cursor"){
                 switch (event.key){
                     case "ArrowRight":
@@ -54,9 +60,6 @@ const MathComponent = () => {
                         break;
                     case "Delete":
                         setMathTree(MathTree.deleteNextToCursor(mathTree,"right"));
-                        break;
-                    case "\\":
-                        setCommand("\\");
                         break;
                 }
             }
@@ -109,6 +112,7 @@ const MathComponent = () => {
     };
 
     useEffect(() => { // Times where I need to change the listeners...
+        console.log(mathTree.children);
         setFormula(MathTree.getFormula(mathTree));
         addListeners();
         return () => {
@@ -121,7 +125,8 @@ const MathComponent = () => {
         <MathJax.Provider>
             <MathJax.Node formula={formula} inline={false}/>
         </MathJax.Provider>
-        <span>{command}</span>
+        <span>{command}</span><br/>
+        <span>{editMode}</span>
       </div>
   );
 };
