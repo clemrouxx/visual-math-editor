@@ -215,7 +215,7 @@ function recursiveShiftCursor(node,shift) {
     else{
       var nextnode = newnode.children[index+shift];
       if (nextnode){ // Simple case : we don't leave this branch
-        if (nextnode.children){// We need to go down the tree, and insert the cursor as a new leaf
+        if (nextnode.children && !nextnode.hassinglechild){// We need to go down the tree, and insert the cursor as a new leaf
           newnode.children.splice(index,1); // Remove the cursor
           nextnode.children.splice((shift===1)?0:nextnode.children.length,0,CURSOR);
         }
