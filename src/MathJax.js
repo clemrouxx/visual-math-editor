@@ -4,10 +4,24 @@ import MathTree from "./MathTree";
 import Keyboard from "./Keyboard";
 
 const MathComponent = () => {
-    const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"|"command"
+    const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
     const [mathTree,setMathTree] = useState({isroot:true,children:[MathTree.CURSOR]});
     const [formula,setFormula] = useState("");
     const [command,setCommand] = useState("");
+
+    const addSymbol = (symbol) => { // Called after a key press/command entered/on-screen key press
+        const newnode = MathTree.getNode(symbol);
+        if (editMode==="cursor"){
+            if (Keyboard.ACCENTS.includes(symbol)){
+                setMathTree(MathTree.adoptNodeBeforeCursor(mathTree,newnode));
+            }
+            else setMathTree(MathTree.insertAtCursor(mathTree,newnode));
+        }
+        else if (editMode==="selection"){
+            setMathTree(MathTree.replaceSelectedNode(mathTree,newnode));
+            setEditMode("cursor");
+        }
+    }
 
     const handleClick =  (event) => {
         event.preventDefault();
@@ -22,70 +36,55 @@ const MathComponent = () => {
     };
 
     const handleKeyDown = (event) => {
-        if (editMode=="cursor"){ 
+        if (command===""){// Not writing a command
             if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
             {
-                var newtree = MathTree.insertAtCursor(mathTree,MathTree.getNode(event.key));
-                setMathTree(newtree);
+                addSymbol(event.key);
             }
-            switch (event.key){
-                case "ArrowRight":
-                    setMathTree(MathTree.shiftCursor(mathTree,"right"));
-                    break;
-                case "ArrowLeft":
-                    setMathTree(MathTree.shiftCursor(mathTree,"left"));
-                    break;
-                case "Backspace":
-                    setMathTree(MathTree.deleteNextToCursor(mathTree,"left"));
-                    break;
-                case "Delete":
-                    setMathTree(MathTree.deleteNextToCursor(mathTree,"right"));
-                    break;
-                case "_":
-                    setMathTree(MathTree.insertAtCursor(mathTree,MathTree.getNode("_")));
-                    break;
-                case "\\":
-                    setEditMode("command");
-                    setCommand("\\");
-                    break;
+            else if (editMode==="cursor"){
+                switch (event.key){
+                    case "ArrowRight":
+                        setMathTree(MathTree.shiftCursor(mathTree,"right"));
+                        break;
+                    case "ArrowLeft":
+                        setMathTree(MathTree.shiftCursor(mathTree,"left"));
+                        break;
+                    case "Backspace":
+                        setMathTree(MathTree.deleteNextToCursor(mathTree,"left"));
+                        break;
+                    case "Delete":
+                        setMathTree(MathTree.deleteNextToCursor(mathTree,"right"));
+                        break;
+                    case "\\":
+                        setCommand("\\");
+                        break;
+                }
             }
-        }
-        else if (editMode==="selection"){ // "special" keys in selection mode
-            if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included (here : replaced)
-            {
-                var newtree = MathTree.replaceSelectedNode(mathTree,MathTree.getNode(event.key));
-                setMathTree(newtree);
-                setEditMode("cursor");
-            }
-            switch (event.key){
-                case "Delete":
-                case "Backspace":
-                    setMathTree(MathTree.deleteSelectedNode(mathTree,true));
-                    setEditMode("cursor");
-                    break;
-                case "ArrowRight":
-                    setMathTree(MathTree.selectedToCursor(mathTree,"right"));
-                    setEditMode("cursor");
-                    break;
-                case "ArrowLeft":
-                    setMathTree(MathTree.selectedToCursor(mathTree,"left"));
-                    setEditMode("cursor");
-                    break;
+            else if (editMode==="selection"){
+                switch (event.key){
+                    case "Delete":
+                    case "Backspace":
+                        setMathTree(MathTree.deleteSelectedNode(mathTree,true));
+                        setEditMode("cursor");
+                        break;
+                    case "ArrowRight":
+                        setMathTree(MathTree.selectedToCursor(mathTree,"right"));
+                        setEditMode("cursor");
+                        break;
+                    case "ArrowLeft":
+                        setMathTree(MathTree.selectedToCursor(mathTree,"left"));
+                        setEditMode("cursor");
+                        break;
+                }
             }
         }
-        else if (editMode==="command"){
+        else{ // Writing a command
             if (/^[a-zA-Z]$/.test(event.key)){
                 setCommand(command+event.key); // letter
             }
             else if (event.key==="Enter"){
-                if (Keyboard.ACCENTS.includes(command)){
-                    setMathTree(MathTree.modifyNodeBeforeCursor(mathTree,MathTree.getNode(command)));
-                }
-                else{
-                    setMathTree(MathTree.insertAtCursor(mathTree,MathTree.getNode(command)));
-                }
+                addSymbol(command);
                 setCommand("");
-                setEditMode("cursor");
             } 
         }
     }

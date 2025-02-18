@@ -164,7 +164,8 @@ function insertAtCursor(node,newnode){
   return newtree;
 }
 
-function modifyNodeBeforeCursor(tree,newnode){ // Add an accent or modifier on the node before the cursor
+function adoptNodeBeforeCursor(tree,newnode){ // Add an accent or modifier on the node before the cursor
+  console.log("ok");
   const modifier = children => {
     const index = children.findIndex(child => child.iscursor);
     if (index >= 1) {
@@ -183,7 +184,7 @@ function removeCursor(tree){
   return modifyChildren(tree,children => {return {children:children.filter(child=>!(child.iscursor)),stopModify:children.some(c=>c.iscursor)}}).node;
 }
 
-function selectedToCursor(tree,side){ // Add cursor next to selected
+function selectedToCursor(tree,side){ // Add cursor next to selected, and unselect
   const index_shift = (side==="right") ? 1 : 0;
   const inserter = (children) => {
     const index = children.findIndex(child => child.selected);
@@ -248,4 +249,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,modifyNodeBeforeCursor,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}
+export default {CURSOR,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}
