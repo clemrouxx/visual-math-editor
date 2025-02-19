@@ -112,7 +112,6 @@ const MathComponent = () => {
     };
 
     useEffect(() => { // Times where I need to change the listeners...
-        console.log(mathTree.children);
         setFormula(MathTree.getFormula(mathTree));
         addListeners();
         return () => {

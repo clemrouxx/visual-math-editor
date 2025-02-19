@@ -4,10 +4,12 @@ const CURSOR = {iscursor:true};
 const Symbol = (symbol) => {return {symbol:symbol}};
 const ParentSymbol = (symbol) => {return {symbol:symbol,children:[],nodeletionfromright:true}};
 const Accent = (symbol) => {return {symbol:symbol,children:[],hassinglechild:true}}
+const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[]}};
 
 function getNode(symbol){
   if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol);
   else if (Keyboard.ACCENTS.includes(symbol)) return Accent(symbol);
+  else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol);
   return Symbol(symbol);
 }
 
@@ -16,10 +18,12 @@ function getFormula(node){
 
     var string =  `\\cssId{math-${node.id}}{`;
     if (node.symbol) string += node.symbol;
+    else if (node.leftsymbol) string += node.leftsymbol;
     if (node.children){
       if (node.symbol) string += `{${node.children.map(getFormula).join("")}}`;
       else string += node.children.map(getFormula).join(""); // Just a simple grouping
     }
+    if (node.rightsymbol) string += node.rightsymbol;
     string += "}";
     if (node.selected) string = `\\class{math_selected}{${string}}`;
     return string;
