@@ -121,10 +121,13 @@ function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ /
   return modifyChildren(tree,deleter).node;
 }
 
-function replaceSelectedNode(tree,node){ // Replaces the selected node with 'node', and places the cursor just after.
+function replaceSelectedNode(tree,node,transferChildren=true){ // Replaces the selected node with 'node', and places the cursor just after. Keep the same children.
   const replacer = (children) => {
     const index = children.findIndex(child => child.selected);
-    if (index !== -1) children.splice(index,1,node,CURSOR);
+    if (index !== -1){
+      if (transferChildren) node.children = children[index].children;
+      children.splice(index,1,node,CURSOR);
+    }
     return {children,stopModify:index!==-1};
   }
   return modifyChildren(tree,replacer).node;
