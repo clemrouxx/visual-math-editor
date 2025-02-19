@@ -1,32 +1,34 @@
 import Keyboard from "./Keyboard";
 
 const CURSOR = {iscursor:true};
-const Symbol = (symbol) => {return {symbol:symbol}};
-const ParentSymbol = (symbol) => {return {symbol:symbol,children:[],nodeletionfromright:true}};
-const Accent = (symbol) => {return {symbol:symbol,children:[],hassinglechild:true}}
+const Symbol = (symbol) => {return {symbol}};
+const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright:true}};
+const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[]}};
+const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true}};
 
 function getNode(symbol){
   if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol);
   else if (Keyboard.ACCENTS.includes(symbol)) return Accent(symbol);
-  else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol);
+  else if (symbol in Keyboard.DELIMITERS || Keyboard.STYLES.includes(symbol)) return Delimiter(symbol);
   return Symbol(symbol);
 }
 
 function getFormula(node){
-    if (node.iscursor) return "\\class{math_cursor}|";
+    if (node.iscursor) return "\\class{math-cursor}|";
 
     var string =  "";
-    if (!node.isroot) string += `\\cssId{math-${node.id}}{`;
     if (node.symbol) string += node.symbol;
     else if (node.leftsymbol) string += node.leftsymbol;
+
     if (node.children){
       if (node.symbol) string += `{${node.children.map(getFormula).join("")}}`;
       else string += node.children.map(getFormula).join(""); // Just a simple grouping
     }
     if (node.rightsymbol) string += node.rightsymbol;
-    if (!node.isroot) string += "}";
-    if (node.selected) string = `\\class{math_selected}{${string}}`;
+    
+    if (!node.isroot) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
+    if (node.selected) string = `\\class{math-selected}{${string}}`;
     return string;
 }
 

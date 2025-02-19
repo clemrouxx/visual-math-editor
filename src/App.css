@@ -45,7 +45,7 @@
   display: none;
 }
 
-.math_cursor {
+.math-cursor {
   color:blue;
   animation: blink 1s infinite;
 }
@@ -54,6 +54,10 @@
   50% { opacity: 0; }
 }
 
-.math_selected{
+.math-node{
+  color: black;
+}
+
+.math-selected{
   color: red;
 }
