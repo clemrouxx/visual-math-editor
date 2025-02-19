@@ -9,8 +9,8 @@ const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true}};
 
 function getNode(symbol){
   if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol);
-  else if (Keyboard.ACCENTS.includes(symbol)) return Accent(symbol);
-  else if (symbol in Keyboard.DELIMITERS || Keyboard.STYLES.includes(symbol)) return Delimiter(symbol);
+  else if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)) return Accent(symbol);
+  else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol);
   return Symbol(symbol);
 }
 
@@ -26,7 +26,7 @@ function getFormula(node){
       else string += node.children.map(getFormula).join(""); // Just a simple grouping
     }
     if (node.rightsymbol) string += node.rightsymbol;
-    
+
     if (!node.isroot) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
     if (node.selected) string = `\\class{math-selected}{${string}}`;
     return string;

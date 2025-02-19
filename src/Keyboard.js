@@ -8,4 +8,4 @@ const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\vert":"\\vert","\\Vert":"\\Vert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil"};
 const MODIFIERS = ["\\text","\\textbf"];
 
-export default {DIRECT_INPUT,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS};
+export default {DIRECT_INPUT,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS};

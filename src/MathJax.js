@@ -12,13 +12,13 @@ const MathComponent = () => {
     const addSymbol = (symbol) => { // Called after a key press/command entered/on-screen key press
         const newnode = MathTree.getNode(symbol);
         if (editMode==="cursor"){
-            if (Keyboard.ACCENTS.includes(symbol)){
+            if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)){
                 setMathTree(MathTree.adoptNodeBeforeCursor(mathTree,newnode));
             }
             else setMathTree(MathTree.insertAtCursor(mathTree,newnode));
         }
         else if (editMode==="selection"){
-            if (Keyboard.ACCENTS.includes(symbol)){
+            if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)){
                 setMathTree(MathTree.adoptSelectedNode(mathTree,newnode));
             }
             else{
