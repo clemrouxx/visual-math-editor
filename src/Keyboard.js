@@ -6,6 +6,6 @@ const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat",
 const ACCENTS = ["\\acute","\\bar","\\breve","\\ddot","\\dot","\\grave","\\hat","\\tilde","\\vec"];
 const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\vert":"\\vert","\\Vert":"\\Vert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil"};
-const MODIFIERS = ["\\text","\\textbf"];
+const MODIFIERS = ["\\mathrm","\\text"];
 
 export default {DIRECT_INPUT,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS};

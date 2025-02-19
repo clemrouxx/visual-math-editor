@@ -9,8 +9,8 @@ const MathComponent = () => {
     const [formula,setFormula] = useState("");
     const [command,setCommand] = useState("");
 
-    const addSymbol = (symbol) => { // Called after a key press/command entered/on-screen key press
-        const newnode = MathTree.getNode(symbol);
+    const addSymbol = (symbol,rawtext=false) => { // Called after a key press/command entered/on-screen key press
+        const newnode = MathTree.getNode(symbol,rawtext);
         if (editMode==="cursor"){
             if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)){
                 setMathTree(MathTree.adoptNodeBeforeCursor(mathTree,newnode));
@@ -41,6 +41,15 @@ const MathComponent = () => {
     };
 
     const handleKeyDown = (event) => {
+        // We need to check if we are in a "raw text" area and in cursor mode
+        if (editMode==="cursor"){
+            const parent = MathTree.findCursorParent(mathTree);
+            if (parent.parseastext && event.key.length===1){
+                addSymbol(event.key,true);
+                return;
+            }
+        }
+
         if (command===""){// Not writing a command
             if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
             {
@@ -112,6 +121,7 @@ const MathComponent = () => {
     };
 
     useEffect(() => { // Times where I need to change the listeners...
+        console.log(mathTree);
         setFormula(MathTree.getFormula(mathTree));
         addListeners();
         return () => {

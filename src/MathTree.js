@@ -1,16 +1,18 @@
 import Keyboard from "./Keyboard";
 
-const CURSOR = {iscursor:true};
+const CURSOR = {iscursor:true,symbol:"|"};
 const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright:true}};
 const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[]}};
-const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true}};
+const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true}};
 
-function getNode(symbol){
-  if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol);
+function getNode(symbol,rawtext=false){
+  if (rawtext) return Symbol(symbol);
+  else if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol);
   else if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)) return Accent(symbol);
   else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol);
+  else if (Keyboard.MODIFIERS.includes(symbol)) return Modifier(symbol);
   return Symbol(symbol);
 }
 
@@ -21,7 +23,11 @@ function getFormula(node){
     if (node.symbol) string += node.symbol;
     else if (node.leftsymbol) string += node.leftsymbol;
 
-    if (node.children){
+    if (node.parseastext){
+      let inside = node.children.map(c=>c.symbol).join("");
+      string += `{${inside}}`;
+    }
+    else if (node.children){
       if (node.symbol) string += `{${node.children.map(getFormula).join("")}}`;
       else string += node.children.map(getFormula).join(""); // Just a simple grouping
     }
@@ -273,4 +279,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect}
+export default {CURSOR,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent}
