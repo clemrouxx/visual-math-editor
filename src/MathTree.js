@@ -16,7 +16,8 @@ function getNode(symbol){
 function getFormula(node){
     if (node.iscursor) return "\\class{math_cursor}|";
 
-    var string =  `\\cssId{math-${node.id}}{`;
+    var string =  "";
+    if (!node.isroot) string += `\\cssId{math-${node.id}}{`;
     if (node.symbol) string += node.symbol;
     else if (node.leftsymbol) string += node.leftsymbol;
     if (node.children){
@@ -24,7 +25,7 @@ function getFormula(node){
       else string += node.children.map(getFormula).join(""); // Just a simple grouping
     }
     if (node.rightsymbol) string += node.rightsymbol;
-    string += "}";
+    if (!node.isroot) string += "}";
     if (node.selected) string = `\\class{math_selected}{${string}}`;
     return string;
 }
@@ -98,6 +99,7 @@ function deleteSelectedNode(tree,replaceWithCursor){
 }
 
 function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor"
+  console.log(id,tree);
   const deleter = (children) => {
     var stopModify = false;
     const index = children.findIndex(child => child.id === id);
