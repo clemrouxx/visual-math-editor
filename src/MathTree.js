@@ -17,7 +17,7 @@ function getNode(symbol,rawtext=false){
 }
 
 function getFormula(node){
-    if (node.iscursor) return "\\class{math-cursor}|";
+    if (node.iscursor) return "\\class{math-cursor}{|}";
 
     var string =  "";
     if (node.symbol) string += node.symbol;

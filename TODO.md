@@ -4,7 +4,9 @@
 - Problem : interference between ids/classes and "_" in the placement for some operators (ex large operators)
 
 ## Basic capabilities
-- Recognize commands that are more complicated that just symbols (ex sqrt, frac)
+- Text mode : deletion by selection (global), and using the cursor
+- Fractions
+- Environment (multi-line)
 
 ### Provisional list of math tokens types
 - Simple symbols (vis, no child) : `a` -> symbol
