@@ -149,7 +149,7 @@ function deleteNextToCursor(tree,direction){
   else if (index+index_shift === -1){// Allow deleting parent when going to the left. (deletion 'from inside')
     return deleteNode(tree,cursorParent.id,"cursor",false);// The cursor will already be placed as for any other child
   }
-  else if (index+index_shift === cursorParent.children.length && cursorParent.nodeletionfromright){// Idem to the right
+  else if (index+index_shift === cursorParent.children.length && !cursorParent.nodeletionfromright){// Idem to the right
     return deleteNode(tree,cursorParent.id,"cursor",false);
   }
   return tree;
