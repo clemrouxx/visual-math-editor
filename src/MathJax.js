@@ -107,7 +107,7 @@ const MathComponent = () => {
     const addListeners = () => {
         // Ensure MathJax renders first
         setTimeout(() => {
-            document.querySelectorAll(".mjx-char").forEach((el) => {
+            document.querySelectorAll(".math-node").forEach((el) => {
                 el.addEventListener("click",handleClick);
             });
         }, 500); // Small delay to allow rendering. TODO : change this

@@ -6,6 +6,7 @@ const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright
 const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[]}};
 const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true}};
+const FracLike = (symbol) => {return {symbol,children:[{},{}],isfraclike:true}};
 
 function getNode(symbol,rawtext=false){
   if (rawtext) return Symbol(symbol);
@@ -13,6 +14,7 @@ function getNode(symbol,rawtext=false){
   else if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)) return Accent(symbol);
   else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol);
   else if (Keyboard.MODIFIERS.includes(symbol)) return Modifier(symbol);
+  else if (Keyboard.FRAC_LIKE.includes(symbol)) return FracLike(symbol);
   return Symbol(symbol);
 }
 
@@ -33,6 +35,7 @@ function getFormula(node){
     }
     if (node.rightsymbol) string += node.rightsymbol;
 
+    // Surrounding commands for classes & ids
     if (!node.isroot) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
     if (node.selected) string = `\\class{math-selected}{${string}}`;
     return string;
@@ -107,7 +110,6 @@ function deleteSelectedNode(tree,replaceWithCursor){
 }
 
 function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor".
-  console.log(id,tree);
   const deleter = (children) => {
     var stopModify = false;
     const index = children.findIndex(child => child.id === id);

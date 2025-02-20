@@ -37,10 +37,6 @@
   }
 }
 
-.mjx-char{
-  cursor: pointer;
-}
-
 .MathJax_Preview{
   display: none;
 }
@@ -56,6 +52,7 @@
 
 .math-node{
   color: black;
+  cursor:pointer;
 }
 
 .math-selected{
