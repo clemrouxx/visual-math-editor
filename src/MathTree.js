@@ -252,17 +252,34 @@ function recursiveShiftCursor(node,shift) {
     const index = node.children.findIndex(child => child.iscursor);// Looking for the cursor
     if (index===-1){// Not found among direct children. recursion.
       newnode.children = [];
-      node.children.forEach(child => {
-        let results = recursiveShiftCursor(child,shift);
-        if (shift===-1 && results.justFoundCursor) newnode.children.push(CURSOR);
-        newnode.children.push(results.node);
-        if (shift===1 && results.justFoundCursor) newnode.children.push(CURSOR);
-      });
+      if (newnode.isfraclike){
+        console.log("fraclike");
+        let results0 = recursiveShiftCursor(node.children[0],shift);
+        let results1 = recursiveShiftCursor(node.children[1],shift);
+        newnode.children = [results0.node,results1.node];
+        if ((shift===-1 && results0.justFoundCursor) || (shift===1 && results1.justFoundCursor)) return {node:newnode,justFoundCursor:true};// Send the cursor another level up
+        else if (shift===1 && results0.justFoundCursor) newnode.children[1].children.splice(0,0,CURSOR);// Move cursor from up to down
+        else if (shift === -1 && results1.justFoundCursor) newnode.children[0].children.push(CURSOR); // From down to up
+        else return {node:newnode,justFoundCursor:false};
+      }
+      else{
+        node.children.forEach(child => {
+          let results = recursiveShiftCursor(child,shift);
+          if (shift===-1 && results.justFoundCursor) newnode.children.push(CURSOR);
+          newnode.children.push(results.node);
+          if (shift===1 && results.justFoundCursor) newnode.children.push(CURSOR);
+        });
+      }
     }
-    else{
+    else{ // CURSOR is a direct child of newnode
       var nextnode = newnode.children[index+shift];
       if (nextnode){ // Simple case : we don't leave this branch
-        if (nextnode.children && !nextnode.hassinglechild){// We need to go down the tree, and insert the cursor as a new leaf
+        if (nextnode.isfraclike){ // Special case, we need to go down 2 levels
+          newnode.children.splice(index,1); // Remove the cursor
+          if (shift === 1) nextnode.children[0].children.splice(0,0,CURSOR);
+          else nextnode.children[1].children.splice(nextnode.children[0].children.length,0,CURSOR);
+        }
+        else if (nextnode.children && !nextnode.hassinglechild){// We need to go down the tree, and insert the cursor as a new leaf.
           newnode.children.splice(index,1); // Remove the cursor
           nextnode.children.splice((shift===1)?0:nextnode.children.length,0,CURSOR);
         }
