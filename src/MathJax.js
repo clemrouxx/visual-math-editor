@@ -55,6 +55,9 @@ const MathComponent = () => {
             {
                 addSymbol(event.key);
             }
+            else if (Keyboard.ESCAPED_SYMBOLS.includes(event.key)){
+                addSymbol("\\"+event.key);
+            }
             else if (event.key==="\\") setCommand("\\");
             else if (editMode==="cursor"){
                 switch (event.key){
