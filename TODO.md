@@ -25,6 +25,8 @@ NB : in cases where the number of children is fixed, the cursor should never be 
 ## Typing improvements
 - Shortcuts
 - On-screen special character keyboard
+- Copy-pasting nodes/branches
+- Changing alignement in array environments
 
 ## Performance imprivements
 - Test other methods of running MathJax to improve rendering speed
