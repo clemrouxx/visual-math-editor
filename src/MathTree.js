@@ -106,14 +106,14 @@ function deleteSelectedNode(tree,replaceWithCursor){
   return deleteNode(tree,findSelectedNode(tree).id,"selection",replaceWithCursor);
 }
 
-function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor"
+function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor".
   console.log(id,tree);
   const deleter = (children) => {
     var stopModify = false;
     const index = children.findIndex(child => child.id === id);
     if (index !== -1){
       const nodeToDelete = children[index];
-      if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor")){
+      if (!nodeToDelete.children || ((nodeToDelete.hassinglechild || nodeToDelete.ismodifier) && deletionMode==="cursor")){ // Implode
         children.splice(index,1);
       }
       else { // We will make it "explode" (ie leave its children).
@@ -154,14 +154,24 @@ function deleteNextToCursor(tree,direction){
   const toDelete = cursorParent.children[index+index_shift];
   if (toDelete){ // Found something to delete !
     // Specific case for when the node has children, and only a symbol on the left (no 'rightsymbol') : do nothing if going left !
-    if (direction==="left" && toDelete.nodeletionfromright) return tree; // Should we then "enter" and delete the last child then ?
+    if (direction==="left" && toDelete.nodeletionfromright) return tree; // Do nothing. Should we then "enter" and delete the last child then ?
+    else if (toDelete.ismodifier){// Then we need to enter the modifier (depends on how many children it has)
+      let nchildren = toDelete.children.length;
+      if (nchildren<=1) return deleteNode(tree,toDelete.id,"cursor"); // We empty the modifier, so we delete it completely.
+      else{
+        // Start by removing the cursor
+        cursorParent.children.splice(index,1);
+        console.log(toDelete.children[-1]);
+        // Then delete the node and replace it with the cursor
+        let childToDelete = (direction==="right") ? toDelete.children[0] : toDelete.children[toDelete.children.length-1];
+        return deleteNode(tree,childToDelete.id,"cursor",true);
+      }
+    }
     return deleteNode(tree,toDelete.id,"cursor");
   }
-  else if (index+index_shift === -1){// Allow deleting parent when going to the left. (deletion 'from inside')
-    return deleteNode(tree,cursorParent.id,"cursor",false);// The cursor will already be placed as for any other child
-  }
-  else if (index+index_shift === cursorParent.children.length && !cursorParent.nodeletionfromright){// Idem to the right
-    return deleteNode(tree,cursorParent.id,"cursor",false);
+  else if (index+index_shift === -1 || (index+index_shift === cursorParent.children.length && !cursorParent.nodeletionfromright)){// Allow deleting parent when going to the left. (deletion 'from inside')
+    if (cursorParent.ismodifier) return deleteNode(tree,cursorParent.id,"cursor",true);
+    else return deleteNode(tree,cursorParent.id,"cursor",false);// The cursor will already be placed as for any other child (if explosion only)
   }
   return tree;
 }
