@@ -9,9 +9,11 @@ const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat",
 const ACCENTS = ["\\acute","\\bar","\\breve","\\ddot","\\dot","\\grave","\\hat","\\tilde","\\vec"];
 const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\vert":"\\vert","\\Vert":"\\Vert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil"};
-const MODIFIERS = ["\\mathrm","\\text"];
+const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
 const FRAC_LIKE = ["\\frac"]; // Symbols that have strictly 2 children
+const ENVIRONMENTS = ["matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
 
-// Probably other constants defining shortcuts
+// Probably other constants defining shortcuts 
 
-export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE};
+export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,ENVIRONMENTS};
+
