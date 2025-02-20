@@ -113,7 +113,7 @@ function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ /
     const index = children.findIndex(child => child.id === id);
     if (index !== -1){
       const nodeToDelete = children[index];
-      if (!nodeToDelete.children || ((nodeToDelete.hassinglechild || nodeToDelete.ismodifier) && deletionMode==="cursor")){ // Implode
+      if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor") || nodeToDelete.ismodifier){ // Implode
         children.splice(index,1);
       }
       else { // We will make it "explode" (ie leave its children).
