@@ -6,7 +6,7 @@ const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright
 const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[]}};
 const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true}};
-const FracLike = (symbol) => {return {symbol,children:[{},{}],isfraclike:true}};
+const FracLike = (symbol) => {return {symbol,children:[{children:[]},{children:[]}],isfraclike:true}};
 
 function getNode(symbol,rawtext=false){
   if (rawtext) return Symbol(symbol);
@@ -118,7 +118,7 @@ function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ /
     const index = children.findIndex(child => child.id === id);
     if (index !== -1){
       const nodeToDelete = children[index];
-      if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor") || nodeToDelete.ismodifier){ // Implode
+      if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor") || nodeToDelete.ismodifier || nodeToDelete.isfraclike){ // Implode
         children.splice(index,1);
       }
       else { // We will make it "explode" (ie leave its children).
@@ -182,8 +182,9 @@ function deleteNextToCursor(tree,direction){
 }
 
 function insertAtCursor(node,newnode){
-  if (newnode.children){// I will then place the cursor as last child (maybe special case for fixed-children ?)
-    newnode.children.push(CURSOR);
+  if (newnode.children){// I will then place the cursor as last child
+    if (newnode.isfraclike) newnode.children[0].children.push(CURSOR);
+    else newnode.children.push(CURSOR);
     var inserter = (children) => {return {children:children.map((child) => child.iscursor ? newnode : child),stopModify:children.some(child => child.iscursor)};};
   }
   else{
