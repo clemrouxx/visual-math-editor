@@ -29,6 +29,9 @@ function getFormula(node){
       let inside = node.children.map(c=>c.symbol).join("");
       string += `{${inside}}`;
     }
+    else if (node.isfraclike){
+      string += `{${getFormula(node.children[0])}}{${getFormula(node.children[1])}}`
+    }
     else if (node.children){
       if (node.symbol) string += `{${node.children.map(getFormula).join("")}}`;
       else string += node.children.map(getFormula).join(""); // Just a simple grouping
