@@ -6,7 +6,7 @@ const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright
 const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[]}};
 const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true}};
-const FracLike = (symbol) => {return {symbol,children:[{children:[]},{children:[]}],isfraclike:true}};
+const FracLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],isfraclike:true}};
 
 function getNode(symbol,rawtext=false){
   if (rawtext) return Symbol(symbol);
@@ -166,7 +166,6 @@ function deleteNextToCursor(tree,direction){
       else{
         // Start by removing the cursor
         cursorParent.children.splice(index,1);
-        console.log(toDelete.children[-1]);
         // Then delete the node and replace it with the cursor
         let childToDelete = (direction==="right") ? toDelete.children[0] : toDelete.children[toDelete.children.length-1];
         return deleteNode(tree,childToDelete.id,"cursor",true);
@@ -174,7 +173,7 @@ function deleteNextToCursor(tree,direction){
     }
     return deleteNode(tree,toDelete.id,"cursor");
   }
-  else if (index+index_shift === -1 || (index+index_shift === cursorParent.children.length && !cursorParent.nodeletionfromright)){// Allow deleting parent when going to the left. (deletion 'from inside')
+  else if (!cursorParent.nodeletion && (index+index_shift === -1 || (index+index_shift === cursorParent.children.length && !cursorParent.nodeletionfromright))){// Allow deleting parent when going to the left. (deletion 'from inside')
     if (cursorParent.ismodifier) return deleteNode(tree,cursorParent.id,"cursor",true);
     else return deleteNode(tree,cursorParent.id,"cursor",false);// The cursor will already be placed as for any other child (if explosion only)
   }
@@ -253,7 +252,6 @@ function recursiveShiftCursor(node,shift) {
     if (index===-1){// Not found among direct children. recursion.
       newnode.children = [];
       if (newnode.isfraclike){
-        console.log("fraclike");
         let results0 = recursiveShiftCursor(node.children[0],shift);
         let results1 = recursiveShiftCursor(node.children[1],shift);
         newnode.children = [results0.node,results1.node];
