@@ -95,8 +95,8 @@ const MathComponent = () => {
             }
         }
         else{ // Writing a command
-            if (/^[a-zA-Z]$/.test(event.key)){
-                setCommand(command+event.key); // letter
+            if (/^[a-zA-Z\\\{\}]$/.test(event.key)){
+                setCommand(command+event.key);
             }
             else if (event.key==="Enter"){
                 addSymbol(command);
