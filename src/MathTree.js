@@ -7,6 +7,7 @@ const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[]}};
 const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true}};
 const FracLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],isfraclike:true}};
+const Environment = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.ENVIRONMENTS[symbol],children:[],ismultiline:true}};
 
 function getNode(symbol,rawtext=false){
   if (rawtext) return Symbol(symbol);
@@ -15,6 +16,7 @@ function getNode(symbol,rawtext=false){
   else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol);
   else if (Keyboard.MODIFIERS.includes(symbol)) return Modifier(symbol);
   else if (Keyboard.FRAC_LIKE.includes(symbol)) return FracLike(symbol);
+  else if (symbol in Keyboard.ENVIRONMENTS) return Environment(symbol);
   return Symbol(symbol);
 }
 

@@ -41,6 +41,7 @@ const MathComponent = () => {
     };
 
     const handleKeyDown = (event) => {
+        
         // We need to check if we are in a "raw text" area and in cursor mode
         if (editMode==="cursor"){
             const parent = MathTree.findCursorParent(mathTree);

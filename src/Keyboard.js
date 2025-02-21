@@ -11,7 +11,11 @@ const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\vert":"\\vert","\\Vert":"\\Vert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil"};
 const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
 const FRAC_LIKE = ["\\frac"]; // Symbols that have strictly 2 children
-const ENVIRONMENTS = ["matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
+const ENVIRONMENTS_NAMES = ["matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
+const ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
+    acc[`\\begin{${name}}`] = `\\end{${name}}`;
+    return acc;
+  }, {});
 
 // Probably other constants defining shortcuts
 const SHORTCUTS = {fr:"\\frac"};
