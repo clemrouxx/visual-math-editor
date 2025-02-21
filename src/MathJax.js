@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
-import MathJax from "react-mathjax";
+import {MathJax,MathJaxContext} from "better-react-mathjax";
 import MathTree from "./MathTree";
 import Keyboard from "./Keyboard";
+
+const mathjaxconfig = {
+    loader: { load: ["input/asciimath", "output/chtml"] }
+  };
 
 const MathComponent = () => {
     const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
@@ -169,9 +173,9 @@ const MathComponent = () => {
 
   return (
       <div>
-        <MathJax.Provider>
-            <MathJax.Node formula={formula} inline={false}/>
-        </MathJax.Provider>
+        <MathJaxContext config={mathjaxconfig}>
+            <MathJax>{"\\[ " + formula + " \\]"}</MathJax>
+        </MathJaxContext>
         <span>{command}</span><br/>
         <span>{editMode}</span>
       </div>

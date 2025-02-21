@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "better-react-mathjax": "^2.1.0",
     "cra-template": "1.2.0",
     "mathjax": "^3.2.2",
     "mathjax-full": "^3.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-mathjax": "^1.0.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^4.2.4"
   },
