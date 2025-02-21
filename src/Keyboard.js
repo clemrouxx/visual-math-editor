@@ -13,7 +13,8 @@ const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
 const FRAC_LIKE = ["\\frac"]; // Symbols that have strictly 2 children
 const ENVIRONMENTS = ["matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
 
-// Probably other constants defining shortcuts 
+// Probably other constants defining shortcuts
+const SHORTCUTS = {fr:"\\frac"};
 
 export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,ENVIRONMENTS};
 

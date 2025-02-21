@@ -62,6 +62,7 @@ const MathComponent = () => {
             else if (editMode==="cursor"){
                 switch (event.key){
                     case "ArrowRight":
+                    case "Tab":
                         setMathTree(MathTree.shiftCursor(mathTree,"right"));
                         break;
                     case "ArrowLeft":
