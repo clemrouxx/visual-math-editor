@@ -1,7 +1,6 @@
 # TODO list
 
 ## Bugs
-- Problem : interference between ids/classes and "_" in the placement for some operators (ex large operators)
 - Bug (mostly visual) : fractions seem to appear in triple when selected (or when a sub element is selected)
 
 ## Basic capabilities
