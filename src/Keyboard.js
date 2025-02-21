@@ -1,8 +1,10 @@
 // Defines some constants for typing / keyboard control
 
 // valid characters (including some that can have children) that can be typed directly
-const DIRECT_INPUT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+=*,.'`<>/_^([|!?\";:";
+const DIRECT_INPUT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+=*,.'`<>/_^([|!?\";:&";
 const ESCAPED_SYMBOLS = "%{"; // Will be automatically preceded by a backlash
+
+const INVISIBLE_SYMBOLS = ["_","^","\\\\","&"];
 
 // The following lists / dictionnaries determine the properties of the inserted node (regarding selection, cursor placement, deletion...)
 const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overbrace","\\underbrace"];
@@ -11,14 +13,14 @@ const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\vert":"\\vert","\\Vert":"\\Vert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil"};
 const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
 const FRAC_LIKE = ["\\frac"]; // Symbols that have strictly 2 children
-const ENVIRONMENTS_NAMES = ["matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
+const ENVIRONMENTS_NAMES = ["matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix","cases"];
 const ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
     acc[`\\begin{${name}}`] = `\\end{${name}}`;
     return acc;
   }, {});
 
 // Probably other constants defining shortcuts
-const SHORTCUTS = {fr:"\\frac"};
+const SHORTCUTS = {fr:"\\frac",pma:"\\begin{pmatrix}"};
 
-export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,ENVIRONMENTS,SHORTCUTS};
+export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,ENVIRONMENTS,SHORTCUTS,INVISIBLE_SYMBOLS};
 

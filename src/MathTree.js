@@ -41,7 +41,7 @@ function getFormula(node){
     if (node.rightsymbol) string += node.rightsymbol;
 
     // Surrounding commands for classes & ids
-    if (!node.isroot) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
+    if (!node.isroot && !(Keyboard.INVISIBLE_SYMBOLS.includes(node.symbol))) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
     if (node.selected) string = `\\class{math-selected}{${string}}`;
     return string;
 }
