@@ -20,7 +20,98 @@ const ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
   }, {});
 
 // Probably other constants defining shortcuts
-const SHORTCUTS = {fr:"\\frac",pma:"\\begin{pmatrix}"};
+const SHORTCUTS = {
+  alp:"\\alpha",
+  bet:"\\beta",
+  gam:"\\gamma",
+  Gam:"\\Gamma",
+  del:"\\delta",
+  Del:"\\Delta",
+  eps:"\\epsilon",
+  veps:"\\varepsilon",
+  zeta:"\\zeta",
+  eta:"\\eta",
+  the:"\\theta",
+  vthe:"\\vartheta",
+  The:"\\Theta",
+  iot:"\\iota",
+  kap:"\\kappa",
+  vkap:"\\varkappa",
+  lam:"\\lambda",
+  Lam:"\\Lambda",
+  mu:"\\mu",
+  nu:"\\nu",
+  xi:"\\xi",
+  Xi:"\\Xi",
+  pi:"\\pi",
+  Pi:"\\Pi",
+  rho:"\\rho",
+  vrho:"\\varrho",
+  sig:"\\sigma",
+  Sig:"\\Sigma",
+  tau:"\\tau",
+  ups:"\\upsilon",
+  Ups:"\\Upsilon",
+  phi:"\\phi",
+  vphi:"\\varphi",
+  Phi:"\\Phi",
+  chi:"\\chi",
+  psi:"\\psi",
+  Psi:"\\Psi",
+  ome:"\\omega",
+  Ome:"\\Omega",
+
+  ale:"\\aleph",
+
+  // Arrows
+  left:"\\leftarrow",
+  "<-":"\\leftarrow",
+  right:"\\rightarrow",
+  "->":"\\rightarrow",
+  "<->":"\\leftrightarrow",
+  up:"\\uparrow",
+  down:"\\downarrow",
+  Left:"\\Leftarrow",
+  Right:"\\Rightarrow",
+  "<=>":"\\Leftrightarrow",
+  Up:"\\Uparrow",
+  Down:"\\Downarrow",
+  maps:"\\mapsto",
+  // diagonal arrows ?
+
+  // Misc symbols
+  inf:"\\infty",
+  all:"\\forall",
+  Re:"\\Re",
+  Im:"\\Im",
+  nab:"\\nabla",
+  ex:"\\exists",
+  nex:"\\nexists",
+  pd:"\\partial",
+  empty:"\\varnothing",
+  neg:"\\neg",
+  "...":"\\cdots",
+  tri:"\\triangle",
+
+  // Operations
+  x:"\\times",
+  div:"\\div",
+  U:"\\cup",
+  inter:"\\cap",
+  ".":"\\cdot",
+  "<=":"\\leq",
+  ">=":"\\geq",
+  in:"\\in",
+  perp:"\\perp",
+  notin:"\\notin",
+  "!=":"\\neq",
+  "incl":"\\subset",
+  // To be continued
+
+
+  fr:"\\frac",
+  pma:"\\begin{pmatrix}"
+};
 
 export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,ENVIRONMENTS,SHORTCUTS,INVISIBLE_SYMBOLS};
 
