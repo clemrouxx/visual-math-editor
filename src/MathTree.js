@@ -229,6 +229,22 @@ function removeCursor(tree){
   return modifyChildren(tree,children => {return {children:children.filter(child=>!(child.iscursor)),stopModify:children.some(c=>c.iscursor)}}).node;
 }
 
+function applyReplacementShortcut(tree){
+  var cursorParent = findCursorParent(tree);
+  const index = cursorParent.children.findIndex(c=>c.iscursor);
+  var s = "";
+  for (var i=1;i<=6;i++){
+    if (index-i<0 || !cursorParent.children[index-i].symbol || cursorParent.children[index-i].symbol.length !== 1) break;
+    s = cursorParent.children[index-i].symbol + s;
+    if (s in Keyboard.SHORTCUTS){
+      console.log(s);
+      cursorParent.children.splice(index-i,i);
+      return insertAtCursor(tree,getNode(Keyboard.SHORTCUTS[s])); // Insert new node as if it was manually written
+    }
+  }
+  return tree;
+}
+
 function selectedToCursor(tree,side){ // Add cursor next to selected, and unselect
   const index_shift = (side==="right") ? 1 : 0;
   const inserter = (children) => {
@@ -310,4 +326,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent}
+export default {CURSOR,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut}

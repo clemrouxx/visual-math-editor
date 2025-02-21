@@ -74,6 +74,9 @@ const MathComponent = () => {
                     case "Delete":
                         setMathTree(MathTree.deleteNextToCursor(mathTree,"right"));
                         break;
+                    case " ": // Space
+                        setMathTree(MathTree.applyReplacementShortcut(mathTree));
+                        break;
                 }
             }
             else if (editMode==="selection"){

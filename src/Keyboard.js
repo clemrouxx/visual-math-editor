@@ -16,5 +16,5 @@ const ENVIRONMENTS = ["matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"
 // Probably other constants defining shortcuts
 const SHORTCUTS = {fr:"\\frac"};
 
-export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,ENVIRONMENTS};
+export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,ENVIRONMENTS,SHORTCUTS};
 
