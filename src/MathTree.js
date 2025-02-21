@@ -5,9 +5,9 @@ const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright:true}};
 const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[]}};
-const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true}};
-const FracLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],isfraclike:true}};
-const Environment = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.ENVIRONMENTS[symbol],children:[],ismultiline:true}};
+const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
+const FracLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],isfraclike:true,implodes:true}};
+const Environment = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true}};
 
 function getNode(symbol,rawtext=false){
   if (rawtext) return Symbol(symbol);
@@ -120,7 +120,7 @@ function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ /
     const index = children.findIndex(child => child.id === id);
     if (index !== -1){
       const nodeToDelete = children[index];
-      if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor") || nodeToDelete.ismodifier || nodeToDelete.isfraclike || nodeToDelete.ismultiline){ // Implode
+      if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor") || nodeToDelete.implodes){ // Implode
         children.splice(index,1);
       }
       else { // We will make it "explode" (ie leave its children).
@@ -175,8 +175,8 @@ function deleteNextToCursor(tree,direction){
     }
     return deleteNode(tree,toDelete.id,"cursor");
   }
-  else if (!cursorParent.nodeletion && (index+index_shift === -1 || (index+index_shift === cursorParent.children.length && !cursorParent.nodeletionfromright))){// Allow deleting parent when going to the left. (deletion 'from inside')
-    if (cursorParent.ismodifier) return deleteNode(tree,cursorParent.id,"cursor",true);
+  else if (!cursorParent.nodeletion && (index+index_shift === -1 || (index+index_shift === cursorParent.children.length && !cursorParent.nodeletionfromright))){// (deletion 'from inside')
+    if (cursorParent.implodes) return deleteNode(tree,cursorParent.id,"cursor",true);
     else return deleteNode(tree,cursorParent.id,"cursor",false);// The cursor will already be placed as for any other child (if explosion only)
   }
   return tree;
