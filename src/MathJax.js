@@ -45,6 +45,7 @@ const MathComponent = () => {
         if (editMode==="cursor"){
             const parent = MathTree.findCursorParent(mathTree);
             if (parent.parseastext && event.key.length===1){
+                event.preventDefault();
                 addSymbol(event.key,true);
                 return;
             }
@@ -53,12 +54,17 @@ const MathComponent = () => {
         if (command===""){// Not writing a command
             if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
             {
+                event.preventDefault();
                 addSymbol(event.key);
             }
             else if (Keyboard.ESCAPED_SYMBOLS.includes(event.key)){
+                event.preventDefault();
                 addSymbol("\\"+event.key);
             }
-            else if (event.key==="\\") setCommand("\\");
+            else if (event.key==="\\") {
+                event.preventDefault();
+                setCommand("\\");
+            }
             else if (editMode==="cursor"){
                 switch (event.key){
                     case "ArrowRight":
@@ -107,9 +113,11 @@ const MathComponent = () => {
         }
         else{ // Writing a command
             if (/^[a-zA-Z\\\{\}]$/.test(event.key)){
+                event.preventDefault();
                 setCommand(command+event.key);
             }
             else if (event.key==="Enter" || event.key===" "){
+                event.preventDefault();
                 addSymbol(command);
                 setCommand("");
             } 
