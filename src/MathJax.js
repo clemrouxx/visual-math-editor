@@ -41,10 +41,13 @@ const MathComponent = () => {
     };
 
     const handleKeyDown = (event) => {
-        
+
         // We need to check if we are in a "raw text" area and in cursor mode
+        // I take this opportunity to check if the parent is a multiline environment
+        var isParentMultiline = false;
         if (editMode==="cursor"){
             const parent = MathTree.findCursorParent(mathTree);
+            if (parent.ismultiline) isParentMultiline=true;
             if (parent.parseastext && event.key.length===1){
                 event.preventDefault();
                 addSymbol(event.key,true);
@@ -68,6 +71,17 @@ const MathComponent = () => {
             }
             else if (editMode==="cursor"){
                 switch (event.key){
+                    case "Tab":
+                        event.preventDefault();
+                        if (isParentMultiline) addSymbol("&");
+                        else setMathTree(MathTree.shiftCursor(mathTree,"right"));
+                        break;
+                    case "Enter":
+                        if (isParentMultiline){
+                            event.preventDefault();
+                            addSymbol("\\\\");
+                        }
+                        break;
                     case "ArrowRight":
                     case "Tab":
                         event.preventDefault();
