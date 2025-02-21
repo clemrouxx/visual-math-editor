@@ -63,9 +63,11 @@ const MathComponent = () => {
                 switch (event.key){
                     case "ArrowRight":
                     case "Tab":
+                        event.preventDefault();
                         setMathTree(MathTree.shiftCursor(mathTree,"right"));
                         break;
                     case "ArrowLeft":
+                        event.preventDefault();
                         setMathTree(MathTree.shiftCursor(mathTree,"left"));
                         break;
                     case "Backspace":
@@ -101,7 +103,7 @@ const MathComponent = () => {
             if (/^[a-zA-Z\\\{\}]$/.test(event.key)){
                 setCommand(command+event.key);
             }
-            else if (event.key==="Enter"){
+            else if (event.key==="Enter" || event.key===" "){
                 addSymbol(command);
                 setCommand("");
             } 
