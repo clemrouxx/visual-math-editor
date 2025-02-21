@@ -71,12 +71,15 @@ const MathComponent = () => {
                         setMathTree(MathTree.shiftCursor(mathTree,"left"));
                         break;
                     case "Backspace":
+                        event.preventDefault();
                         setMathTree(MathTree.deleteNextToCursor(mathTree,"left"));
                         break;
                     case "Delete":
+                        event.preventDefault();
                         setMathTree(MathTree.deleteNextToCursor(mathTree,"right"));
                         break;
                     case " ": // Space
+                        event.preventDefault();
                         setMathTree(MathTree.applyReplacementShortcut(mathTree));
                         break;
                 }
@@ -85,14 +88,17 @@ const MathComponent = () => {
                 switch (event.key){
                     case "Delete":
                     case "Backspace":
+                        event.preventDefault();
                         setMathTree(MathTree.deleteSelectedNode(mathTree,true));
                         setEditMode("cursor");
                         break;
                     case "ArrowRight":
+                        event.preventDefault();
                         setMathTree(MathTree.selectedToCursor(mathTree,"right"));
                         setEditMode("cursor");
                         break;
                     case "ArrowLeft":
+                        event.preventDefault();
                         setMathTree(MathTree.selectedToCursor(mathTree,"left"));
                         setEditMode("cursor");
                         break;
