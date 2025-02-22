@@ -2,17 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -24,26 +13,24 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.formula-editor {
+  border: solid grey 1px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.formula-editor.unfocused{
+  background-color: #eee;
 }
 
-.MathJax_Preview{
-  display: none;
+.math-cursor{
+  color: blue;
 }
 
-.math-cursor {
-  color:blue;
+.formula-editor.focused .math-cursor {
   animation: blink 1s infinite;
+}
+
+.formula-editor.unfocused .math-cursor {
+  opacity: 0.5;
 }
 
 @keyframes blink {
@@ -52,9 +39,9 @@
 
 .math-node{
   color: black;
-  cursor:pointer;
+  cursor: pointer;
 }
 
-.math-selected{
+.formula-editor .math-selected{
   color: red;
 }

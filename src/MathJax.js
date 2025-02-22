@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {MathJax,MathJaxContext} from "better-react-mathjax";
 import MathTree from "./MathTree";
 import Keyboard from "./Keyboard";
@@ -12,6 +12,8 @@ const MathComponent = () => {
     const [mathTree,setMathTree] = useState({isroot:true,children:[MathTree.CURSOR]});
     const [formula,setFormula] = useState("");
     const [command,setCommand] = useState("");
+    const [focused,setFocused] = useState(true);
+    const ref = useRef(null);
 
     const addSymbol = (symbol,rawtext=false) => { // Called after a key press/command entered/on-screen key press
         const newnode = MathTree.getNode(symbol,rawtext);
@@ -34,7 +36,10 @@ const MathComponent = () => {
 
     const handleClick =  (event) => {
         event.preventDefault();
+        event.stopPropagation();// Avoids problems with focusing
         // We need to go up the tree until we find an element with id 'math-...'
+        
+        setFocused(true);
         var element = event.target;
         while (!element.id || element.id.split("-")[0]!=="math") element = element.parentElement;
         var id = parseInt(element.id.split("-").pop());
@@ -155,7 +160,7 @@ const MathComponent = () => {
         window.addEventListener("keydown", handleKeyDown);
     };
 
-    const removeListener = () => {
+    const removeListeners = () => {
         window.removeEventListener("keydown", handleKeyDown);
         document.querySelectorAll(".mjx-char").forEach((el) => {
             el.removeEventListener("click",handleClick); // Remove listeners on unmount
@@ -166,18 +171,40 @@ const MathComponent = () => {
         console.log(mathTree);
         setFormula(MathTree.getFormula(mathTree));
         addListeners();
-        return () => {
-            removeListener();
+        return () => removeListeners();
+    }, [mathTree,command,focused]);
+
+    const focus = () => {
+        if (!focused) { // Prevent redundant updates
+            console.log("Focused!");
+            if (editMode==="cursor") setMathTree(MathTree.appendCursor(mathTree));
+            setFocused(true);
         }
-    }, [mathTree,command]);
+    }
+
+    const unfocus = () => {
+        if (focused) { // Prevent redundant updates
+            console.log("Unfocused!");
+            setMathTree(MathTree.unselect(MathTree.removeCursor(mathTree)));
+            setFocused(false);
+        }
+    };
+
+    useEffect(() => {
+        const handleFocusClick = (event) => {
+            if (ref.current && ref.current.contains(event.target)) focus()
+            else unfocus();
+        };
+        document.addEventListener("click", handleFocusClick);
+        return () => document.removeEventListener("click", handleFocusClick);
+    }, [focused,mathTree,editMode]);
 
   return (
-      <div>
+      <div className={`formula-editor ${focused ? "focused" : "unfocused"}`} ref={ref}>
         <MathJaxContext config={mathjaxconfig}>
             <MathJax>{"\\[ " + formula + " \\]"}</MathJax>
         </MathJaxContext>
-        <span>{command}</span><br/>
-        <span>{editMode}</span>
+        <span>{command}</span>
       </div>
   );
 };
