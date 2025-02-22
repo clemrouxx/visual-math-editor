@@ -1,7 +1,7 @@
 # TODO list
 
 ## Bugs
-- Bug (mostly visual) : fractions seem to appear in triple when selected (or when a sub element is selected)
+- Bug : Rendering "error" when selecting an element in a long sequence; sometimes
 
 ## Basic capabilities
 - Environment (multi-line)

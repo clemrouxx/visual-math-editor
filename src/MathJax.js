@@ -182,7 +182,7 @@ const MathComponent = () => {
     }, [mathTree,command,focused]);
 
     useEffect(() => {
-        console.log(mathTree);
+        //console.log(mathTree,MathTree.getFormula(mathTree,true));
         setFormula(MathTree.getFormula(mathTree,true));
     }, [mathTree]);
 
