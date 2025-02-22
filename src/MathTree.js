@@ -20,8 +20,8 @@ function getNode(symbol,rawtext=false){
   return Symbol(symbol);
 }
 
-function getFormula(node){
-    if (node.iscursor) return "\\class{math-cursor}{|}";
+function getFormula(node,forEditor){
+    if (node.iscursor) return forEditor ? "\\class{math-cursor}{|}" : "";
 
     var string =  "";
     if (node.symbol) string += node.symbol;
@@ -32,17 +32,18 @@ function getFormula(node){
       string += `{${inside}}`;
     }
     else if (node.isfraclike){
-      string += `{${getFormula(node.children[0])}}{${getFormula(node.children[1])}}`
+      string += `{${getFormula(node.children[0],forEditor)}}{${getFormula(node.children[1],forEditor)}}`
     }
     else if (node.children){
-      if (node.symbol) string += `{${node.children.map(getFormula).join("")}}`;
-      else string += node.children.map(getFormula).join(""); // Just a simple grouping
+      if (node.symbol) string += `{${node.children.map(c=>getFormula(c,forEditor)).join("")}}`;
+      else string += node.children.map(c=>getFormula(c,forEditor)).join(""); // Just a simple grouping
     }
     if (node.rightsymbol) string += node.rightsymbol;
 
     // Surrounding commands for classes & ids
-    if (!node.isroot && !(Keyboard.INVISIBLE_SYMBOLS.includes(node.symbol))) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
-    if (node.selected) string = `\\class{math-selected}{${string}}`;
+    const invisible = Keyboard.INVISIBLE_SYMBOLS.includes(node.symbol);
+    if (forEditor && !node.isroot && !invisible) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
+    if (node.selected && forEditor) string = `\\class{math-selected}{${string}}`;
     return string;
 }
 

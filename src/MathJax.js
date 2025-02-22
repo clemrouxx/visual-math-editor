@@ -34,6 +34,16 @@ const MathComponent = () => {
         }
     }
 
+    const copyToClipboard = async () => {
+        const latex = MathTree.getFormula(mathTree,false);
+        try {
+            await navigator.clipboard.writeText(latex);
+            console.log("Copied to clipboard:", latex);
+        } catch (err) {
+            console.error("Failed to copy:", err);
+        }
+    };
+
     const handleClick =  (event) => {
         event.preventDefault();
         event.stopPropagation();// Avoids problems with focusing
@@ -50,7 +60,6 @@ const MathComponent = () => {
     };
 
     const handleKeyDown = (event) => {
-
         // We need to check if we are in a "raw text" area and in cursor mode
         // I take this opportunity to check if the parent is a multiline environment
         var isParentMultiline = false;
@@ -168,15 +177,17 @@ const MathComponent = () => {
     };
 
     useEffect(() => { // Times where I need to change the listeners...
-        console.log(mathTree);
-        setFormula(MathTree.getFormula(mathTree));
         addListeners();
         return () => removeListeners();
     }, [mathTree,command,focused]);
 
+    useEffect(() => {
+        console.log(mathTree);
+        setFormula(MathTree.getFormula(mathTree,true));
+    }, [mathTree]);
+
     const focus = () => {
         if (!focused) { // Prevent redundant updates
-            console.log("Focused!");
             if (editMode==="cursor") setMathTree(MathTree.appendCursor(mathTree));
             setFocused(true);
         }
@@ -184,7 +195,6 @@ const MathComponent = () => {
 
     const unfocus = () => {
         if (focused) { // Prevent redundant updates
-            console.log("Unfocused!");
             setMathTree(MathTree.unselect(MathTree.removeCursor(mathTree)));
             setFocused(false);
         }
@@ -205,8 +215,17 @@ const MathComponent = () => {
             <MathJax>{"\\[ " + formula + " \\]"}</MathJax>
         </MathJaxContext>
         <span>{command}</span>
+        <button
+            onClick={(e) => {
+            e.stopPropagation();
+            copyToClipboard(); // Copy message to clipboard
+            }}
+        >
+            Copy LaTeX to clipboard
+        </button>
       </div>
   );
 };
 
 export default MathComponent;
+
