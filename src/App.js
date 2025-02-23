@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import MathComponent from './MathJax';
-import './App.css'; // Optional: For styling
+import './App.css';
 
 function App() {
-
   return (
     <div className="App">
-      <h1>React MathJax Example</h1>
+      <h1>Visual Math Editor</h1>
       <MathComponent/>
     </div>
   );

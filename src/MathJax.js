@@ -4,7 +4,19 @@ import MathTree from "./MathTree";
 import Keyboard from "./Keyboard";
 
 const mathjaxconfig = {
-    loader: { load: ["input/asciimath", "output/chtml"] }
+    loader: { load: ["[tex]/html","output/chtml"] },
+    tex: {
+      packages: { "[+]": ["html"] },
+    },
+    options: {
+      enableMenu : false,
+      renderActions: {
+        assistiveMml: [], // Prevents additional MathML rendering
+      },
+    },
+    output: {
+      renderer: "chtml", // Force CHTML instead of SVG
+    },
   };
 
 const MathComponent = () => {
