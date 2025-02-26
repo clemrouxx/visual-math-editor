@@ -13,6 +13,7 @@ const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\vert":"\\vert","\\Vert":"\\Vert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil"};
 const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
 const FRAC_LIKE = ["\\frac"]; // Symbols that have strictly 2 children
+const SUM_LIKE = ["\\sum","\\int"]; // Also strictly 2 children, but displayed differently as fractions
 const ENVIRONMENTS_NAMES = ["matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix","cases","align"];
 const ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
     acc[`\\begin{${name}}`] = `\\end{${name}}`;
@@ -105,13 +106,33 @@ const SHORTCUTS = {
   perp:"\\perp",
   notin:"\\notin",
   "!=":"\\neq",
-  "incl":"\\subset",
-  // To be continued
+  neq:"\\neq",
+  sub:"\\subset",
+  seq:"\\simeq",
+  sim:"\\sim",
+  app:"\\approx",
+  and:"\\wedge",
+  or:"\\vee",
+  "o+":"\\oplus",
+  ox:"\\otimes",
+  box:"\\Box",
+  xbox:"\\boxtimes",
+  "===":"\\equiv",
+  cong:"\\cong",  
+
+  // delimiters
+  avg:"\\langle",
+  mod:"\\vert",
+  "|":"\\vert",
+  norm:"\\Vert",
+  "||":"\\Vert",
+
+  // Sums...
 
 
   fr:"\\frac",
   pma:"\\begin{pmatrix}"
 };
 
-export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,ENVIRONMENTS,SHORTCUTS,INVISIBLE_SYMBOLS};
+export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,SUM_LIKE,ENVIRONMENTS,SHORTCUTS,INVISIBLE_SYMBOLS};
 

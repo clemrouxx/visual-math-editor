@@ -6,7 +6,8 @@ const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright
 const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[]}};
 const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
-const FracLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],isfraclike:true,implodes:true}};
+const FracLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true}};
+const SumLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,issumlike:true}};
 const Environment = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true}};
 
 function getNode(symbol,rawtext=false){
@@ -16,6 +17,7 @@ function getNode(symbol,rawtext=false){
   else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol);
   else if (Keyboard.MODIFIERS.includes(symbol)) return Modifier(symbol);
   else if (Keyboard.FRAC_LIKE.includes(symbol)) return FracLike(symbol);
+  else if (Keyboard.SUM_LIKE.includes(symbol)) return SumLike(symbol);
   else if (symbol in Keyboard.ENVIRONMENTS) return Environment(symbol);
   return Symbol(symbol);
 }
@@ -31,8 +33,9 @@ function getFormula(node,forEditor){
       let inside = node.children.map(c=>c.symbol).join("");
       string += `{${inside}}`;
     }
-    else if (node.isfraclike){
-      string += `{${getFormula(node.children[0],forEditor)}}{${getFormula(node.children[1],forEditor)}}`
+    else if (node.hasstrictlytwochildren){
+      if (node.issumlike) string += `_{${getFormula(node.children[0],forEditor)}}^{${getFormula(node.children[1],forEditor)}}`;
+      else string += `{${getFormula(node.children[0],forEditor)}}{${getFormula(node.children[1],forEditor)}}`;// FRAC-LIKE
     }
     else if (node.children){
       if (node.symbol) string += `{${node.children.map(c=>getFormula(c,forEditor)).join("")}}`;
@@ -185,7 +188,7 @@ function deleteNextToCursor(tree,direction){
 
 function insertAtCursor(node,newnode){
   if (newnode.children){// I will then place the cursor as last child
-    if (newnode.isfraclike) newnode.children[0].children.push(CURSOR);
+    if (newnode.hasstrictlytwochildren) newnode.children[0].children.push(CURSOR);
     else newnode.children.push(CURSOR);
     var inserter = (children) => {return {children:children.map((child) => child.iscursor ? newnode : child),stopModify:children.some(child => child.iscursor)};};
   }
@@ -275,7 +278,7 @@ function recursiveShiftCursor(node,shift) {
     const index = node.children.findIndex(child => child.iscursor);// Looking for the cursor
     if (index===-1){// Not found among direct children. recursion.
       newnode.children = [];
-      if (newnode.isfraclike){
+      if (newnode.hasstrictlytwochildren){
         let results0 = recursiveShiftCursor(node.children[0],shift);
         let results1 = recursiveShiftCursor(node.children[1],shift);
         newnode.children = [results0.node,results1.node];
@@ -296,7 +299,7 @@ function recursiveShiftCursor(node,shift) {
     else{ // CURSOR is a direct child of newnode
       var nextnode = newnode.children[index+shift];
       if (nextnode){ // Simple case : we don't leave this branch
-        if (nextnode.isfraclike){ // Special case, we need to go down 2 levels
+        if (nextnode.hasstrictlytwochildren){ // Special case, we need to go down 2 levels
           newnode.children.splice(index,1); // Remove the cursor
           if (shift === 1) nextnode.children[0].children.splice(0,0,CURSOR);
           else nextnode.children[1].children.splice(nextnode.children[0].children.length,0,CURSOR);
