@@ -15,3 +15,4 @@
 - Up-Down cursor movements in frac
 - dealing with variable-size operators similarly as fractions
 - Multi-symbol selection
+- Going out of a delimiter when the closing delimiter is typed

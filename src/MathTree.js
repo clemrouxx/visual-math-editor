@@ -3,6 +3,7 @@ import Keyboard from "./Keyboard";
 const CURSOR = {iscursor:true,symbol:"|"};
 const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright:true}};
+const LimLike = (symbol) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
 const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[]}};
 const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
@@ -18,6 +19,7 @@ function getNode(symbol,rawtext=false){
   else if (Keyboard.MODIFIERS.includes(symbol)) return Modifier(symbol);
   else if (Keyboard.FRAC_LIKE.includes(symbol)) return FracLike(symbol);
   else if (Keyboard.SUM_LIKE.includes(symbol)) return SumLike(symbol);
+  else if (Keyboard.LIM_LIKE.includes(symbol)) return LimLike(symbol);
   else if (symbol in Keyboard.ENVIRONMENTS) return Environment(symbol);
   return Symbol(symbol);
 }
@@ -38,7 +40,10 @@ function getFormula(node,forEditor){
       else string += `{${getFormula(node.children[0],forEditor)}}{${getFormula(node.children[1],forEditor)}}`;// FRAC-LIKE
     }
     else if (node.children){
-      if (node.symbol) string += `{${node.children.map(c=>getFormula(c,forEditor)).join("")}}`;
+      if (node.symbol){
+        if (node.childrenaredown) string += "_";// For limits...
+        string += `{${node.children.map(c=>getFormula(c,forEditor)).join("")}}`;
+      }
       else string += node.children.map(c=>getFormula(c,forEditor)).join(""); // Just a simple grouping
     }
     if (node.rightsymbol) string += node.rightsymbol;

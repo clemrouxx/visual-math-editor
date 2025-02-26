@@ -14,6 +14,7 @@ const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\vert":"\\vert","\\Vert":"\\Ve
 const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
 const FRAC_LIKE = ["\\frac"]; // Symbols that have strictly 2 children
 const SUM_LIKE = ["\\sum","\\int"]; // Also strictly 2 children, but displayed differently as fractions
+const LIM_LIKE = ["\\lim","\\iint","\\iiint","\\iiiint","\\oint"];
 const ENVIRONMENTS_NAMES = ["matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix","cases","align"];
 const ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
     acc[`\\begin{${name}}`] = `\\end{${name}}`;
@@ -134,5 +135,5 @@ const SHORTCUTS = {
   pma:"\\begin{pmatrix}"
 };
 
-export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,SUM_LIKE,ENVIRONMENTS,SHORTCUTS,INVISIBLE_SYMBOLS};
+export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,SUM_LIKE,LIM_LIKE,ENVIRONMENTS,SHORTCUTS,INVISIBLE_SYMBOLS};
 
