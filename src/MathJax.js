@@ -3,22 +3,6 @@ import {MathJax,MathJaxContext} from "better-react-mathjax";
 import MathTree from "./MathTree";
 import Keyboard from "./Keyboard";
 
-const mathjaxconfig = {
-    loader: { load: ["[tex]/html","output/chtml"] },
-    tex: {
-      packages: { "[+]": ["html"] },
-    },
-    options: {
-      enableMenu : false,
-      renderActions: {
-        assistiveMml: [], // Prevents additional MathML rendering
-      },
-    },
-    output: {
-      renderer: "chtml", // Force CHTML instead of SVG
-    },
-  };
-
 const MathComponent = () => {
     const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
     const [mathTree,setMathTree] = useState({isroot:true,children:[MathTree.CURSOR]});
@@ -223,9 +207,7 @@ const MathComponent = () => {
 
   return (
       <div className={`formula-editor ${focused ? "focused" : "unfocused"}`} ref={ref}>
-        <MathJaxContext config={mathjaxconfig}>
-            <MathJax>{"\\[ " + formula + " \\]"}</MathJax>
-        </MathJaxContext>
+        <MathJax>{"\\[ " + formula + " \\]"}</MathJax>
         <span>{command}</span>
         <button
             onClick={(e) => {

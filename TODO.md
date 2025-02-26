@@ -3,6 +3,7 @@
 ## Bugs
 - Bug : Rendering "error" when selecting an element in a long sequence; sometimes
 - cursor is sometimes invisible when refocusing
+- Bug in rendering : the symbols seem to get closer to one another at the end of long sequences.
 
 ## Basic capabilities
 - Environment (multi-line)
