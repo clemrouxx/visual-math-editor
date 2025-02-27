@@ -96,6 +96,8 @@ const SHORTCUTS = {
   "...":"\\cdots",
   tri:"\\triangle",
 
+  sr:"\\sqrt",
+
   // Operations
   x:"\\times",
   div:"\\div",
