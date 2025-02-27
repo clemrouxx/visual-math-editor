@@ -115,7 +115,11 @@ const MathComponent = () => {
                         break;
                     case " ": // Space
                         event.preventDefault();
-                        setMathTree(MathTree.applyReplacementShortcut(mathTree));
+                        let replacementResult = MathTree.applyReplacementShortcut(mathTree);
+                        if (replacementResult.symbol){
+                            setMathTree(replacementResult.tree);
+                            addSymbol(replacementResult.symbol);
+                        }
                         break;
                 }
             }

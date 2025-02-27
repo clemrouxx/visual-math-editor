@@ -249,16 +249,21 @@ function applyReplacementShortcut(tree){
   var cursorParent = findCursorParent(tree);
   const index = cursorParent.children.findIndex(c=>c.iscursor);
   var s = "";
-  for (var i=1;i<=6;i++){
+  const maxlength = 6;
+  for (var i=1;i<=maxlength;i++){ // First, find the longest possible string
     if (index-i<0 || !cursorParent.children[index-i].symbol || cursorParent.children[index-i].symbol.length !== 1) break;
     s = cursorParent.children[index-i].symbol + s;
-    if (s in Keyboard.SHORTCUTS){
-      console.log(s);
-      cursorParent.children.splice(index-i,i);
-      return insertAtCursor(tree,getNode(Keyboard.SHORTCUTS[s])); // Insert new node as if it was manually written
+  }
+  // Then, we look in priority at the longest sequences
+  const slen = s.length;
+  for (var j=0;j<=slen-1;j++){
+    let splitstring = s.slice(j);
+    if (splitstring in Keyboard.SHORTCUTS){
+      cursorParent.children.splice(index-slen+j,slen-j); // Remove the "used" nodes
+      return {tree,symbol:Keyboard.SHORTCUTS[splitstring]};
     }
   }
-  return tree;
+  return {tree,symbol:undefined};
 }
 
 function selectedToCursor(tree,side){ // Add cursor next to selected, and unselect

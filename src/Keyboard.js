@@ -21,7 +21,6 @@ const ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
     return acc;
   }, {});
 
-// Probably other constants defining shortcuts
 const SHORTCUTS = {
   alp:"\\alpha",
   bet:"\\beta",
@@ -130,10 +129,18 @@ const SHORTCUTS = {
 
   // Sums...
 
+  // Accents
+  d:"\\dot",
+  v:"\\vec",
+  dd:"\\ddot",
+  b:"\\bar",
+  h:"\\hat",
+
 
   fr:"\\frac",
   pma:"\\begin{pmatrix}"
 };
+
 
 export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,SUM_LIKE,LIM_LIKE,ENVIRONMENTS,SHORTCUTS,INVISIBLE_SYMBOLS};
 
