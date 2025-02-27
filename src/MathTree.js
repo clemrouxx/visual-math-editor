@@ -5,7 +5,7 @@ const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright:true}};
 const LimLike = (symbol) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
 const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
-const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[]}};
+const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[],adptative:true}};
 const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
 const FracLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true}};
 const SumLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,issumlike:true}};
@@ -29,7 +29,10 @@ function getFormula(node,forEditor){
 
     var string =  "";
     if (node.symbol) string += node.symbol;
-    else if (node.leftsymbol) string += node.leftsymbol;
+    else if (node.leftsymbol){
+      if (node.adptative) string += "\\left ";
+      string += node.leftsymbol;
+    }
 
     if (node.parseastext){
       let inside = node.children.map(c=>c.symbol).join("");
@@ -46,7 +49,10 @@ function getFormula(node,forEditor){
       }
       else string += node.children.map(c=>getFormula(c,forEditor)).join(""); // Just a simple grouping
     }
-    if (node.rightsymbol) string += node.rightsymbol;
+    if (node.rightsymbol){
+      if (node.adptative) string += "\\right ";
+      string += node.rightsymbol;
+    }
 
     // Surrounding commands for classes & ids
     const invisible = Keyboard.INVISIBLE_SYMBOLS.includes(node.symbol);
