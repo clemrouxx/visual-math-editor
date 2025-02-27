@@ -128,6 +128,8 @@ const SHORTCUTS = {
   "||":"\\Vert",
 
   // Sums...
+  sum:"\\sum",
+  int:"\\int",
 
   // Accents
   d:"\\dot",
@@ -136,8 +138,12 @@ const SHORTCUTS = {
   b:"\\bar",
   h:"\\hat",
 
+  // Styles
+
 
   fr:"\\frac",
+
+  // Environments
   pma:"\\begin{pmatrix}"
 };
 
