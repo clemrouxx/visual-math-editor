@@ -135,10 +135,14 @@ const SHORTCUTS = {
   d:"\\dot",
   v:"\\vec",
   dd:"\\ddot",
-  b:"\\bar",
-  h:"\\hat",
+  bar:"\\bar",
+  hat:"\\hat",
 
   // Styles
+  C:"\\mathcal",
+  B:"\\mathbb",
+  F:"\\mathfrak",
+  b:"\\mathbf",
 
 
   fr:"\\frac",
