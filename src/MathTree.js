@@ -170,7 +170,13 @@ function deleteNextToCursor(tree,direction){
   const toDelete = cursorParent.children[index+index_shift];
   if (toDelete){ // Found something to delete !
     // Specific case for when the node has children, and only a symbol on the left (no 'rightsymbol') : do nothing if going left !
-    if (direction==="left" && toDelete.nodeletionfromright) return tree; // Do nothing. Should we then "enter" and delete the last child then ?
+    if (direction==="left" && toDelete.nodeletionfromright){ // Then we should "enter" (assuming the node has children)
+      if (toDelete.children) {
+        cursorParent.children.splice(index,1); // Remove cursor
+        toDelete.children.push(CURSOR);
+      }
+      return tree; 
+    }
     else if (toDelete.ismodifier){// Then we need to enter the modifier (depends on how many children it has)
       let nchildren = toDelete.children.length;
       if (nchildren<=1) return deleteNode(tree,toDelete.id,"cursor"); // We empty the modifier, so we delete it completely.
