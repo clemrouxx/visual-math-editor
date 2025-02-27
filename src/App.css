@@ -1,6 +1,31 @@
-html {
+:root {
+  --bg-color: white;
+  --unfocused-bg-color:#eee;
+  --text-color: black;
+  --cursor-color:blue;
+  --selection-color:red;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: black;
+    --unfocused-bg-color:#333;
+    --text-color: white;
+    --cursor-color:cyan;
+    --selection-color:orange;
+  }
+}
+
+
+body {
   text-align: center;
-  background-color: #ddd;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+}
+
+button{
+  color: var(--text-color);
+  background-color: var(--unfocused-bg-color);
 }
 
 .formula-editor {
@@ -9,15 +34,15 @@ html {
 }
 
 .formula-editor.unfocused{
-  background-color: #eee;
+  background-color: var(--unfocused-bg-color);
 }
 
 .formula-editor.focused{
-  background-color: white;
+  background-color: var(--bg-color);
 }
 
 .math-cursor{
-  color: blue;
+  color: var(--cursor-color);
 }
 
 .formula-editor.focused .math-cursor {
@@ -33,10 +58,9 @@ html {
 }
 
 .math-node{
-  color: black;
   cursor: pointer;
 }
 
 .formula-editor .math-selected{
-  color: red;
+  color: var(--selection-color);
 }
