@@ -7,7 +7,11 @@ const LimLike = (symbol) => {return {symbol,children:[],childrenaredown:true,imp
 const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[],adptative:true}};
 const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
-const FracLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true}};
+const FracLike = (symbol) => {
+  var childrenstring = "{0}{1}";
+  if (Keyboard.SUM_LIKE.includes(symbol)) childrenstring = "_{0}^{1}";
+  return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,childrenstring}
+};
 const SumLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,issumlike:true}};
 const Environment = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true}};
 
@@ -17,8 +21,7 @@ function getNode(symbol,rawtext=false){
   else if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)) return Accent(symbol);
   else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol);
   else if (Keyboard.MODIFIERS.includes(symbol)) return Modifier(symbol);
-  else if (Keyboard.FRAC_LIKE.includes(symbol)) return FracLike(symbol);
-  else if (Keyboard.SUM_LIKE.includes(symbol)) return SumLike(symbol);
+  else if (Keyboard.FRAC_LIKE.includes(symbol) || Keyboard.SUM_LIKE.includes(symbol)) return FracLike(symbol);
   else if (Keyboard.LIM_LIKE.includes(symbol)) return LimLike(symbol);
   else if (symbol in Keyboard.ENVIRONMENTS) return Environment(symbol);
   return Symbol(symbol);
@@ -39,8 +42,7 @@ function getFormula(node,forEditor){
       string += `{${inside}}`;
     }
     else if (node.hasstrictlytwochildren){
-      if (node.issumlike) string += `_{${getFormula(node.children[0],forEditor)}}^{${getFormula(node.children[1],forEditor)}}`;
-      else string += `{${getFormula(node.children[0],forEditor)}}{${getFormula(node.children[1],forEditor)}}`;// FRAC-LIKE
+      string += node.childrenstring.replace("0",getFormula(node.children[0],forEditor)).replace(1,getFormula(node.children[1],forEditor))
     }
     else if (node.children){
       if (node.symbol){
