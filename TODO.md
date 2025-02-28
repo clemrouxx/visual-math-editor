@@ -5,6 +5,7 @@
 - cursor is sometimes invisible when refocusing
 - Bug in rendering : the symbols seem to get closer to one another at the end of long sequences.
 - Text mode shouldn't allow deletion from inside
+- When moving the cursor to the left, starting from after a fraction, it seems to skip a spot
 
 ## Basic capabilities
 - Environment (multi-line)

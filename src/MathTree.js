@@ -1,6 +1,7 @@
 import Keyboard from "./Keyboard";
 
 const CURSOR = {iscursor:true,symbol:"|"};
+const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"}
 const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright:true}};
 const LimLike = (symbol) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
@@ -30,7 +31,7 @@ function getNode(symbol,rawtext=false){
 }
 
 function getFormula(node,forEditor){
-    if (node.iscursor) return forEditor ? "\\class{math-cursor}{|}" : "";
+    if (node.iscursor) return forEditor ? `\\class{math-cursor}{${node.symbol}}` : "";
 
     var string =  "";
     if (node.symbol) string += node.symbol;
