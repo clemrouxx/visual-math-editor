@@ -8,13 +8,12 @@ const INVISIBLE_SYMBOLS = ["_","^","\\\\","&"];
 
 // The following lists / dictionnaries determine the properties of the inserted node (regarding selection, cursor placement, deletion...)
 // Include the core and AMS commands
-const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overbrace","\\underbrace","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow"];
+const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow"];
 const ACCENTS = ["\\acute","\\bar","\\breve","\\ddot","\\dot","\\grave","\\hat","\\tilde","\\vec","\\dddot","\\ddddot"];
 const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\lvert":"\\rvert","\\lVert":"\\rVert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil"};
 const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
-const FRAC_LIKE = ["\\frac"]; // Symbols that have strictly 2 children
-// How about underbraces, overbraces...
+const FRAC_LIKE = ["\\frac","\\overbrace","\\underbrace"]; // Symbols that have strictly 2 children (other than sum-like)
 const SUM_LIKE = ["\\sum","\\int","\\bigcap","\\bigcup","\\bigodot","\\bigoplus","\\bigotimes","\\bigsqcup","\\biguplus","\\bigvee","\\bigwedge","\\coprod","\\prod"]; // Also strictly 2 children, but displayed differently as fractions
 const LIM_LIKE = ["\\lim","\\iint","\\iiint","\\iiiint","\\oint","\\idotsint"];
 const ENVIRONMENTS_NAMES = ["matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix","cases","align"];

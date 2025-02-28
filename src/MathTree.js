@@ -8,8 +8,10 @@ const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[],adptative:true}};
 const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
 const FracLike = (symbol) => {
-  var childrenstring = "{0}{1}";
-  if (Keyboard.SUM_LIKE.includes(symbol)) childrenstring = "_{0}^{1}";
+  var childrenstring = "{§0}{§1}";
+  if (Keyboard.SUM_LIKE.includes(symbol)) childrenstring = "_{§0}^{§1}";
+  else if (symbol === "\\underbrace") childrenstring = "{§0}_{§1}";
+  else if (symbol === "\\overbrace") childrenstring = "{§0}^{§1}";
   return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,childrenstring}
 };
 const SumLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,issumlike:true}};
@@ -42,7 +44,7 @@ function getFormula(node,forEditor){
       string += `{${inside}}`;
     }
     else if (node.hasstrictlytwochildren){
-      string += node.childrenstring.replace("0",getFormula(node.children[0],forEditor)).replace(1,getFormula(node.children[1],forEditor))
+      string += node.childrenstring.replace("§0",getFormula(node.children[0],forEditor)).replace("§1",getFormula(node.children[1],forEditor))
     }
     else if (node.children){
       if (node.symbol){
