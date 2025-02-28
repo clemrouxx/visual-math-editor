@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState,useEffect,useRef} from 'react';
 import MathComponent from './MathJax';
 import './App.css';
 import { MathJaxContext } from 'better-react-mathjax';
@@ -7,6 +7,7 @@ function App() {
 
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const [darkMode, setDarkMode] = useState(prefersDark);
+  const formulaEditor = useRef();
 
   
   const config = {
@@ -40,7 +41,10 @@ function App() {
       </div>
       <div class="centeredcontent">
         <h1>Visual Math Editor</h1>
-        <MathComponent/>
+        <MathComponent ref={formulaEditor}/>
+        <button onClick={() => formulaEditor.current?.addSymbol("\\#")}>
+        Call Child Function from Parent
+        </button>
       </div>
       </MathJaxContext>
     </div>

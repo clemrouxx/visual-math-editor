@@ -1,21 +1,25 @@
-import React, { useEffect, useState, useRef, useImperativeHandle } from "react";
+import React, { useEffect, useState, useRef, useImperativeHandle, forwardRef } from "react";
 import {MathJax,MathJaxContext} from "better-react-mathjax";
 import MathTree from "./MathTree";
 import Keyboard from "./Keyboard";
 
-const MathComponent = () => {
+const MathComponent = forwardRef((props,ref) => {
     const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
     const [mathTree,setMathTree] = useState({isroot:true,children:[MathTree.CURSOR]});
     const [formula,setFormula] = useState("");
     const [command,setCommand] = useState("");
     const [focused,setFocused] = useState(true);
-    const ref = useRef(null);
-
+    const domRef = useRef(null);
 
     const addSymbol = (symbol,rawtext=false) => { // Called after a key press/command entered/on-screen key press
         const newnode = MathTree.getNode(symbol,rawtext);
         addNode(newnode);
-    };
+    }
+
+    useImperativeHandle(ref, () => ({
+        addSymbol
+    }));
+    
 
     const addNode = (newnode) => {
         if (editMode==="cursor"){
@@ -207,7 +211,7 @@ const MathComponent = () => {
 
     useEffect(() => {
         const handleFocusClick = (event) => {
-            if (ref.current && ref.current.contains(event.target)) focus()
+            if (domRef.current && domRef.current.contains(event.target)) focus()
             else unfocus();
         };
         document.addEventListener("click", handleFocusClick);
@@ -215,7 +219,7 @@ const MathComponent = () => {
     }, [focused,mathTree,editMode]);
 
   return (
-      <div className={`formula-editor ${focused ? "focused" : "unfocused"}`} ref={ref}>
+      <div className={`formula-editor ${focused ? "focused" : "unfocused"}`} ref={domRef}>
         <MathJax>{"\\[ " + formula + " \\]"}</MathJax>
         <div>{command}</div>
         <button
@@ -228,7 +232,7 @@ const MathComponent = () => {
         </button>
       </div>
   );
-};
+});
 
 export default MathComponent;
 
