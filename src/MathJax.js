@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useImperativeHandle } from "react";
 import {MathJax,MathJaxContext} from "better-react-mathjax";
 import MathTree from "./MathTree";
 import Keyboard from "./Keyboard";
@@ -11,16 +11,21 @@ const MathComponent = () => {
     const [focused,setFocused] = useState(true);
     const ref = useRef(null);
 
+
     const addSymbol = (symbol,rawtext=false) => { // Called after a key press/command entered/on-screen key press
         const newnode = MathTree.getNode(symbol,rawtext);
+        addNode(newnode);
+    };
+
+    const addNode = (newnode) => {
         if (editMode==="cursor"){
-            if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)){
+            if (Keyboard.ACCENTS.includes(newnode.symbol) || Keyboard.STYLES.includes(newnode.symbol)){
                 setMathTree(MathTree.adoptNodeBeforeCursor(mathTree,newnode));
             }
             else setMathTree(MathTree.insertAtCursor(mathTree,newnode));
         }
         else if (editMode==="selection"){
-            if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)){
+            if (Keyboard.ACCENTS.includes(newnode.symbol) || Keyboard.STYLES.includes(newnode.symbol)){
                 setMathTree(MathTree.adoptSelectedNode(mathTree,newnode));
             }
             else{
@@ -28,7 +33,7 @@ const MathComponent = () => {
                 setEditMode("cursor");
             }
         }
-    }
+    };
 
     const copyToClipboard = async () => {
         const latex = MathTree.getFormula(mathTree,false);
