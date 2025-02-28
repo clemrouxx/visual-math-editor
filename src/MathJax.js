@@ -212,7 +212,7 @@ const MathComponent = () => {
   return (
       <div className={`formula-editor ${focused ? "focused" : "unfocused"}`} ref={ref}>
         <MathJax>{"\\[ " + formula + " \\]"}</MathJax>
-        <span>{command}</span>
+        <div>{command}</div>
         <button
             onClick={(e) => {
             e.stopPropagation();
