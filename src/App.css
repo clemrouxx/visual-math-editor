@@ -16,7 +16,6 @@
   }
 }
 
-
 body {
   text-align: center;
   color: var(--text-color);
@@ -26,11 +25,15 @@ body {
 button{
   color: var(--text-color);
   background-color: var(--unfocused-bg-color);
+  margin: 0.5em;
+  padding: 0.5em;
+  border-radius: 0.3em;
 }
 
 .formula-editor {
   border: solid grey 1px;
   font-size: larger;
+  margin: 1em;
 }
 
 .formula-editor.unfocused{
