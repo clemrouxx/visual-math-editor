@@ -6,20 +6,22 @@
   --selection-color:red;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+.dark {
     --bg-color: black;
     --unfocused-bg-color:#333;
     --text-color: white;
     --cursor-color:cyan;
     --selection-color:orange;
-  }
 }
 
 body {
-  text-align: center;
   color: var(--text-color);
   background-color: var(--bg-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.centeredcontent{
+  text-align: center;
 }
 
 button{

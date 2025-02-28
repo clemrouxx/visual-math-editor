@@ -1,9 +1,14 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import MathComponent from './MathJax';
 import './App.css';
 import { MathJaxContext } from 'better-react-mathjax';
 
 function App() {
+
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const [darkMode, setDarkMode] = useState(prefersDark);
+
+  
   const config = {
       loader: { load: ["[tex]/html","output/chtml"] },
       tex: {
@@ -20,11 +25,23 @@ function App() {
       },
     };
 
+  
+    useEffect(() => {
+      document.body.classList.toggle("dark", darkMode);
+    }, [darkMode]);
+
   return (
     <div className="App">
       <MathJaxContext config={config}>
+      <div class="menu">
+      <button onClick={() => setDarkMode(!darkMode)}>
+        Toggle Dark Mode
+      </button>
+      </div>
+      <div class="centeredcontent">
         <h1>Visual Math Editor</h1>
         <MathComponent/>
+      </div>
       </MathJaxContext>
     </div>
   );
