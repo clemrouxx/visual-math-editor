@@ -32,6 +32,10 @@ button{
   border-radius: 0.3em;
 }
 
+button mjx-container[jax="CHTML"][display="true"]{
+  margin: 0;
+}
+
 .formula-editor {
   border: solid grey 1px;
   font-size: larger;
@@ -68,4 +72,15 @@ button{
 
 .formula-editor .math-selected{
   color: var(--selection-color);
+}
+
+
+.virtual-keyboard{
+  
+}
+
+.virtual-keyboard button{
+  font-size: larger;
+  width: 2em;
+  height: 2em;
 }

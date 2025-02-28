@@ -2,6 +2,7 @@ import React, {useState,useEffect,useRef} from 'react';
 import MathComponent from './MathJax';
 import './App.css';
 import { MathJaxContext } from 'better-react-mathjax';
+import VirtualKeyboard from './VirtualKeyboard';
 
 function App() {
 
@@ -42,9 +43,7 @@ function App() {
       <div class="centeredcontent">
         <h1>Visual Math Editor</h1>
         <MathComponent ref={formulaEditor}/>
-        <button onClick={() => formulaEditor.current?.addSymbol("\\#")}>
-        Call Child Function from Parent
-        </button>
+        <VirtualKeyboard formulaEditorRef={formulaEditor} />
       </div>
       </MathJaxContext>
     </div>
