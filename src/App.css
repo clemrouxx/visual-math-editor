@@ -76,7 +76,7 @@ button mjx-container[jax="CHTML"][display="true"]{
 }
 
 
-.virtual-keyboard{
+.virtual-keyboard .key-row{
   padding: 1em;
   display: flex;
   flex-wrap: wrap;
