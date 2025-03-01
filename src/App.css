@@ -77,11 +77,14 @@ button mjx-container[jax="CHTML"][display="true"]{
 
 
 .virtual-keyboard{
-  
+  padding: 1em;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .virtual-keyboard button{
   font-size: larger;
   width: 2em;
   height: 2em;
+  margin: 0;
 }

@@ -212,7 +212,7 @@ const MathComponent = forwardRef((props,ref) => {
     useEffect(() => {
         const handleFocusClick = (event) => {
             if (domRef.current && domRef.current.contains(event.target)) focus()
-            else unfocus();
+            //else unfocus(); Removed for now, until proven useful
         };
         document.addEventListener("click", handleFocusClick);
         return () => document.removeEventListener("click", handleFocusClick);

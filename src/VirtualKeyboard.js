@@ -1,16 +1,21 @@
 import { MathJax } from "better-react-mathjax";
 import React from "react";
 import { Tooltip } from "react-tooltip";
+import Keyboard from "./Keyboard";
 
 const VirtualKeyboard = ({ formulaEditorRef }) => {
-  const sym = "\\alpha";
-  const tooltip = "alp";
+  const reversedShortcuts = Object.fromEntries(Object.entries(Keyboard.SHORTCUTS).map(([key, value]) => [value, key]));
+  const symblist = ["\\alpha","\\beta","\\gamma"];
   return (
-    <div class="virtual-keyboard">
-        <MathJax>
-            <VirtualKey symbol={sym} tooltip={tooltip} reference={formulaEditorRef}/>
-        </MathJax>
+    <MathJax>
+    <div className="virtual-keyboard">
+        
+            {symblist.map((symbol, index) => (
+              <VirtualKey symbol={symbol} tooltip={reversedShortcuts[symbol]} reference={formulaEditorRef} key={index}/>
+            ))}
+
     </div>
+    </MathJax>
   );
 };
 
