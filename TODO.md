@@ -9,6 +9,7 @@
 
 ## Basic capabilities
 - Environment (multi-line)
+- Removing the style on a symbol
 
 ## Typing improvements
 - On-screen special character keyboard

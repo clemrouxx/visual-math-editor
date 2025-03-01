@@ -82,7 +82,7 @@ button mjx-container[jax="CHTML"][display="true"]{
 }
 
 .virtual-keyboard > div{
-  max-width: 33em;
+  max-width: 28rem;
 }
 
 
@@ -94,9 +94,17 @@ button mjx-container[jax="CHTML"][display="true"]{
 }
 
 .virtual-keyboard button{
-  font-size: larger;
-  min-width: 2em;
-  height: 2em;
+  font-size: large;
+  min-width: 2rem;
+  height: 2rem;
   margin: 0;
   padding: 0.2em;
+}
+
+.virtual-keyboard .small-text{
+  font-size:small;
+}
+
+.virtual-keyboard .x-small-text{
+  font-size:x-small;
 }
