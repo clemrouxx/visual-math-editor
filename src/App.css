@@ -75,16 +75,28 @@ button mjx-container[jax="CHTML"][display="true"]{
   color: var(--selection-color);
 }
 
-
-.virtual-keyboard .key-row{
-  margin: 1em;
+.virtual-keyboard{
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.virtual-keyboard > div{
+  max-width: 33em;
+}
+
+
+.virtual-keyboard .key-row{
+  margin: 0.5em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .virtual-keyboard button{
   font-size: larger;
-  width: 2em;
+  min-width: 2em;
   height: 2em;
   margin: 0;
+  padding: 0.2em;
 }

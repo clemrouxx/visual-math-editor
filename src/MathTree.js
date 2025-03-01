@@ -2,10 +2,11 @@ import Keyboard from "./Keyboard";
 
 const CURSOR = {iscursor:true,symbol:"|"};
 const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"}
+const LETTERPLACEHOLDER = {isplaceholder:true,symbol:"a"}
 const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[PLACEHOLDER]:[],nodeletionfromright:true}};
 const LimLike = (symbol,addplaceholder=false) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
-const Accent = (symbol,addplaceholder=false) => {return {symbol,children:[],hassinglechild:true}}
+const Accent = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[LETTERPLACEHOLDER]:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[],adptative:true}};
 const Modifier = (symbol,addplaceholder=false) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
 const FracLike = (symbol,addplaceholder=false) => {
