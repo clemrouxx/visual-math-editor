@@ -3,30 +3,30 @@ import Keyboard from "./Keyboard";
 const CURSOR = {iscursor:true,symbol:"|"};
 const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"}
 const Symbol = (symbol) => {return {symbol}};
-const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright:true}};
-const LimLike = (symbol) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
-const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
+const ParentSymbol = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[PLACEHOLDER]:[],nodeletionfromright:true}};
+const LimLike = (symbol,addplaceholder=false) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
+const Accent = (symbol,addplaceholder=false) => {return {symbol,children:[],hassinglechild:true}}
 const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[],adptative:true}};
-const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
-const FracLike = (symbol) => {
+const Modifier = (symbol,addplaceholder=false) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
+const FracLike = (symbol,addplaceholder=false) => {
   var childrenstring = "{§0}{§1}";
   if (Keyboard.SUM_LIKE.includes(symbol)) childrenstring = "_{§0}^{§1}";
   else if (symbol === "\\underbrace") childrenstring = "{§0}_{§1}";
   else if (symbol === "\\overbrace") childrenstring = "{§0}^{§1}";
   return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,childrenstring}
 };
-const SumLike = (symbol) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,issumlike:true}};
-const Environment = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true}};
+const SumLike = (symbol,addplaceholder=false) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,issumlike:true}};
+const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:Keyboard.ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true}};
 
-function getNode(symbol,rawtext=false){
+function getNode(symbol,rawtext=false,addplaceholder=false){
   if (rawtext) return Symbol(symbol);
-  else if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol);
-  else if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)) return Accent(symbol);
+  else if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol,addplaceholder);
+  else if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)) return Accent(symbol,addplaceholder);
   else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol);
-  else if (Keyboard.MODIFIERS.includes(symbol)) return Modifier(symbol);
-  else if (Keyboard.FRAC_LIKE.includes(symbol) || Keyboard.SUM_LIKE.includes(symbol)) return FracLike(symbol);
-  else if (Keyboard.LIM_LIKE.includes(symbol)) return LimLike(symbol);
-  else if (symbol in Keyboard.ENVIRONMENTS) return Environment(symbol);
+  else if (Keyboard.MODIFIERS.includes(symbol)) return Modifier(symbol,addplaceholder);
+  else if (Keyboard.FRAC_LIKE.includes(symbol) || Keyboard.SUM_LIKE.includes(symbol)) return FracLike(symbol,addplaceholder);
+  else if (Keyboard.LIM_LIKE.includes(symbol)) return LimLike(symbol,addplaceholder);
+  else if (symbol in Keyboard.ENVIRONMENTS) return Environment(symbol,addplaceholder);
   return Symbol(symbol);
 }
 
