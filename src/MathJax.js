@@ -17,7 +17,7 @@ const MathComponent = forwardRef((props,ref) => {
     }
 
     useImperativeHandle(ref, () => ({
-        addSymbol
+        addSymbol,addNode
     }));
     
 

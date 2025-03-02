@@ -1,5 +1,5 @@
 import { MathJax } from "better-react-mathjax";
-import React from "react";
+import React, { Children } from "react";
 import { Tooltip } from "react-tooltip";
 import Keyboard from "./Keyboard";
 import MathTree from "./MathTree";
@@ -39,10 +39,12 @@ const FirstRow = ({reference,getShortcut}) => {
     <div>
       <h3>Common symbols</h3>
       <div className="key-row">
+        <NodeVirtualKey uniqueName="squared" display="\square^2" node={{symbol:"^",children:[{symbol:"2"}]}} reference={reference}/>
         <VirtualKey symbol="^" display="A^\square" tooltip="(^)"  reference={reference}/>
         <VirtualKey symbol="_" display="A_\square" tooltip="(_)"  reference={reference}/>
         <SymbolVirtualKey symbol="\frac" tooltip={getShortcut("\\frac")} reference={reference} className="x-small-text"/>
         <SymbolVirtualKey symbol="\sqrt" tooltip={getShortcut("\\sqrt")} reference={reference} className="small-text"/>
+        <NodeVirtualKey uniqueName="squared" display={MathTree.getFormula(MathTree.FracLike("\\sqrt",true))} node={MathTree.FracLike("\\sqrt")} reference={reference} className="small-text"/>
       </div>
       <h3>Styles</h3>
       <div className="key-row">
@@ -65,6 +67,17 @@ const SimpleCategory = ({title,symbols,getShortcut,reference}) => {
       ))}
     </div>
   </div>)
+}
+
+const NodeVirtualKey = ({uniqueName,node,display,tooltip,reference,className}) => {
+  return (
+    <div>
+      <button data-tooltip-id={uniqueName} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addNode(node)}>
+            {`\\[${display} \\]`}
+        </button>
+        {tooltip && <Tooltip id={uniqueName} />}
+    </div>
+  );
 }
 
 const VirtualKey = ({symbol,display,tooltip,reference,className}) => {
