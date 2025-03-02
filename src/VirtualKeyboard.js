@@ -5,7 +5,7 @@ import Keyboard from "./Keyboard";
 import MathTree from "./MathTree";
 
 const GREEK_LETTERS = ["\\alpha","\\beta","\\gamma","\\Gamma","\\delta","\\Delta","\\epsilon","\\varepsilon","\\zeta","\\eta","\\theta","\\vartheta","\\Theta","\\iota","\\kappa","\\varkappa","\\lambda","\\Lambda","\\mu","\\nu","\\xi","\\Xi","\\pi","\\Pi","\\rho","\\varrho","\\sigma","\\Sigma","\\tau","\\upsilon","\\Upsilon","\\phi","\\varphi","\\Phi","\\chi","\\psi","\\Psi","\\omega","\\Omega"];
-const MISC = ["\\exists","\\nexists","\\forall","\\aleph","\\hbar","\\ell","\\partial","\\Re","\\Im","\\imath","\\jmath","\\top","\\infty","\\nabla","\\cdots","\\emptyset","\\varnothing","\\square"];
+const MISC = ["\\exists","\\nexists","\\forall","\\aleph","\\hbar","\\ell","\\partial","\\Re","\\Im","\\imath","\\jmath","\\top","\\infty","\\nabla","\\cdots","\\emptyset","\\varnothing","\\dagger","\\therefore","\\because","\\square"];
 const ARROWS = ["\\rightarrow","\\mapsto","\\Rightarrow","\\leftarrow","\\Leftarrow","\\leftrightarrow","\\Leftrightarrow","\\rightleftharpoons","\\rightleftarrows","\\downarrow","\\Downarrow","\\uparrow","\\Uparrow","\\updownarrow","\\Updownarrow","\\nearrow","\\searrow","\\swarrow","\\nwarrow",];// To be completed...
 // I should have a default and extended table for some of the categories
 const ACCENTS = Keyboard.ACCENTS;
@@ -14,6 +14,10 @@ const ENVIRONMENT_NAMES = ["matrix","cases","pmatrix","bmatrix","Bmatrix","vmatr
 const ENVIRONMENT_DISPLAY_INNER = ". & . \\\\ . & .";
 
 const DELIMITERS = ["\\lvert","\\lVert","\\lfloor","\\lceil","\\langle"];
+
+const BINARY_OPERATORS = ["\\times","\\div","\\cdot","\\circ","\\pm","\\mp","\\oplus","\\otimes","\\cap","\\cup","\\sqcap","\\sqcup","\\wedge","\\vee"];
+const RELATIONS = ["\\equiv","\\cong","\\neq","\\sim","\\approx","\\propto","\\triangleq","\\ncong","\\perp","\\parallel","\\nparallel"];
+const ORDER = ["\\leq","\\geq","\\ll","\\gg","\\subset","\\supset","\\subseteq","\\supseteq","\\in","\\ni","\\notin","\\lll","\\ggg","\\lesssim","\\gtrsim","\\nless","\\ngtr","\\nleq","\\ngeq","\\not\\subset","\\not\\supset","\\nsubseteq","\\nsupseteq","\\mid","\\nmid"];
 
 const VirtualKeyboard = ({ formulaEditorRef }) => {
   const reversedShortcuts = Object.fromEntries(Object.entries(Keyboard.SHORTCUTS).map(([key, value]) => [value, key]));
@@ -25,6 +29,9 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
       <SimpleCategory title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <SimpleCategory title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={10}/>
       <SimpleCategory title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <SimpleCategory title="Binary operators" symbols={BINARY_OPERATORS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <SimpleCategory title="Equivalence relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <SimpleCategory title="Ordering relations" symbols={ORDER} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <div>
         <h3>Accents</h3>
         <div className="key-row">
@@ -48,13 +55,14 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
 };
 
 const FirstRow = ({reference,getShortcut}) => {
+  const PLACEHOLDER_STRING = "\\class{math-placeholder}{\\square}"
   return (
     <div>
       <h3>Common constructs</h3>
       <div className="key-row">
-        <NodeVirtualKey uniqueName="squared" display="\square^2" node={{symbol:"^",children:[{symbol:"2"}]}} reference={reference}/>
-        <VirtualKey symbol="^" display="A^\square" tooltip="(^)"  reference={reference}/>
-        <VirtualKey symbol="_" display="A_\square" tooltip="(_)"  reference={reference}/>
+        <NodeVirtualKey uniqueName="squared" display={`${PLACEHOLDER_STRING}^2`} node={{symbol:"^",children:[{symbol:"2"}]}} reference={reference}/>
+        <VirtualKey symbol="^" display={`A^${PLACEHOLDER_STRING}`} tooltip="(^)"  reference={reference}/>
+        <VirtualKey symbol="_" display={`A_${PLACEHOLDER_STRING}`} tooltip="(_)"  reference={reference}/>
         <SymbolVirtualKey symbol="\frac" tooltip={getShortcut("\\frac")} reference={reference} className="x-small-text"/>
         <SymbolVirtualKey symbol="\sqrt" tooltip={getShortcut("\\sqrt")} reference={reference} className="small-text"/>
         <NodeVirtualKey uniqueName="squared" display={MathTree.getFormula(MathTree.FracLike("\\sqrt",true))} node={MathTree.FracLike("\\sqrt")} reference={reference} className="small-text"/>

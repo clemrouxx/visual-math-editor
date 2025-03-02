@@ -65,6 +65,7 @@ function getFormula(node,forEditor){
     const invisible = Keyboard.INVISIBLE_SYMBOLS.includes(node.symbol);
     if (forEditor && !node.isroot && !invisible) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
     if (node.selected && forEditor) string = `\\class{math-selected}{${string}}`;
+    else if (node.isplaceholder) string = `\\class{math-placeholder}{${string}}`;
     return string;
 }
 

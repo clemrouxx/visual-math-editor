@@ -75,6 +75,10 @@ button mjx-container[jax="CHTML"][display="true"]{
   color: var(--selection-color);
 }
 
+.math-placeholder{
+  opacity: 0.5;
+}
+
 .virtual-keyboard{
   display: flex;
   flex-wrap: wrap;
@@ -86,7 +90,7 @@ button mjx-container[jax="CHTML"][display="true"]{
 }
 
 .virtual-keyboard > div{
-  max-width: 30rem;
+  max-width: 26rem;
 }
 
 .virtual-keyboard .key-row{
