@@ -11,6 +11,9 @@ const ARROWS = ["\\rightarrow","\\mapsto","\\Rightarrow","\\leftarrow","\\Leftar
 // I should have a default and extended table for some of the categories
 const ACCENTS = Keyboard.ACCENTS;
 
+const ENVIRONMENT_NAMES = ["matrix","cases","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
+const ENVIRONMENT_DISPLAY_INNER = ". & . \\\\ . & .";
+
 const VirtualKeyboard = ({ formulaEditorRef }) => {
   const reversedShortcuts = Object.fromEntries(Object.entries(Keyboard.SHORTCUTS).map(([key, value]) => [value, key]));
   const getShortcut = (symbol) => reversedShortcuts[symbol] ? `(${reversedShortcuts[symbol]})` : undefined;
@@ -26,6 +29,15 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
         <div className="key-row">
           {ACCENTS.map((symbol, index) => (
             <SymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={formulaEditorRef} key={index}/>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3>Multiline environments</h3>
+        <div className="key-row">
+          {ENVIRONMENT_NAMES.map((name, index) => (
+            <VirtualKey symbol={`\\begin{${name}}`} display={`\\begin{${name}}${ENVIRONMENT_DISPLAY_INNER}\\end{${name}}`} tooltip={getShortcut(`\\begin{${name}}`)} reference={formulaEditorRef} key={index} className="x-small-text"/>
           ))}
         </div>
       </div>

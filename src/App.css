@@ -81,6 +81,10 @@ button mjx-container[jax="CHTML"][display="true"]{
   justify-content: space-around;
 }
 
+.virtual-keyboard h3{
+  margin: 0.5em;
+}
+
 .virtual-keyboard > div{
   max-width: 28rem;
 }
@@ -96,9 +100,9 @@ button mjx-container[jax="CHTML"][display="true"]{
 .virtual-keyboard button{
   font-size: large;
   min-width: 2rem;
-  height: 2rem;
+  min-height: 2rem;
   margin: 0;
-  padding: 0.2em;
+  padding: 0.4em;
 }
 
 .virtual-keyboard .small-text{
