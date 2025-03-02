@@ -46,11 +46,11 @@ const FirstRow = ({reference,getShortcut}) => {
       </div>
       <h3>Styles</h3>
       <div className="key-row">
-        <SymbolVirtualKey symbol="\mathbf" tooltip={getShortcut("\\mathbf")} reference={reference} />
-        <SymbolVirtualKey symbol="\mathcal" tooltip={getShortcut("\\mathcal")} reference={reference} />
-        <SymbolVirtualKey symbol="\mathbb" tooltip={getShortcut("\\mathbb")} reference={reference} />
-        <SymbolVirtualKey symbol="\mathfrak" tooltip={getShortcut("\\mathfrak")} reference={reference} />
-        <SymbolVirtualKey symbol="\mathsf" tooltip={getShortcut("\\mathsf")} reference={reference} />
+        <VirtualKey symbol="\mathbf" display="\mathbf{A}" tooltip={getShortcut("\\mathbf")} reference={reference} />
+        <VirtualKey symbol="\mathcal" display="\mathcal{A}" tooltip={getShortcut("\\mathcal")} reference={reference} />
+        <VirtualKey symbol="\mathbb" display="\mathbb{A}" tooltip={getShortcut("\\mathbb")} reference={reference} />
+        <VirtualKey symbol="\mathfrak" display="\mathfrak{A}" tooltip={getShortcut("\\mathfrak")} reference={reference} />
+        <VirtualKey symbol="\mathsf" display="\mathsf{A}" tooltip={getShortcut("\\mathsf")} reference={reference} />
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import Keyboard from "./Keyboard";
 
 const CURSOR = {iscursor:true,symbol:"|"};
 const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"}
-const LETTERPLACEHOLDER = {isplaceholder:true,symbol:"A"}
+const LETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"}
 const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[PLACEHOLDER]:[],nodeletionfromright:true}};
 const LimLike = (symbol,addplaceholder=false) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
