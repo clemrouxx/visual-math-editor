@@ -1,5 +1,5 @@
 import { MathJax } from "better-react-mathjax";
-import React, { Children, useState } from "react";
+import React, { useState } from "react";
 import { Tooltip } from "react-tooltip";
 import Keyboard from "./Keyboard";
 import MathTree from "./MathTree";

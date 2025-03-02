@@ -3,6 +3,7 @@ import Keyboard from "./Keyboard";
 const CURSOR = {iscursor:true,symbol:"|"};
 const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"}
 const LETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"}
+
 const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[PLACEHOLDER]:[],nodeletionfromright:true}};
 const LimLike = (symbol,addplaceholder=false) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
@@ -17,7 +18,6 @@ const FracLike = (symbol,addplaceholder=false) => {
   else if (symbol === "\\sqrt") childrenstring = "[§0]{§1}";
   return {symbol,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,childrenstring}
 };
-const SumLike = (symbol,addplaceholder=false) => {return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,issumlike:true}};
 const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:Keyboard.ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true}};
 
 function getNode(symbol,rawtext=false,addplaceholder=false){
@@ -217,6 +217,7 @@ function insertAtCursor(node,newnode){
     var inserter = (children) => {return {children:children.map((child) => child.iscursor ? newnode : child),stopModify:children.some(child => child.iscursor)};};
   }
   else{
+    // eslint-disable-next-line
     var inserter = (children) => {
       const index = children.findIndex(child => child.iscursor);
       if (index !== -1) {

@@ -4,9 +4,9 @@
 const DIRECT_INPUT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+=*,.'`<>/_^([|!?\";:&";
 const ESCAPED_SYMBOLS = "%{$#"; // Will be automatically preceded by a backlash
 
-const INVISIBLE_SYMBOLS = ["_","^","\\\\","&"];
+const INVISIBLE_SYMBOLS = ["_","^","\\\\","&"]; // Don't have classes attached
 
-// The following lists / dictionnaries determine the properties of the inserted node (regarding selection, cursor placement, deletion...)
+// The following lists / dictionnaries determine the propesrties of the inserted node (regarding selection, cursor placement, deletion...)
 // Include the core and AMS commands
 const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow"];
 const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","\\tilde","\\breve","\\acute","\\grave"];
