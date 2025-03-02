@@ -37,7 +37,7 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
 const FirstRow = ({reference,getShortcut}) => {
   return (
     <div>
-      <h3>Common symbols</h3>
+      <h3>Common constructs</h3>
       <div className="key-row">
         <NodeVirtualKey uniqueName="squared" display="\square^2" node={{symbol:"^",children:[{symbol:"2"}]}} reference={reference}/>
         <VirtualKey symbol="^" display="A^\square" tooltip="(^)"  reference={reference}/>
@@ -53,6 +53,7 @@ const FirstRow = ({reference,getShortcut}) => {
         <VirtualKey symbol="\mathbb" display="\mathbb{A}" tooltip={getShortcut("\\mathbb")} reference={reference} />
         <VirtualKey symbol="\mathfrak" display="\mathfrak{A}" tooltip={getShortcut("\\mathfrak")} reference={reference} />
         <VirtualKey symbol="\mathsf" display="\mathsf{A}" tooltip={getShortcut("\\mathsf")} reference={reference} />
+        <VirtualKey symbol="\text" display="\text{Tt}" tooltip={getShortcut("\\text")} reference={reference} />
       </div>
     </div>
   );
