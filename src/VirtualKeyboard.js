@@ -1,5 +1,5 @@
 import { MathJax } from "better-react-mathjax";
-import React, { Children } from "react";
+import React, { Children, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import Keyboard from "./Keyboard";
 import MathTree from "./MathTree";
@@ -23,7 +23,7 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
     <div className="virtual-keyboard">
       <FirstRow reference={formulaEditorRef} getShortcut={getShortcut} />
       <SimpleCategory title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <SimpleCategory title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <SimpleCategory title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={3}/>
       <SimpleCategory title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <div>
         <h3>Accents</h3>
@@ -77,14 +77,17 @@ const FirstRow = ({reference,getShortcut}) => {
   );
 }
 
-const SimpleCategory = ({title,symbols,getShortcut,reference}) => {
+const SimpleCategory = ({title,symbols,getShortcut,reference,threasholdIndex}) => {
+  const [showAll,setShowAll] = useState(false);
+
   return (<div>
     <h3>{title}</h3>
     <div className="key-row">
       {symbols.map((symbol, index) => (
-        <SimpleSymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index}/>
+        <SimpleSymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index} className={threasholdIndex && index>threasholdIndex && !showAll ?"hidden":""}/>
       ))}
     </div>
+    {threasholdIndex && <button onClick={()=>{setShowAll(!showAll)}}>{showAll?"Show less":"Show all"}</button>}
   </div>)
 }
 
@@ -111,9 +114,9 @@ const VirtualKey = ({symbol,display,tooltip,reference,className}) => {
   );
 }
 
-const SimpleSymbolVirtualKey = ({symbol,tooltip,reference}) => {
+const SimpleSymbolVirtualKey = ({symbol,tooltip,reference,className}) => {
   return (
-    <VirtualKey symbol={symbol} display={symbol} tooltip={tooltip} reference={reference} />
+    <VirtualKey symbol={symbol} display={symbol} tooltip={tooltip} reference={reference} className={className}/>
   );
 }
 

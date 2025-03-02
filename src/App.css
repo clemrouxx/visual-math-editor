@@ -116,3 +116,7 @@ button mjx-container[jax="CHTML"][display="true"]{
 .virtual-keyboard .x-small-text{
   font-size:x-small;
 }
+
+.hidden{
+  display: none;
+}
