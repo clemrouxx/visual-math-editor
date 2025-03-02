@@ -23,7 +23,7 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
     <div className="virtual-keyboard">
       <FirstRow reference={formulaEditorRef} getShortcut={getShortcut} />
       <SimpleCategory title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <SimpleCategory title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={3}/>
+      <SimpleCategory title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={10}/>
       <SimpleCategory title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <div>
         <h3>Accents</h3>
@@ -87,7 +87,7 @@ const SimpleCategory = ({title,symbols,getShortcut,reference,threasholdIndex}) =
         <SimpleSymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index} className={threasholdIndex && index>threasholdIndex && !showAll ?"hidden":""}/>
       ))}
     </div>
-    {threasholdIndex && <button onClick={()=>{setShowAll(!showAll)}}>{showAll?"Show less":"Show all"}</button>}
+    {threasholdIndex && <button className="drawer-handle" onClick={()=>{setShowAll(!showAll)}}>{showAll?"Show less":"Show all"}</button>}
   </div>)
 }
 

@@ -120,3 +120,9 @@ button mjx-container[jax="CHTML"][display="true"]{
 .hidden{
   display: none;
 }
+
+button.drawer-handle{
+  opacity: 0.7;
+  margin: 0.2rem;
+  font-size: medium;
+}
