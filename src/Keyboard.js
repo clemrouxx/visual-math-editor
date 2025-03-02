@@ -31,7 +31,7 @@ const SHORTCUTS = {
   Del:"\\Delta",
   eps:"\\epsilon",
   veps:"\\varepsilon",
-  zeta:"\\zeta",
+  zet:"\\zeta",
   eta:"\\eta",
   the:"\\theta",
   vthe:"\\vartheta",
@@ -79,7 +79,6 @@ const SHORTCUTS = {
   Up:"\\Uparrow",
   Down:"\\Downarrow",
   maps:"\\mapsto",
-  // diagonal arrows ?
 
   // Misc symbols
   inf:"\\infty",
@@ -139,6 +138,7 @@ const SHORTCUTS = {
   dd:"\\ddot",
   bar:"\\bar",
   hat:"\\hat",
+  til:"\\tilde",
 
   // Styles
   C:"\\mathcal",
@@ -150,7 +150,8 @@ const SHORTCUTS = {
   fr:"\\frac",
 
   // Environments
-  pma:"\\begin{pmatrix}"
+  mat:"\\begin{pmatrix}",
+  cas:"\\begin{cases}"
 };
 
 
