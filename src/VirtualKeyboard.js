@@ -18,30 +18,9 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
     <MathJax>
     <div className="virtual-keyboard">
       <FirstRow reference={formulaEditorRef} getShortcut={getShortcut} />
-      <div>
-        <h3>Greek letters</h3>
-        <div className="key-row">
-          {GREEK_LETTERS.map((symbol, index) => (
-            <SimpleSymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={formulaEditorRef} key={index}/>
-          ))}
-        </div>
-      </div>
-      <div>
-        <h3>Miscellaneous</h3>
-        <div className="key-row">
-          {MISC.map((symbol, index) => (
-            <SimpleSymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={formulaEditorRef} key={index}/>
-          ))}
-        </div>
-      </div>
-      <div>
-        <h3>Arrows</h3>
-        <div className="key-row">
-          {ARROWS.map((symbol, index) => (
-            <SimpleSymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={formulaEditorRef} key={index}/>
-          ))}
-        </div>
-      </div>
+      <SimpleCategory title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <SimpleCategory title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <SimpleCategory title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <div>
         <h3>Accents</h3>
         <div className="key-row">
@@ -75,6 +54,17 @@ const FirstRow = ({reference,getShortcut}) => {
       </div>
     </div>
   );
+}
+
+const SimpleCategory = ({title,symbols,getShortcut,reference}) => {
+  return (<div>
+    <h3>{title}</h3>
+    <div className="key-row">
+      {symbols.map((symbol, index) => (
+        <SimpleSymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index}/>
+      ))}
+    </div>
+  </div>)
 }
 
 const VirtualKey = ({symbol,display,tooltip,reference,className}) => {
