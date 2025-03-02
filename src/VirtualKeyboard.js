@@ -5,7 +5,7 @@ import Keyboard from "./Keyboard";
 import MathTree from "./MathTree";
 
 const GREEK_LETTERS = ["\\alpha","\\beta","\\gamma","\\Gamma","\\delta","\\Delta","\\epsilon","\\varepsilon","\\zeta","\\eta","\\theta","\\vartheta","\\Theta","\\iota","\\kappa","\\varkappa","\\lambda","\\Lambda","\\mu","\\nu","\\xi","\\Xi","\\pi","\\Pi","\\rho","\\varrho","\\sigma","\\Sigma","\\tau","\\upsilon","\\Upsilon","\\phi","\\varphi","\\Phi","\\chi","\\psi","\\Psi","\\omega","\\Omega"];
-const MISC = ["\\exists","\\nexists","\\forall","\\aleph","\\hbar","\\ell","\\partial","\\Re","\\Im","\\imath","\\jmath","\\top","\\infty","\\nabla","\\cdots","\\emptyset","\\varnothing","\\dagger","\\therefore","\\because","\\square"];
+const MISC = ["\\infty","\\partial","\\forall","\\exists","\\nexists","\\varnothing","\\ell","\\nabla","\\triangle","\\angle","\\square","\\hbar","\\Im","\\Re","\\bigstar","\\complement","\\therefore","\\because","\\dots"]
 const ARROWS = ["\\rightarrow","\\mapsto","\\Rightarrow","\\leftarrow","\\Leftarrow","\\leftrightarrow","\\Leftrightarrow","\\rightleftharpoons","\\rightleftarrows","\\downarrow","\\Downarrow","\\uparrow","\\Uparrow","\\updownarrow","\\Updownarrow","\\nearrow","\\searrow","\\swarrow","\\nwarrow",];// To be completed...
 // I should have a default and extended table for some of the categories
 const ACCENTS = Keyboard.ACCENTS;
@@ -19,19 +19,22 @@ const BINARY_OPERATORS = ["\\times","\\div","\\cdot","\\circ","\\pm","\\mp","\\o
 const RELATIONS = ["\\equiv","\\cong","\\neq","\\sim","\\approx","\\propto","\\triangleq","\\ncong","\\perp","\\parallel","\\nparallel"];
 const ORDER = ["\\leq","\\geq","\\ll","\\gg","\\subset","\\supset","\\subseteq","\\supseteq","\\in","\\ni","\\notin","\\lll","\\ggg","\\lesssim","\\gtrsim","\\nless","\\ngtr","\\nleq","\\ngeq","\\not\\subset","\\not\\supset","\\nsubseteq","\\nsupseteq","\\mid","\\nmid"];
 
+const VARSIZE = ["\\sum","\\prod","\\int","\\iint","\\iiint","\\oint","\\bigcup","\\bigcap","\\bigoplus","\\bigotimes"];
+
 const VirtualKeyboard = ({ formulaEditorRef }) => {
   const reversedShortcuts = Object.fromEntries(Object.entries(Keyboard.SHORTCUTS).map(([key, value]) => [value, key]));
-  const getShortcut = (symbol) => reversedShortcuts[symbol] ? `(${reversedShortcuts[symbol]})` : undefined;
+  const getShortcut = (symbol) => reversedShortcuts[symbol] ? `${reversedShortcuts[symbol]} [Space]` : undefined;
   return (
     <MathJax>
     <div className="virtual-keyboard">
       <FirstRow reference={formulaEditorRef} getShortcut={getShortcut} />
       <SimpleCategory title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <SimpleCategory title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={10}/>
-      <SimpleCategory title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <SimpleCategory title="Binary operators" symbols={BINARY_OPERATORS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <SimpleCategory title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <SimpleCategory title="Equivalence relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <SimpleCategory title="Ordering relations" symbols={ORDER} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <SimpleCategory title="Variable-size symbols" symbols={VARSIZE} getShortcut={getShortcut} reference={formulaEditorRef} className="x-small-text"/>
+      <SimpleCategory title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <div>
         <h3>Accents</h3>
         <div className="key-row">
@@ -61,8 +64,8 @@ const FirstRow = ({reference,getShortcut}) => {
       <h3>Common constructs</h3>
       <div className="key-row">
         <NodeVirtualKey uniqueName="squared" display={`${PLACEHOLDER_STRING}^2`} node={{symbol:"^",children:[{symbol:"2"}]}} reference={reference}/>
-        <VirtualKey symbol="^" display={`A^${PLACEHOLDER_STRING}`} tooltip="(^)"  reference={reference}/>
-        <VirtualKey symbol="_" display={`A_${PLACEHOLDER_STRING}`} tooltip="(_)"  reference={reference}/>
+        <VirtualKey symbol="^" display={`A^${PLACEHOLDER_STRING}`} tooltip="^"  reference={reference}/>
+        <VirtualKey symbol="_" display={`A_${PLACEHOLDER_STRING}`} tooltip="_ (Underscore)"  reference={reference}/>
         <SymbolVirtualKey symbol="\frac" tooltip={getShortcut("\\frac")} reference={reference} className="x-small-text"/>
         <SymbolVirtualKey symbol="\sqrt" tooltip={getShortcut("\\sqrt")} reference={reference} className="small-text"/>
         <NodeVirtualKey uniqueName="squared" display={MathTree.getFormula(MathTree.FracLike("\\sqrt",true))} node={MathTree.FracLike("\\sqrt")} reference={reference} className="small-text"/>
@@ -85,14 +88,14 @@ const FirstRow = ({reference,getShortcut}) => {
   );
 }
 
-const SimpleCategory = ({title,symbols,getShortcut,reference,threasholdIndex}) => {
+const SimpleCategory = ({title,symbols,getShortcut,reference,threasholdIndex,className}) => {
   const [showAll,setShowAll] = useState(false);
 
   return (<div>
     <h3>{title}</h3>
     <div className="key-row">
       {symbols.map((symbol, index) => (
-        <SimpleSymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index} className={threasholdIndex && index>threasholdIndex && !showAll ?"hidden":""}/>
+        <SimpleSymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index} className={(threasholdIndex && index>threasholdIndex && !showAll ?"hidden":"") + " "+className}/>
       ))}
     </div>
     {threasholdIndex && <button className="drawer-handle" onClick={()=>{setShowAll(!showAll)}}>{showAll?"Show less":"Show all"}</button>}
