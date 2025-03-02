@@ -4,7 +4,6 @@ import { Tooltip } from "react-tooltip";
 import Keyboard from "./Keyboard";
 import MathTree from "./MathTree";
 
-const COMMON_SYMBOLS = ["^","_"];
 const GREEK_LETTERS = ["\\alpha","\\beta","\\gamma","\\Gamma","\\delta","\\Delta","\\epsilon","\\varepsilon","\\zeta","\\eta","\\theta","\\vartheta","\\Theta","\\iota","\\kappa","\\varkappa","\\lambda","\\Lambda","\\mu","\\nu","\\xi","\\Xi","\\pi","\\Pi","\\rho","\\varrho","\\sigma","\\Sigma","\\tau","\\upsilon","\\Upsilon","\\phi","\\varphi","\\Phi","\\chi","\\psi","\\Psi","\\omega","\\Omega"];
 const MISC = ["\\exists","\\nexists","\\forall","\\aleph","\\hbar","\\ell","\\partial","\\Re","\\Im","\\imath","\\jmath","\\top","\\infty","\\nabla","\\cdots","\\emptyset","\\varnothing","\\square"];
 const ARROWS = ["\\rightarrow","\\mapsto","\\Rightarrow","\\leftarrow","\\Leftarrow","\\leftrightarrow","\\Leftrightarrow","\\rightleftharpoons","\\rightleftarrows","\\downarrow","\\Downarrow","\\uparrow","\\Uparrow","\\updownarrow","\\Updownarrow","\\nearrow","\\searrow","\\swarrow","\\nwarrow",];// To be completed...
@@ -13,6 +12,8 @@ const ACCENTS = Keyboard.ACCENTS;
 
 const ENVIRONMENT_NAMES = ["matrix","cases","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
 const ENVIRONMENT_DISPLAY_INNER = ". & . \\\\ . & .";
+
+const DELIMITERS = ["\\lvert","\\lVert","\\lfloor","\\lceil","\\langle"];
 
 const VirtualKeyboard = ({ formulaEditorRef }) => {
   const reversedShortcuts = Object.fromEntries(Object.entries(Keyboard.SHORTCUTS).map(([key, value]) => [value, key]));
@@ -57,6 +58,11 @@ const FirstRow = ({reference,getShortcut}) => {
         <SymbolVirtualKey symbol="\frac" tooltip={getShortcut("\\frac")} reference={reference} className="x-small-text"/>
         <SymbolVirtualKey symbol="\sqrt" tooltip={getShortcut("\\sqrt")} reference={reference} className="small-text"/>
         <NodeVirtualKey uniqueName="squared" display={MathTree.getFormula(MathTree.FracLike("\\sqrt",true))} node={MathTree.FracLike("\\sqrt")} reference={reference} className="small-text"/>
+        </div>
+        <div className="key-row">
+        {DELIMITERS.map((symbol, index) => (
+          <SymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index}/>
+        ))}
       </div>
       <h3>Styles</h3>
       <div className="key-row">

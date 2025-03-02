@@ -7,7 +7,7 @@ const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[PLACEHOLDER]:[],nodeletionfromright:true}};
 const LimLike = (symbol,addplaceholder=false) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
 const Accent = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[LETTERPLACEHOLDER]:[],hassinglechild:true}}
-const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:[],adptative:true}};
+const Delimiter = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:addplaceholder?[PLACEHOLDER]:[],adptative:true}};
 const Modifier = (symbol,addplaceholder=false) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
 const FracLike = (symbol,addplaceholder=false) => {
   var childrenstring = "{§0}{§1}";
@@ -24,7 +24,7 @@ function getNode(symbol,rawtext=false,addplaceholder=false){
   if (rawtext) return Symbol(symbol);
   else if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol,addplaceholder);
   else if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)) return Accent(symbol,addplaceholder);
-  else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol);
+  else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol,addplaceholder);
   else if (Keyboard.MODIFIERS.includes(symbol)) return Modifier(symbol,addplaceholder);
   else if (Keyboard.FRAC_LIKE.includes(symbol) || Keyboard.SUM_LIKE.includes(symbol)) return FracLike(symbol,addplaceholder);
   else if (Keyboard.LIM_LIKE.includes(symbol)) return LimLike(symbol,addplaceholder);

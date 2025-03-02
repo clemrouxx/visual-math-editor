@@ -82,15 +82,15 @@ button mjx-container[jax="CHTML"][display="true"]{
 }
 
 .virtual-keyboard h3{
-  margin: 0.5em;
+  margin: 0.8em;
 }
 
 .virtual-keyboard > div{
-  max-width: 32rem;
+  max-width: 30rem;
 }
 
 .virtual-keyboard .key-row{
-  margin: 0.5em;
+  margin: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
