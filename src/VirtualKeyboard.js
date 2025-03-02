@@ -37,7 +37,7 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
         <h3>Multiline environments</h3>
         <div className="key-row">
           {ENVIRONMENT_NAMES.map((name, index) => (
-            <VirtualKey symbol={`\\begin{${name}}`} display={`\\begin{${name}}${ENVIRONMENT_DISPLAY_INNER}\\end{${name}}`} tooltip={getShortcut(`\\begin{${name}}`)} reference={formulaEditorRef} key={index} className="x-small-text"/>
+            <VirtualKey symbol={`\\begin{${name}}`} display={`\\begin{${name}}${ENVIRONMENT_DISPLAY_INNER}\\end{${name}}`} tooltip={getShortcut(`\\begin{${name}}`)} reference={formulaEditorRef} key={index} className="x-small-text larger-button"/>
           ))}
         </div>
       </div>

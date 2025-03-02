@@ -86,23 +86,27 @@ button mjx-container[jax="CHTML"][display="true"]{
 }
 
 .virtual-keyboard > div{
-  max-width: 28rem;
+  max-width: 32rem;
 }
-
 
 .virtual-keyboard .key-row{
   margin: 0.5em;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: stretch;
 }
 
 .virtual-keyboard button{
   font-size: large;
-  min-width: 2rem;
-  min-height: 2rem;
+  min-width: 2.2rem;
+  height: 2.2rem;
   margin: 0;
-  padding: 0.4em;
+  padding: 0.3em 0.5em;
+}
+
+.virtual-keyboard button.larger-button{
+  height: 2.7rem;
 }
 
 .virtual-keyboard .small-text{
