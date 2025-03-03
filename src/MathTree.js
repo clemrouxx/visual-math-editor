@@ -259,7 +259,8 @@ function adoptSelectedNode(tree,newnode){
 
 function alignAll(tree){ // Puts the whole tree (minus the root) in an align environment
   const alignNode = getNode("\\begin{align}");
-  alignNode.children = tree.children;
+  alignNode.children = tree.children.flatMap(n => (n.symbol==="="?[getNode("&"),n]:[n])); // Put '&' in front of any '='
+  console.log(alignNode)
   tree.children = [alignNode];
   return tree;
 }
