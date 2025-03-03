@@ -10,7 +10,7 @@ const ARROWS = ["\\rightarrow","\\mapsto","\\Rightarrow","\\leftarrow","\\Leftar
 // I should have a default and extended table for some of the categories
 const ACCENTS = Keyboard.ACCENTS;
 
-const ENVIRONMENT_NAMES = ["align","cases","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
+const ENVIRONMENT_NAMES = ["cases","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
 const ENVIRONMENT_DISPLAY_INNER = ". & . \\\\ . & .";
 
 const DELIMITERS = ["\\lvert","\\lVert","\\lfloor","\\lceil","\\langle"];
@@ -20,6 +20,7 @@ const RELATIONS = ["\\equiv","\\cong","\\neq","\\sim","\\approx","\\propto","\\t
 const ORDER = ["\\leq","\\geq","\\ll","\\gg","\\subset","\\supset","\\subseteq","\\supseteq","\\in","\\ni","\\notin","\\lll","\\ggg","\\lesssim","\\gtrsim","\\nless","\\ngtr","\\nleq","\\ngeq","\\not\\subset","\\not\\supset","\\nsubseteq","\\nsupseteq","\\mid","\\nmid"];
 
 const VARSIZE = ["\\sum","\\prod","\\int","\\iint","\\iiint","\\oint","\\bigcup","\\bigcap","\\bigoplus","\\bigotimes"];
+const CONSTRUCTS = VARSIZE.concat("\\overbrace","\\underbrace","\\widehat","\\overrightarrow","\\ket","\\bra");
 
 const VirtualKeyboard = ({ formulaEditorRef }) => {
   const reversedShortcuts = Object.fromEntries(Object.entries(Keyboard.SHORTCUTS).map(([key, value]) => [value, key]));
@@ -28,21 +29,14 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
     <MathJax>
     <div className="virtual-keyboard">
       <FirstRow reference={formulaEditorRef} getShortcut={getShortcut} />
-      <SimpleCategory title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <SimpleCategory title="Binary operators" symbols={BINARY_OPERATORS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <SimpleCategory title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <SimpleCategory title="Equivalence relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <SimpleCategory title="Ordering relations" symbols={ORDER} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <SimpleCategory title="Variable-size symbols" symbols={VARSIZE} getShortcut={getShortcut} reference={formulaEditorRef} className="x-small-text"/>
-      <SimpleCategory title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <div>
-        <h3>Accents</h3>
-        <div className="key-row">
-          {ACCENTS.map((symbol, index) => (
-            <SymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={formulaEditorRef} key={index}/>
-          ))}
-        </div>
-      </div>
+      <Category title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Ordering relations" symbols={ORDER} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Binary operators" symbols={BINARY_OPERATORS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Equivalence relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Other constructs" symbols={CONSTRUCTS} getShortcut={getShortcut} reference={formulaEditorRef} className="x-small-text larger-button"/>
+      <Category title="Accents" symbols={ACCENTS} getShortcut={getShortcut} reference={formulaEditorRef}/>
 
       <div>
         <h3>Multiline environments</h3>
@@ -88,14 +82,15 @@ const FirstRow = ({reference,getShortcut}) => {
   );
 }
 
-const SimpleCategory = ({title,symbols,getShortcut,reference,threasholdIndex,className}) => {
+
+const Category = ({title,symbols,getShortcut,reference,threasholdIndex,className}) => {
   const [showAll,setShowAll] = useState(false);
 
   return (<div>
     <h3>{title}</h3>
     <div className="key-row">
       {symbols.map((symbol, index) => (
-        <SimpleSymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index} className={(threasholdIndex && index>threasholdIndex && !showAll ?"hidden":"") + " "+className}/>
+        <SymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index} className={(threasholdIndex && index>threasholdIndex && !showAll ?"hidden":"") + " "+className}/>
       ))}
     </div>
     {threasholdIndex && <button className="drawer-handle" onClick={()=>{setShowAll(!showAll)}}>{showAll?"Show less":"Show all"}</button>}
@@ -116,18 +111,9 @@ const NodeVirtualKey = ({uniqueName,node,display,tooltip,reference,className}) =
 const VirtualKey = ({symbol,display,tooltip,reference,className}) => {
   const tooltipId = symbol.replace(" ","__").replace("\\","--");// Necessary replacement to have a valid (but still unique) id
   return (
-    <div>
       <button data-tooltip-id={tooltipId} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addSymbol(symbol)}>
-            {`\\[${display} \\]`}
-        </button>
-        {tooltip && <Tooltip id={tooltipId} />}
-    </div>
-  );
-}
-
-const SimpleSymbolVirtualKey = ({symbol,tooltip,reference,className}) => {
-  return (
-    <VirtualKey symbol={symbol} display={symbol} tooltip={tooltip} reference={reference} className={className}/>
+            {`\\[${display} \\]`} {tooltip && <Tooltip id={tooltipId} />}
+      </button>
   );
 }
 

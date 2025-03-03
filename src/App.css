@@ -24,6 +24,8 @@ h1{
   margin: 1rem;
 }
 
+
+
 .menu button{
   margin: 0;
 }
@@ -143,4 +145,8 @@ button.drawer-handle{
   opacity: 0.7;
   margin: 0.2rem;
   font-size: medium;
+}
+
+.react-tooltip{
+  font-size: 12px !important;
 }
