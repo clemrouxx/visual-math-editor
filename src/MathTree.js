@@ -257,6 +257,13 @@ function adoptSelectedNode(tree,newnode){
   return newtree;
 }
 
+function alignAll(tree){ // Puts the whole tree (minus the root) in an align environment
+  const alignNode = getNode("\\begin{align}");
+  alignNode.children = tree.children;
+  tree.children = [alignNode];
+  return tree;
+}
+
 function removeCursor(tree){
   return modifyChildren(tree,children => {return {children:children.filter(child=>!(child.iscursor)),stopModify:children.some(c=>c.iscursor)}}).node;
 }
@@ -368,4 +375,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,FracLike,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut}
+export default {CURSOR,FracLike,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}

@@ -10,7 +10,7 @@ const ARROWS = ["\\rightarrow","\\mapsto","\\Rightarrow","\\leftarrow","\\Leftar
 // I should have a default and extended table for some of the categories
 const ACCENTS = Keyboard.ACCENTS;
 
-const ENVIRONMENT_NAMES = ["matrix","cases","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
+const ENVIRONMENT_NAMES = ["align","cases","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
 const ENVIRONMENT_DISPLAY_INNER = ". & . \\\\ . & .";
 
 const DELIMITERS = ["\\lvert","\\lVert","\\lfloor","\\lceil","\\langle"];

@@ -16,7 +16,7 @@ const MathComponent = forwardRef((props,ref) => {
         addNode(newnode);
     }
 
-    useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({ // Can be called by the VirtualKeyboard for example
         addSymbol,addNode
     }));
     
@@ -52,10 +52,9 @@ const MathComponent = forwardRef((props,ref) => {
     const handleClick =  (event) => {
         event.preventDefault();
         event.stopPropagation();// Avoids problems with focusing
-        // We need to go up the tree until we find an element with id 'math-...'
         
         setFocused(true);
-        var element = event.target;
+        var element = event.target; // We need to go up the tree until we find an element with id 'math-...'
         while (!element.id || element.id.split("-")[0]!=="math") element = element.parentElement;
         var id = parseInt(element.id.split("-").pop());
         var newtree = MathTree.removeCursor(mathTree);
@@ -68,9 +67,11 @@ const MathComponent = forwardRef((props,ref) => {
         // We need to check if we are in a "raw text" area and in cursor mode
         // I take this opportunity to check if the parent is a multiline environment
         var isParentMultiline = false;
+        var isParentRoot = false;
         if (editMode==="cursor"){
             const parent = MathTree.findCursorParent(mathTree);
             if (parent.ismultiline) isParentMultiline=true;
+            if (parent.isroot) isParentRoot=true;
             if (parent.parseastext && event.key.length===1){
                 event.preventDefault();
                 addSymbol(event.key,true);
@@ -102,6 +103,10 @@ const MathComponent = forwardRef((props,ref) => {
                     case "Enter":
                         if (isParentMultiline){
                             event.preventDefault();
+                            addSymbol("\\\\");
+                        }
+                        else if (isParentRoot){//AutoAlign
+                            setMathTree(MathTree.alignAll(mathTree));
                             addSymbol("\\\\");
                         }
                         break;
