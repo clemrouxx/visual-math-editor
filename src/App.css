@@ -122,7 +122,6 @@ button mjx-container[jax="CHTML"][display="true"]{
   min-width: 2.2rem;
   height: 2.2rem;
   margin: 0;
-  padding: 0.3em 0.5em;
 }
 
 .virtual-keyboard button.larger-button{
@@ -142,7 +141,7 @@ button mjx-container[jax="CHTML"][display="true"]{
 }
 
 button.drawer-handle{
-  opacity: 0.7;
+  opacity: 0.6;
   margin: 0.2rem;
   font-size: medium;
 }

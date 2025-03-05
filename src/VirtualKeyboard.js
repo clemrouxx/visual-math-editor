@@ -22,7 +22,7 @@ const ORDER = ["\\leq","\\geq","\\ll","\\gg","\\subset","\\supset","\\subseteq",
 const VARSIZE = ["\\sum","\\prod","\\int","\\iint","\\iiint","\\oint","\\bigcup","\\bigcap","\\bigoplus","\\bigotimes"];
 const CONSTRUCTS = VARSIZE.concat("\\overbrace","\\underbrace","\\widehat","\\overrightarrow","\\ket","\\bra");
 
-const NAMED_FUNCTIONS = ["\\exp","\\log","\\min","\\max","\\arg","\\lim","\\inf","\\sup","\\cos","\\sin","\\tan","\\arccos","\\arcsin","\\arctan","\\cot","\\sec","\\cosh","\\sinh","\\tanh","\\ker","\\det","\\deg"];
+const NAMED_FUNCTIONS = ["\\exp","\\log","\\min","\\max","\\arg","\\lim","\\cos","\\sin","\\tan","\\arccos","\\arcsin","\\arctan","\\cosh","\\sinh","\\tanh","\\det","\\ker","\\inf","\\sup","\\deg","\\cot","\\sec"];
 
 const VirtualKeyboard = ({ formulaEditorRef }) => {
   const reversedShortcuts = Object.fromEntries(Object.entries(Keyboard.SHORTCUTS).map(([key, value]) => [value, key]));
@@ -38,7 +38,7 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
       <Category title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <Category title="Equivalence relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <Category title="Other constructs" symbols={CONSTRUCTS} getShortcut={getShortcut} reference={formulaEditorRef} className="x-small-text larger-button"/>
-      <Category title="Functions" symbols={NAMED_FUNCTIONS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Functions" symbols={NAMED_FUNCTIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15}/>
       <Category title="Accents" symbols={ACCENTS} getShortcut={getShortcut} reference={formulaEditorRef}/>
 
       <div>
