@@ -149,6 +149,29 @@ const SHORTCUTS = {
 
   fr:"\\frac",
 
+  // Named functions
+  exp:"\\exp",
+  log:"\\log",
+  min:"\\min",
+  max:"\\max",
+  arg:"\\arg",
+  sup:"\\sup",
+  cos:"\\cos",
+  sin:"\\sin",
+  tan:"\\tan",
+  acos:"\\arccos",
+  asin:"\\arcsin",
+  atan:"\\arctan",
+  cot:"\\cot",
+  sec:"\\sec",
+  ch:"\\cosh",
+  sh:"\\sinh",
+  th:"\\tanh",
+  ket:"\\ker",
+  det:"\\det",
+  deg:"\\deg",
+
+
   // Environments
   mat:"\\begin{pmatrix}",
   cas:"\\begin{cases}"
