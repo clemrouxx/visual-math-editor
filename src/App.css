@@ -57,6 +57,9 @@ button mjx-container[jax="CHTML"][display="true"]{
   border: solid grey 1px;
   font-size: larger;
   margin: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .formula-editor.unfocused{
@@ -66,6 +69,12 @@ button mjx-container[jax="CHTML"][display="true"]{
 .formula-editor.focused{
   background-color: var(--bg-color);
 }
+
+.formula-editor .math-display{
+  padding: 0 3rem;
+  flex-grow: 1;
+}
+
 
 .math-cursor{
   color: var(--cursor-color);
@@ -107,6 +116,10 @@ button mjx-container[jax="CHTML"][display="true"]{
 
 .virtual-keyboard > div{
   max-width: 22rem;
+}
+
+.virtual-keyboard > div.wide-category{
+  max-width: 30rem;
 }
 
 .virtual-keyboard .key-row{

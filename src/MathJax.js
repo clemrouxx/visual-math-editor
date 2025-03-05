@@ -225,16 +225,21 @@ const MathComponent = forwardRef((props,ref) => {
 
   return (
       <div className={`formula-editor ${focused ? "focused" : "unfocused"}`} ref={domRef}>
-        <MathJax>{"\\[ " + formula + " \\]"}</MathJax>
-        <div>{command}</div>
-        <button
-            onClick={(e) => {
-            e.stopPropagation();
-            copyToClipboard(); // Copy message to clipboard
-            }}
-        >
-            Copy LaTeX to clipboard
-        </button>
+        
+        <MathJax className="math-display">{"\\[ " + formula + " \\]"}</MathJax>
+        
+        <div>
+            <button className="formula-copy"
+                onClick={(e) => {
+                e.stopPropagation();
+                copyToClipboard(); // Copy message to clipboard
+                }}
+            >
+                Copy LaTeX <br/> to clipboard
+            </button>
+            <div>{command}</div>
+        </div>
+        
       </div>
   );
 });

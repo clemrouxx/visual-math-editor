@@ -31,14 +31,14 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
     <MathJax>
     <div className="virtual-keyboard">
       <FirstRow reference={formulaEditorRef} getShortcut={getShortcut} />
-      <Category title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef} className="wide-category"/>
       <Category title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={13}/>
       <Category title="Ordering relations" symbols={ORDER} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <Category title="Binary operators" symbols={BINARY_OPERATORS} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <Category title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <Category title="Equivalence relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <Category title="Other constructs" symbols={CONSTRUCTS} getShortcut={getShortcut} reference={formulaEditorRef} className="x-small-text larger-button"/>
-      <Category title="Functions" symbols={NAMED_FUNCTIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15}/>
+      <Category title="Other constructs" symbols={CONSTRUCTS} getShortcut={getShortcut} reference={formulaEditorRef} keyClassName="x-small-text larger-button"/>
+      <Category title="Functions" symbols={NAMED_FUNCTIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15} className="wide-category"/>
       <Category title="Accents" symbols={ACCENTS} getShortcut={getShortcut} reference={formulaEditorRef}/>
 
       <div>
@@ -86,14 +86,14 @@ const FirstRow = ({reference,getShortcut}) => {
 }
 
 
-const Category = ({title,symbols,getShortcut,reference,threasholdIndex,className}) => {
+const Category = ({title,symbols,getShortcut,reference,threasholdIndex,className,keyClassName}) => {
   const [showAll,setShowAll] = useState(false);
 
-  return (<div>
+  return (<div className={className}>
     <h3>{title}</h3>
-    <div className="key-row">
+    <div className={"key-row "}>
       {symbols.map((symbol, index) => (
-        <SymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index} className={(threasholdIndex && index>threasholdIndex && !showAll ?"hidden":"") + " "+className}/>
+        <SymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index} className={(threasholdIndex && index>threasholdIndex && !showAll ?"hidden":"") + " "+keyClassName}/>
       ))}
     </div>
     {threasholdIndex && <button className="drawer-handle" onClick={()=>{setShowAll(!showAll)}}>{showAll?"Show less":"Show all"}</button>}
