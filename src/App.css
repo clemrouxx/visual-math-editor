@@ -60,6 +60,8 @@ button mjx-container[jax="CHTML"][display="true"]{
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  position: sticky;
+  top: 0;
 }
 
 .formula-editor.unfocused{
@@ -120,9 +122,11 @@ button mjx-container[jax="CHTML"][display="true"]{
   padding: 0.4rem;
   border-radius: 0.3rem;
   margin: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-
-
 
 .virtual-keyboard > div.wide-category{
   max-width: 30rem;
