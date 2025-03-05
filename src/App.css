@@ -107,20 +107,38 @@ button mjx-container[jax="CHTML"][display="true"]{
 .virtual-keyboard{
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 .virtual-keyboard h3{
-  margin: 0.8em;
+  margin: 0.5rem;
+  margin-top: 0rem;
 }
 
 .virtual-keyboard > div{
-  max-width: 22rem;
+  max-width: 21rem;
+  padding: 0.4rem;
+  border-radius: 0.3rem;
+  margin: 0.3rem;
 }
+
+
 
 .virtual-keyboard > div.wide-category{
   max-width: 30rem;
 }
+
+.virtual-keyboard > div:nth-child(1) { background-color: rgba(255, 99, 71, 0.2); }    /* Tomato */
+.virtual-keyboard > div:nth-child(2) { background-color: rgba(30, 144, 255, 0.2); }   /* Dodger Blue */
+.virtual-keyboard > div:nth-child(3) { background-color: rgba(50, 205, 50, 0.2); }    /* Lime Green */
+.virtual-keyboard > div:nth-child(4) { background-color: rgba(255, 165, 0, 0.2); }    /* Orange */
+.virtual-keyboard > div:nth-child(5) { background-color: rgba(138, 43, 226, 0.2); }   /* Blue Violet */
+.virtual-keyboard > div:nth-child(6) { background-color: rgba(255, 20, 147, 0.2); }   /* Deep Pink */
+.virtual-keyboard > div:nth-child(7) { background-color: rgba(70, 130, 180, 0.2); }   /* Steel Blue */
+.virtual-keyboard > div:nth-child(8) { background-color: rgba(46, 139, 87, 0.2); }    /* Sea Green */
+.virtual-keyboard > div:nth-child(9) { background-color: rgba(220, 20, 60, 0.2); }    /* Crimson */
+.virtual-keyboard > div:nth-child(10) { background-color: rgba(255, 215, 0, 0.2); }  
+.virtual-keyboard > div:nth-child(11) { background-color: rgba(255, 99, 71, 0.2); }    /* Tomato */
 
 .virtual-keyboard .key-row{
   margin: 0;

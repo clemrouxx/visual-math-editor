@@ -57,7 +57,7 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
 const FirstRow = ({reference,getShortcut}) => {
   const PLACEHOLDER_STRING = "\\class{math-placeholder}{\\square}"
   return (
-    <div>
+    <div className="first-row">
       <h3>Common constructs</h3>
       <div className="key-row">
         <NodeVirtualKey uniqueName="squared" display={`${PLACEHOLDER_STRING}^2`} node={{symbol:"^",children:[{symbol:"2"}]}} reference={reference}/>
