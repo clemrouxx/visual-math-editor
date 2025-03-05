@@ -6,7 +6,7 @@ import MathTree from "./MathTree";
 
 const GREEK_LETTERS = ["\\alpha","\\beta","\\gamma","\\Gamma","\\delta","\\Delta","\\epsilon","\\varepsilon","\\zeta","\\eta","\\theta","\\vartheta","\\Theta","\\iota","\\kappa","\\varkappa","\\lambda","\\Lambda","\\mu","\\nu","\\xi","\\Xi","\\pi","\\Pi","\\rho","\\varrho","\\sigma","\\Sigma","\\tau","\\upsilon","\\Upsilon","\\phi","\\varphi","\\Phi","\\chi","\\psi","\\Psi","\\omega","\\Omega"];
 const MISC = ["\\infty","\\partial","\\forall","\\exists","\\nexists","\\varnothing","\\ell","\\nabla","\\triangle","\\angle","\\square","\\hbar","\\Im","\\Re","\\bigstar","\\complement","\\therefore","\\because","\\dots"]
-const ARROWS = ["\\rightarrow","\\mapsto","\\Rightarrow","\\leftarrow","\\Leftarrow","\\leftrightarrow","\\Leftrightarrow","\\rightleftharpoons","\\rightleftarrows","\\downarrow","\\Downarrow","\\uparrow","\\Uparrow","\\updownarrow","\\Updownarrow","\\nearrow","\\searrow","\\swarrow","\\nwarrow",];// To be completed...
+const ARROWS = ["\\rightarrow","\\mapsto","\\Rightarrow","\\leftarrow","\\Leftarrow","\\leftrightarrow","\\Leftrightarrow","\\Longleftrightarrow","\\rightleftharpoons","\\rightleftarrows","\\downarrow","\\Downarrow","\\uparrow","\\updownarrow","\\Updownarrow","\\Uparrow","\\nearrow","\\searrow","\\swarrow","\\nwarrow"];// To be completed...
 // I should have a default and extended table for some of the categories
 const ACCENTS = Keyboard.ACCENTS;
 
@@ -32,7 +32,7 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
     <div className="virtual-keyboard">
       <FirstRow reference={formulaEditorRef} getShortcut={getShortcut} />
       <Category title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <Category title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={13}/>
       <Category title="Ordering relations" symbols={ORDER} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <Category title="Binary operators" symbols={BINARY_OPERATORS} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <Category title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef}/>
