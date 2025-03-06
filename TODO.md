@@ -9,6 +9,7 @@
 
 ## Basic capabilities
 - Environment (multi-line)
+- How to type "\" (vs beginning a command)
 - Removing the style on a symbol
 
 ## Typing improvements
@@ -17,7 +18,6 @@
 - Up-Down cursor movements in frac
 - dealing with variable-size operators similarly as fractions
 - Multi-symbol selection
-- Going out of a delimiter when the closing delimiter is typed
 - Improve cursor positionning when adding a node with children (ex ²)
 
 ## Visual improvements

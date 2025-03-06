@@ -68,8 +68,10 @@ const MathComponent = forwardRef((props,ref) => {
         // I take this opportunity to check if the parent is a multiline environment
         var isParentMultiline = false;
         var isParentRoot = false;
+        var parentCopy = {};
         if (editMode==="cursor"){
             const parent = MathTree.findCursorParent(mathTree);
+            parentCopy = {...parent};
             if (parent.ismultiline) isParentMultiline=true;
             if (parent.isroot) isParentRoot=true;
             if (parent.parseastext && event.key.length===1){
@@ -133,6 +135,14 @@ const MathComponent = forwardRef((props,ref) => {
                         if (replacementResult.symbol){
                             setMathTree(replacementResult.tree);
                             addSymbol(replacementResult.symbol);
+                        }
+                        break;
+                    default:
+                        if (Object.values(Keyboard.DELIMITERS).includes(event.key)){
+                            if (parentCopy.rightsymbol===event.key && parentCopy.children[parentCopy.children.length-1].iscursor){
+                                // Close the delimiter
+                                setMathTree(MathTree.shiftCursor(mathTree,"right"));
+                            }
                         }
                         break;
                 }
