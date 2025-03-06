@@ -5,7 +5,6 @@
 - cursor is sometimes invisible when refocusing
 - Text mode shouldn't allow deletion from inside
 - When moving the cursor to the left, starting from after a fraction, it seems to skip a spot
-- The cursor should not be included in the exported LaTeX (seems to be a problem in text mode)
 
 ## Basic capabilities
 - Environment (multi-line)

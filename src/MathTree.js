@@ -43,7 +43,7 @@ function getFormula(node,forEditor){
     }
 
     if (node.parseastext){
-      let inside = node.children.map(c=>c.symbol).join("");
+      let inside = node.children.map(c=>(c.iscursor && !forEditor)?"":c.symbol).join("");
       string += `{${inside}}`;
     }
     else if (node.hasstrictlytwochildren){
