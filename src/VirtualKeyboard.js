@@ -96,7 +96,7 @@ const Category = ({title,symbols,getShortcut,reference,threasholdIndex,className
         <SymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index} className={(threasholdIndex && index>threasholdIndex && !showAll ?"hidden":"") + " "+keyClassName}/>
       ))}
     </div>
-    {threasholdIndex && <button className="drawer-handle" onClick={()=>{setShowAll(!showAll)}}>{showAll?"Show less":"Show all"}</button>}
+    {threasholdIndex && <button className="drawer-handle" onMouseDown={(e) => e.preventDefault()} onClick={()=>{setShowAll(!showAll)}}>{showAll?"Show less":"Show all"}</button>}
   </div>)
 }
 
