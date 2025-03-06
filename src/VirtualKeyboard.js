@@ -103,7 +103,7 @@ const Category = ({title,symbols,getShortcut,reference,threasholdIndex,className
 const NodeVirtualKey = ({uniqueName,node,display,tooltip,reference,className}) => {
   return (
     <div>
-      <button data-tooltip-id={uniqueName} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addNode(node)}>
+      <button onMouseDown={(e) => e.preventDefault()} data-tooltip-id={uniqueName} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addNode(node)}>
             {`\\[${display} \\]`}
         </button>
         {tooltip && <Tooltip id={uniqueName} />}
@@ -114,7 +114,7 @@ const NodeVirtualKey = ({uniqueName,node,display,tooltip,reference,className}) =
 const VirtualKey = ({symbol,display,tooltip,reference,className}) => {
   const tooltipId = symbol.replace(" ","__").replace("\\","--");// Necessary replacement to have a valid (but still unique) id
   return (
-      <button data-tooltip-id={tooltipId} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addSymbol(symbol)}>
+      <button onMouseDown={(e) => e.preventDefault()} data-tooltip-id={tooltipId} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addSymbol(symbol)}>
             {`\\[${display} \\]`} {tooltip && <Tooltip id={tooltipId} />}
       </button>
   );

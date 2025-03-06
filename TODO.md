@@ -19,3 +19,6 @@
 - Multi-symbol selection
 - Going out of a delimiter when the closing delimiter is typed
 - Improve cursor positionning when adding a node with children (ex ²)
+
+## Visual improvements
+- Better visuals (in particular buttons), that for the moment depend on the browser
