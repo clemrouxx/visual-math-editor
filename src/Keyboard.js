@@ -63,7 +63,7 @@ const SHORTCUTS = {
   ome:"\\omega",
   Ome:"\\Omega",
 
-  ale:"\\aleph",
+  
 
   // Arrows
   left:"\\leftarrow",
@@ -93,7 +93,7 @@ const SHORTCUTS = {
   neg:"\\neg",
   "...":"\\cdots",
   tri:"\\triangle",
-
+  ale:"\\aleph",
   sr:"\\sqrt",
 
   // Operations
@@ -131,6 +131,7 @@ const SHORTCUTS = {
   // Sums...
   sum:"\\sum",
   int:"\\int",
+  fr:"\\frac",
 
   // Accents
   d:"\\dot",
@@ -145,9 +146,8 @@ const SHORTCUTS = {
   B:"\\mathbb",
   F:"\\mathfrak",
   b:"\\mathbf",
-
-
-  fr:"\\frac",
+  te:"\\text",
+  
 
   // Named functions
   exp:"\\exp",
