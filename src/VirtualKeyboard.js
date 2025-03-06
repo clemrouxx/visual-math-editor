@@ -5,7 +5,7 @@ import Keyboard from "./Keyboard";
 import MathTree from "./MathTree";
 
 const GREEK_LETTERS = ["\\alpha","\\beta","\\gamma","\\Gamma","\\delta","\\Delta","\\epsilon","\\varepsilon","\\zeta","\\eta","\\theta","\\vartheta","\\Theta","\\iota","\\kappa","\\varkappa","\\lambda","\\Lambda","\\mu","\\nu","\\xi","\\Xi","\\pi","\\Pi","\\rho","\\varrho","\\sigma","\\Sigma","\\tau","\\upsilon","\\Upsilon","\\phi","\\varphi","\\Phi","\\chi","\\psi","\\Psi","\\omega","\\Omega"];
-const MISC = ["\\infty","\\partial","\\forall","\\exists","\\nexists","\\varnothing","\\ell","\\nabla","\\triangle","\\angle","\\square","\\hbar","\\Im","\\Re","\\bigstar","\\complement","\\therefore","\\because","\\dots"]
+const MISC = ["\\infty","\\partial","\\forall","\\exists","\\nexists","\\varnothing","\\ell","\\nabla","\\triangle","\\angle","\\square","\\hbar","\\Im","\\Re","\\complement","\\therefore","\\because","\\dots","\\vdots","\\ddots","\\bigstar","\\emptyset","\\imath","\\jmath","\\sharp","\\flat","\\natural","\\diagdown","\\diagup","\\Diamond","\\Finv","\\Game","\\hslash","\\mho","\\prime","\\surd","\\wp","\\measuredangle","\\sphericalangle","\\triangledown","\\vartriangle","\\blacklozenge","\\blacksquare","\\blacktriangle","\\blacktriangledown","\\backprime","\\circledS"];
 const ARROWS = ["\\rightarrow","\\mapsto","\\Rightarrow","\\leftarrow","\\Leftarrow","\\leftrightarrow","\\Leftrightarrow","\\Longleftrightarrow","\\rightleftharpoons","\\rightleftarrows","\\downarrow","\\Downarrow","\\uparrow","\\updownarrow","\\Updownarrow","\\Uparrow","\\nearrow","\\searrow","\\swarrow","\\nwarrow"];// To be completed...
 // I should have a default and extended table for some of the categories
 const ACCENTS = Keyboard.ACCENTS;
@@ -35,7 +35,7 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
       <Category title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={13}/>
       <Category title="Ordering relations" symbols={ORDER} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <Category title="Binary operators" symbols={BINARY_OPERATORS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <Category title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={17}/>
       <Category title="Equivalence relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <Category title="Other constructs" symbols={CONSTRUCTS} getShortcut={getShortcut} reference={formulaEditorRef} keyClassName="x-small-text larger-button"/>
       <Category title="Functions" symbols={NAMED_FUNCTIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15} className="wide-category"/>
