@@ -36,7 +36,7 @@ function App() {
     <div className="App">
       <MathJaxContext config={config}>
       <div class="menu">
-      <button onClick={() => setDarkMode(!darkMode)}>
+      <button onClick={() => setDarkMode(!darkMode)} onMouseDown={(e) => e.preventDefault()}>
         Toggle Dark Mode
       </button>
       </div>
