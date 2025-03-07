@@ -68,8 +68,12 @@ const MathComponent = forwardRef((props,ref) => {
         // We need to check if we are in a "raw text" area and in cursor mode
         // I also keep a copy of the parent
         var parentCopy = {};
+        var cursorPathIndices = [];
         if (editMode==="cursor"){
-            const parent = MathTree.findCursorParent(mathTree);
+            const result = MathTree.findCursorParent(mathTree)
+            const parent = result.node;
+            cursorPathIndices = result.indices;
+            //console.log(cursorPathIndices);
             parentCopy = {...parent};
             if (parent.parseastext && event.key.length===1){
                 event.preventDefault();
@@ -121,6 +125,13 @@ const MathComponent = forwardRef((props,ref) => {
                     case "ArrowLeft":
                         event.preventDefault();
                         setMathTree(MathTree.shiftCursor(mathTree,"left"));
+                        break;
+                    case "ArrowUp":
+                        event.preventDefault();
+                        break;
+                    case "ArrowDown":
+                        event.preventDefault();
+                        console.log(parentCopy);
                         break;
                     case "Backspace":
                         event.preventDefault();

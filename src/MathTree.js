@@ -103,14 +103,21 @@ function findCursorParent(node){
   if (node.children){
     var isCursorParent = false;
     var toReturn = false;
-    node.children.forEach((child)=>{
-      if (child.iscursor) isCursorParent=true;
+    var cursorIndex = -1;
+    node.children.forEach((child,index)=>{
+      if (child.iscursor) {
+        isCursorParent=true;
+        cursorIndex = index;
+      }
       if (child.children) {
         var result = findCursorParent(child);
-        if (result) toReturn = result;
+        if (result){
+          toReturn = result;
+          toReturn.indices.unshift(index);
+        }
       }
     });
-    if (isCursorParent) return node;
+    if (isCursorParent) return {node,indices:[cursorIndex]};
     if (toReturn) return toReturn;
   }
   return false;
@@ -179,7 +186,7 @@ function replaceNode(tree,id,node){
 
 function deleteNextToCursor(tree,direction){
   const index_shift = (direction==="right") ? 1 : -1;
-  const cursorParent = findCursorParent(tree);
+  const cursorParent = findCursorParent(tree).node;
   const index = cursorParent.children.findIndex(child => child.iscursor);
   const toDelete = cursorParent.children[index+index_shift];
   if (toDelete){ // Found something to delete !
@@ -275,7 +282,7 @@ function appendCursor(tree){
 }
 
 function applyReplacementShortcut(tree){
-  var cursorParent = findCursorParent(tree);
+  var cursorParent = findCursorParent(tree).node;
   const index = cursorParent.children.findIndex(c=>c.iscursor);
   var s = "";
   const maxlength = 6;
