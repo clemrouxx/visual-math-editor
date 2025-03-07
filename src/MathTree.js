@@ -123,6 +123,17 @@ function findCursorParent(node){
   return false;
 }
 
+function pathToNode(node,indices){// Recursively loops along the indices n and gets the n(th) children every time. Returns the node at the end.
+  if (indices.length===0) return node;
+  return pathToNode(node.children[indices[0]],indices.slice(1));
+}
+
+function putCursorAtPath(tree,indices){
+  if (indices.length===0) {tree.children.push(CURSOR); return tree;}
+  tree.children[indices[0]] = putCursorAtPath(tree.children[indices[0]],indices.slice(1));
+  return tree;
+}
+
 function findSelectedNode(node){
   if (node.selected) return node;
   if (node.children){
@@ -383,4 +394,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,FracLike,getNode,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}
+export default {CURSOR,FracLike,getNode,pathToNode,putCursorAtPath,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}

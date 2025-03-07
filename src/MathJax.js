@@ -70,10 +70,9 @@ const MathComponent = forwardRef((props,ref) => {
         var parentCopy = {};
         var cursorPathIndices = [];
         if (editMode==="cursor"){
-            const result = MathTree.findCursorParent(mathTree)
+            const result = MathTree.findCursorParent(mathTree);
             const parent = result.node;
             cursorPathIndices = result.indices;
-            //console.log(cursorPathIndices);
             parentCopy = {...parent};
             if (parent.parseastext && event.key.length===1){
                 event.preventDefault();
@@ -131,7 +130,14 @@ const MathComponent = forwardRef((props,ref) => {
                         break;
                     case "ArrowDown":
                         event.preventDefault();
-                        console.log(parentCopy);
+                        if (cursorPathIndices.length>=2 && parentCopy.nodeletion){ // In a frac-like sub-element. We need to go up two levels
+                            var path = cursorPathIndices.slice(0,-2);
+                            path.push(1);
+                            var newtree = MathTree.removeCursor(mathTree);
+                            newtree = MathTree.putCursorAtPath(newtree,path);
+                            setMathTree(newtree);
+                        }
+                        console.log();
                         break;
                     case "Backspace":
                         event.preventDefault();
