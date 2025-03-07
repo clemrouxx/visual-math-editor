@@ -35,12 +35,12 @@ function App() {
   return (
     <div className="App">
       <MathJaxContext config={config}>
-      <div class="menu">
+      <div className="menu">
       <button onClick={() => setDarkMode(!darkMode)} onMouseDown={(e) => e.preventDefault()}>
         Toggle Dark Mode
       </button>
       </div>
-      <div class="centeredcontent">
+      <div className="centeredcontent">
         <h1><MathJax>{`\\[ \\sqrt{\\text{isual}} \\text{ } \\mathcal{M}\\text{ath } \\mathbb{E}\\text{ditor} \\]`}</MathJax></h1>
         <MathComponent ref={formulaEditor}/>
         <VirtualKeyboard formulaEditorRef={formulaEditor} />
