@@ -7,7 +7,6 @@
 - When moving the cursor to the left, starting from after a fraction, it seems to skip a spot
 
 ## Basic capabilities
-- How to type "\" (vs beginning a command)
 - Removing the style on a symbol
 
 ## Typing improvements

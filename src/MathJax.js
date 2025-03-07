@@ -64,6 +64,7 @@ const MathComponent = forwardRef((props,ref) => {
     };
 
     const handleKeyDown = (event) => {
+        
         // We need to check if we are in a "raw text" area and in cursor mode
         // I take this opportunity to check if the parent is a multiline environment
         var isParentMultiline = false;
@@ -82,18 +83,22 @@ const MathComponent = forwardRef((props,ref) => {
         }
 
         if (command===""){// Not writing a command
-            if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
+            if (event.key==="i" && event.ctrlKey) {
+                event.preventDefault();
+                setCommand("\\");
+            }
+            else if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
             {
                 event.preventDefault();
                 addSymbol(event.key);
             }
+            else if (event.key in Keyboard.SIMPLE_REPLACEMENT){
+                event.preventDefault();
+                addSymbol(Keyboard.SIMPLE_REPLACEMENT[event.key]);
+            }
             else if (Keyboard.ESCAPED_SYMBOLS.includes(event.key)){
                 event.preventDefault();
                 addSymbol("\\"+event.key);
-            }
-            else if (event.key==="\\") {
-                event.preventDefault();
-                setCommand("\\");
             }
             else if (editMode==="cursor"){
                 switch (event.key){

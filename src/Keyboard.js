@@ -2,7 +2,8 @@
 
 // valid characters (including some that can have children) that can be typed directly
 const DIRECT_INPUT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+=*,.'`<>/_^([|!?\";:&";
-const ESCAPED_SYMBOLS = "%{$#"; // Will be automatically preceded by a backlash
+const ESCAPED_SYMBOLS = "%{$#\\"; // Will be automatically preceded by a backlash
+const SIMPLE_REPLACEMENT = {"\\":"\\backslash"};
 
 const INVISIBLE_SYMBOLS = ["_","^","\\\\","&"]; // Don't have classes attached
 
@@ -182,5 +183,5 @@ const SHORTCUTS = {
 };
 
 
-export default {DIRECT_INPUT,ESCAPED_SYMBOLS,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,SUM_LIKE,LIM_LIKE,ENVIRONMENTS,SHORTCUTS,INVISIBLE_SYMBOLS};
+export default {DIRECT_INPUT,ESCAPED_SYMBOLS,SIMPLE_REPLACEMENT,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,SUM_LIKE,LIM_LIKE,ENVIRONMENTS,SHORTCUTS,INVISIBLE_SYMBOLS};
 
