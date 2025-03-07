@@ -66,15 +66,11 @@ const MathComponent = forwardRef((props,ref) => {
     const handleKeyDown = (event) => {
         
         // We need to check if we are in a "raw text" area and in cursor mode
-        // I take this opportunity to check if the parent is a multiline environment
-        var isParentMultiline = false;
-        var isParentRoot = false;
+        // I also keep a copy of the parent
         var parentCopy = {};
         if (editMode==="cursor"){
             const parent = MathTree.findCursorParent(mathTree);
             parentCopy = {...parent};
-            if (parent.ismultiline) isParentMultiline=true;
-            if (parent.isroot) isParentRoot=true;
             if (parent.parseastext && event.key.length===1){
                 event.preventDefault();
                 addSymbol(event.key,true);
@@ -104,15 +100,15 @@ const MathComponent = forwardRef((props,ref) => {
                 switch (event.key){
                     case "Tab":
                         event.preventDefault();
-                        if (isParentMultiline) addSymbol("&");
+                        if (parentCopy.ismultiline) addSymbol("&");
                         else setMathTree(MathTree.shiftCursor(mathTree,"right"));
                         break;
                     case "Enter":
-                        if (isParentMultiline){
+                        if (parentCopy.ismultiline){
                             event.preventDefault();
                             addSymbol("\\\\");
                         }
-                        else if (isParentRoot){//AutoAlign
+                        else if (parentCopy.isroot){//AutoAlign
                             setMathTree(MathTree.alignAll(mathTree));
                             addSymbol("\\\\");
                         }
