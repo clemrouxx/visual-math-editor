@@ -204,7 +204,7 @@ function deleteNextToCursor(tree,direction){
     }
     return deleteNode(tree,toDelete.id,"cursor");
   }
-  else if (!cursorParent.nodeletion && (index+index_shift === -1 || (index+index_shift === cursorParent.children.length && !cursorParent.nodeletionfromright))){// (deletion 'from inside')
+  else if (!cursorParent.nodeletion && (index+index_shift === -1 || (index+index_shift === cursorParent.children.length && !cursorParent.nodeletionfromright)) && !(cursorParent.ismodifier && cursorParent.children.length>1)){// deletion 'from inside' of cursorParent.
     if (cursorParent.implodes) return deleteNode(tree,cursorParent.id,"cursor",true);
     else return deleteNode(tree,cursorParent.id,"cursor",false);// The cursor will already be placed as for any other child (if explosion only)
   }
