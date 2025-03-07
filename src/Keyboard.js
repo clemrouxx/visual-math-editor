@@ -17,10 +17,11 @@ const FRAC_LIKE = ["\\frac","\\overbrace","\\underbrace"]; // Symbols that have 
 const SUM_LIKE = ["\\sum","\\int","\\bigcap","\\bigcup","\\bigodot","\\bigoplus","\\bigotimes","\\bigsqcup","\\biguplus","\\bigvee","\\bigwedge","\\coprod","\\prod"]; // Also strictly 2 children, but displayed differently as fractions
 const LIM_LIKE = ["\\lim","\\iint","\\iiint","\\iiiint","\\oint","\\idotsint"];
 const ENVIRONMENTS_NAMES = ["align","cases","matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
-const ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
+var ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
     acc[`\\begin{${name}}`] = `\\end{${name}}`;
     return acc;
   }, {});
+ENVIRONMENTS[`\\begin{array}{}`] = "\\end{array}";
 
 const SHORTCUTS = {
   alp:"\\alpha",

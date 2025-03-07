@@ -44,6 +44,7 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
       <div>
         <h3>Multiline environments</h3>
         <div className="key-row">
+        <VirtualKey symbol={`\\begin{array}{}`} display={`\\begin{array}{}${ENVIRONMENT_DISPLAY_INNER}\\end{array}`} tooltip={getShortcut(`\\begin{array}`)} reference={formulaEditorRef} className="x-small-text larger-button"/>
           {ENVIRONMENT_NAMES.map((name, index) => (
             <VirtualKey symbol={`\\begin{${name}}`} display={`\\begin{${name}}${ENVIRONMENT_DISPLAY_INNER}\\end{${name}}`} tooltip={getShortcut(`\\begin{${name}}`)} reference={formulaEditorRef} key={index} className="x-small-text larger-button"/>
           ))}
