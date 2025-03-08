@@ -16,7 +16,7 @@ const ENVIRONMENT_DISPLAY_INNER = ". & . \\\\ . & .";
 const DELIMITERS = ["\\lvert","\\lVert","\\lfloor","\\lceil","\\langle"];
 
 const BINARY_OPERATORS = ["\\times","\\div","\\cdot","\\circ","\\pm","\\mp","\\oplus","\\otimes","\\cap","\\cup","\\sqcap","\\sqcup","\\wedge","\\vee","\\amalg","\\ast","\\bigcirc","\\bigtriangledown","\\bigtriangleup","\\bullet","\\odot","\\ominus","\\oslash","\\star","\\triangleleft","\\triangleright","\\uplus","\\wr","\\barwedge","\\doublebarwedge","\\veebar","\\boxdot","\\boxminus","\\boxplus","\\boxtimes","\\Cap","\\Cup","\\circledast","\\circledcirc","\\circleddash","\\curlyvee","\\curlywedge","\\divideontimes","\\dotplus","\\intercal","\\leftthreetimes","\\rightthreetimes","\\ltimes","\\rtimes","\\smallsetminus"];
-const RELATIONS = ["\\equiv","\\cong","\\neq","\\sim","\\approx","\\propto","\\triangleq","\\ncong","\\perp","\\parallel","\\nparallel"];
+const RELATIONS = ["\\neq","\\equiv","\\not\\equiv","\\cong","\\ncong","\\sim","\\nsim","\\approx","\\propto","\\triangleq","\\perp","\\parallel","\\nparallel","\\asymp","\\bowtie","\\doteq","\\frown","\\smile","\\simeq","\\not\\simeq","\\approxeq","\\backsim","\\backsimeq","\\between","\\bumpeq","\\Bumpeq","\\circeq","\\doteqdot","\\eqcirc","\\fallingdotseq","\\risingdotseq","\\pitchfork","\\shortparallel","\\nshortparallel","\\smallfrown","\\smallsmile","\\thickapprox","\\thicksim","\\varpropto"];
 const ORDER = ["\\leq","\\geq","\\ll","\\gg","\\subset","\\supset","\\subseteq","\\supseteq","\\in","\\ni","\\notin","\\lll","\\ggg","\\lesssim","\\gtrsim","\\nless","\\ngtr","\\nleq","\\ngeq","\\not\\subset","\\not\\supset","\\nsubseteq","\\nsupseteq","\\mid","\\nmid"];
 
 const CONSTRUCTS = ["\\sum","\\prod","\\int","\\iint","\\iiint","\\oint","\\bigcup","\\bigcap","\\bigoplus","\\bigotimes","\\overbrace","\\underbrace","\\widehat","\\overrightarrow","\\ket","\\bra","\\bigwedge","\\bigvee","\\bigodot","\\biguplus","\\iiiint","\\idotsint"];
@@ -32,10 +32,10 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
       <FirstRow reference={formulaEditorRef} getShortcut={getShortcut} />
       <Category title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef} className="wide-category"/>
       <Category title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={13}/>
-      <Category title="Ordering relations" symbols={ORDER} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Binary 'ordering' relations" symbols={ORDER} getShortcut={getShortcut} reference={formulaEditorRef}/>
       <Category title="Binary operators" symbols={BINARY_OPERATORS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={13}/>
       <Category title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={17}/>
-      <Category title="Equivalence relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Binary 'equivalence' relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={12}/>
       <Category title="Other constructs" symbols={CONSTRUCTS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15} keyClassName="x-small-text larger-button"/>
       <Category title="Functions" symbols={NAMED_FUNCTIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15} className="wide-category"/>
       <Category title="Accents" symbols={ACCENTS} getShortcut={getShortcut} reference={formulaEditorRef}/>
