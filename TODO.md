@@ -10,9 +10,11 @@
 ## Typing improvements
 - Copy-pasting nodes/branches
 - Changing alignement in array environments
-- Up-Down cursor movements in frac
 - Multi-symbol selection
 - Improve cursor positionning when adding a node with children (ex ²)
 
 ## Visual improvements
 - Better visuals (in particular buttons), that for the moment depend on the browser
+
+## Code improvements
+- Refactor MathTree.js (in particular use more of tree indices); to prepare for rewrite of code regarding selection
