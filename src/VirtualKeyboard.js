@@ -19,8 +19,7 @@ const BINARY_OPERATORS = ["\\times","\\div","\\cdot","\\circ","\\pm","\\mp","\\o
 const RELATIONS = ["\\equiv","\\cong","\\neq","\\sim","\\approx","\\propto","\\triangleq","\\ncong","\\perp","\\parallel","\\nparallel"];
 const ORDER = ["\\leq","\\geq","\\ll","\\gg","\\subset","\\supset","\\subseteq","\\supseteq","\\in","\\ni","\\notin","\\lll","\\ggg","\\lesssim","\\gtrsim","\\nless","\\ngtr","\\nleq","\\ngeq","\\not\\subset","\\not\\supset","\\nsubseteq","\\nsupseteq","\\mid","\\nmid"];
 
-const VARSIZE = ["\\sum","\\prod","\\int","\\iint","\\iiint","\\oint","\\bigcup","\\bigcap","\\bigoplus","\\bigotimes"];
-const CONSTRUCTS = VARSIZE.concat("\\overbrace","\\underbrace","\\widehat","\\overrightarrow","\\ket","\\bra");
+const CONSTRUCTS = ["\\sum","\\prod","\\int","\\iint","\\iiint","\\oint","\\bigcup","\\bigcap","\\bigoplus","\\bigotimes","\\overbrace","\\underbrace","\\widehat","\\overrightarrow","\\ket","\\bra","\\bigwedge","\\bigvee","\\bigodot","\\biguplus","\\iiiint","\\idotsint"];
 
 const NAMED_FUNCTIONS = ["\\exp","\\log","\\min","\\max","\\arg","\\lim","\\cos","\\sin","\\tan","\\arccos","\\arcsin","\\arctan","\\cosh","\\sinh","\\tanh","\\det","\\ker","\\inf","\\sup","\\deg","\\cot","\\sec"];
 
@@ -37,7 +36,7 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
       <Category title="Binary operators" symbols={BINARY_OPERATORS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={13}/>
       <Category title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={17}/>
       <Category title="Equivalence relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <Category title="Other constructs" symbols={CONSTRUCTS} getShortcut={getShortcut} reference={formulaEditorRef} keyClassName="x-small-text larger-button"/>
+      <Category title="Other constructs" symbols={CONSTRUCTS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15} keyClassName="x-small-text larger-button"/>
       <Category title="Functions" symbols={NAMED_FUNCTIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15} className="wide-category"/>
       <Category title="Accents" symbols={ACCENTS} getShortcut={getShortcut} reference={formulaEditorRef}/>
 
