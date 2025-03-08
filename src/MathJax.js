@@ -19,7 +19,6 @@ const MathComponent = forwardRef((props,ref) => {
     useImperativeHandle(ref, () => ({ // Can be called by the VirtualKeyboard for example
         addSymbol,addNode
     }));
-    
 
     const addNode = (newnode) => {
         if (editMode==="cursor"){
@@ -64,7 +63,6 @@ const MathComponent = forwardRef((props,ref) => {
     };
 
     const handleKeyDown = (event) => {
-        
         // We need to check if we are in a "raw text" area and in cursor mode
         // I also keep a copy of the parent
         var parentCopy = {};
@@ -125,19 +123,32 @@ const MathComponent = forwardRef((props,ref) => {
                         event.preventDefault();
                         setMathTree(MathTree.shiftCursor(mathTree,"left"));
                         break;
-                    case "ArrowUp":
-                        event.preventDefault();
-                        break;
                     case "ArrowDown":
                         event.preventDefault();
-                        if (cursorPathIndices.length>=2 && parentCopy.nodeletion){ // In a frac-like sub-element. We need to go up two levels
+                        if (cursorPathIndices.length>=2){ // In a frac-like sub-element. We need to go up two levels
                             var path = cursorPathIndices.slice(0,-2);
-                            path.push(1);
-                            var newtree = MathTree.removeCursor(mathTree);
-                            newtree = MathTree.putCursorAtPath(newtree,path);
-                            setMathTree(newtree);
+                            const grandParent = MathTree.pathToNode(mathTree,path);
+                            if ((cursorPathIndices.at(-2)===0 && grandParent.verticalorientation==="down") || (cursorPathIndices.at(-2)===1 && grandParent.verticalorientation==="up")){
+                                path.push(1-cursorPathIndices.at(-2));// Switch to the "down" part
+                                var newtree = MathTree.removeCursor(mathTree);
+                                newtree = MathTree.putCursorAtPath(newtree,path);
+                                setMathTree(newtree);
+                            }
                         }
-                        console.log();
+                        break;
+                    case "ArrowUp":
+                        // Essentially the same as "ArrowDown"
+                        event.preventDefault();
+                        if (cursorPathIndices.length>=2){
+                            var path = cursorPathIndices.slice(0,-2);
+                            const grandParent = MathTree.pathToNode(mathTree,path);
+                            if ((cursorPathIndices.at(-2)===0 && grandParent.verticalorientation==="up") || (cursorPathIndices.at(-2)===1 && grandParent.verticalorientation==="down")){
+                                path.push(1-cursorPathIndices.at(-2));// Switch to the "up" part
+                                var newtree = MathTree.removeCursor(mathTree);
+                                newtree = MathTree.putCursorAtPath(newtree,path);
+                                setMathTree(newtree);
+                            }
+                        }
                         break;
                     case "Backspace":
                         event.preventDefault();

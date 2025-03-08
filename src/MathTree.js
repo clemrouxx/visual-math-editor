@@ -12,11 +12,12 @@ const Delimiter = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,ri
 const Modifier = (symbol,addplaceholder=false) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
 const FracLike = (symbol,addplaceholder=false) => {
   var childrenstring = "{§0}{§1}";
-  if (Keyboard.SUM_LIKE.includes(symbol)) childrenstring = "_{§0}^{§1}";
+  var verticalorientation = "down";
+  if (Keyboard.SUM_LIKE.includes(symbol)) {childrenstring = "_{§0}^{§1}"; verticalorientation="up";}
   else if (symbol === "\\underbrace") childrenstring = "{§0}_{§1}";
-  else if (symbol === "\\overbrace") childrenstring = "{§0}^{§1}";
+  else if (symbol === "\\overbrace") {childrenstring = "{§0}^{§1}"; verticalorientation="up";}
   else if (symbol === "\\sqrt") childrenstring = "[§0]{§1}";
-  return {symbol,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,childrenstring}
+  return {symbol,verticalorientation,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,childrenstring}
 };
 const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:Keyboard.ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true}};
 
