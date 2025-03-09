@@ -31,24 +31,15 @@ const VirtualKeyboard = ({ formulaEditorRef }) => {
     <div className="virtual-keyboard">
       <FirstRow reference={formulaEditorRef} getShortcut={getShortcut} />
       <Category title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef} className="wide-category"/>
-      <Category title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={14}/>
       <Category title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={17}/>
+      <MultilineCategory getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <Category title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={14}/>
+      <Category title="Binary 'equivalence' relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={12}/>
       <Category title="Binary 'ordering' relations" symbols={ORDER} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={16}/>
       <Category title="Binary operators" symbols={BINARY_OPERATORS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={13}/>
-      <Category title="Binary 'equivalence' relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={12}/>
       <Category title="Other constructs" symbols={CONSTRUCTS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15} keyClassName="x-small-text larger-button"/>
       <Category title="Functions & similar" symbols={NAMED_FUNCTIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15} className="wide-category"/>
       <Category title="Accents" symbols={ACCENTS} getShortcut={getShortcut} reference={formulaEditorRef}/>
-
-      <div>
-        <h3>Multiline environments</h3>
-        <div className="key-row">
-        <VirtualKey symbol={`\\begin{array}{}`} display={`\\begin{array}{}${ENVIRONMENT_DISPLAY_INNER}\\end{array}`} tooltip={getShortcut(`\\begin{array}`)} reference={formulaEditorRef} className="x-small-text larger-button"/>
-          {ENVIRONMENT_NAMES.map((name, index) => (
-            <VirtualKey symbol={`\\begin{${name}}`} display={`\\begin{${name}}${ENVIRONMENT_DISPLAY_INNER}\\end{${name}}`} tooltip={getShortcut(`\\begin{${name}}`)} reference={formulaEditorRef} key={index} className="x-small-text larger-button"/>
-          ))}
-        </div>
-      </div>
     </div>
     </MathJax>
   );
@@ -86,6 +77,18 @@ const FirstRow = ({reference,getShortcut}) => {
   );
 }
 
+const MultilineCategory =  ({reference,getShortcut}) => {
+  return (
+  <div>
+    <h3>Multiline environments</h3>
+    <div className="key-row">
+    <VirtualKey symbol={`\\begin{array}{}`} display={`\\begin{array}{}${ENVIRONMENT_DISPLAY_INNER}\\end{array}`} tooltip={getShortcut(`\\begin{array}`)} reference={reference} className="x-small-text larger-button"/>
+      {ENVIRONMENT_NAMES.map((name, index) => (
+        <VirtualKey symbol={`\\begin{${name}}`} display={`\\begin{${name}}${ENVIRONMENT_DISPLAY_INNER}\\end{${name}}`} tooltip={getShortcut(`\\begin{${name}}`)} reference={reference} key={index} className="x-small-text larger-button"/>
+      ))}
+    </div>
+  </div>);
+}
 
 const Category = ({title,symbols,getShortcut,reference,threasholdIndex,className,keyClassName}) => {
   const [showAll,setShowAll] = useState(false);
