@@ -1,7 +1,7 @@
 // Defines some constants for typing / keyboard control
 
 // valid characters (including some that can have children) that can be typed directly
-const DIRECT_INPUT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+=*,.'`<>/_^([|!?\";:&";
+const DIRECT_INPUT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+=*,.'`<>/_^([|!?\";:";
 const ESCAPED_SYMBOLS = "%{$#\\"; // Will be automatically preceded by a backlash
 const SIMPLE_REPLACEMENT = {"\\":"\\backslash"};
 
