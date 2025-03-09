@@ -363,12 +363,10 @@ function setSelectedNode(tree,id){
 }
 
 function deleteSelectedNode(tree,replaceWithCursor){
-  console.log(findSelectedNode(tree));
   return deleteNode(tree,findSelectedNode(tree).node.id,"selection",replaceWithCursor);
 }
 
 function findSelectedNode(node){
-  console.log(node);
   if (node.selected) return {node,path:[]};
   if (node.children){
     for (var index=0;index<node.children.length;index++){
@@ -378,9 +376,6 @@ function findSelectedNode(node){
         return res;
       }
     }
-    node.children.forEach((child,index)=>{
-      
-    });
   }
   return false;
 }
