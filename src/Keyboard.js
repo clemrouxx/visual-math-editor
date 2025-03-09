@@ -2,7 +2,8 @@
 
 // valid characters (including some that can have children) that can be typed directly
 const DIRECT_INPUT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+=*,.'`<>/_^([|!?\";:";
-const ESCAPED_SYMBOLS = "%{$#\\"; // Will be automatically preceded by a backlash
+const ESCAPED_SYMBOLS = "%{$#"; // Will be automatically preceded by a backlash
+const TEXTMODE_ESCAPED_SYMBOLS = "${}";
 const SIMPLE_REPLACEMENT = {"\\":"\\backslash"};
 
 const INVISIBLE_SYMBOLS = ["_","^","\\\\","&"]; // Don't have classes attached
@@ -12,7 +13,7 @@ const INVISIBLE_SYMBOLS = ["_","^","\\\\","&"]; // Don't have classes attached
 const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow","\\bra","\\ket","\\braket"];
 const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","\\check","\\tilde","\\breve","\\acute","\\grave","\\mathring"];
 const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
-const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\lvert":"\\rvert","\\lVert":"\\rVert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil"};
+const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\lvert":"\\rvert","\\lVert":"\\rVert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil","\\ulcorner":"\\urcorner","\\llcorner":"\\lrcorner"};
 const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
 const FRAC_LIKE = ["\\frac","\\overbrace","\\underbrace"]; // Symbols that have strictly 2 children (other than sum-like)
 const SUM_LIKE = ["\\sum","\\int","\\bigcap","\\bigcup","\\bigodot","\\bigoplus","\\bigotimes","\\bigsqcup","\\biguplus","\\bigvee","\\bigwedge","\\coprod","\\prod"]; // Also strictly 2 children, but displayed differently as fractions
@@ -99,6 +100,7 @@ const SHORTCUTS = {
   ale:"\\aleph",
   sr:"\\sqrt",
   not:"\\not",
+  hbar:"\\hbar",
 
   // Operations
   x:"\\times",
@@ -184,5 +186,5 @@ const SHORTCUTS = {
 };
 
 
-export default {DIRECT_INPUT,ESCAPED_SYMBOLS,SIMPLE_REPLACEMENT,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,SUM_LIKE,LIM_LIKE,ENVIRONMENTS,SHORTCUTS,INVISIBLE_SYMBOLS};
+export default {DIRECT_INPUT,ESCAPED_SYMBOLS,TEXTMODE_ESCAPED_SYMBOLS,SIMPLE_REPLACEMENT,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,SUM_LIKE,LIM_LIKE,ENVIRONMENTS,SHORTCUTS,INVISIBLE_SYMBOLS};
 
