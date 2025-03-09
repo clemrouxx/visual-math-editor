@@ -72,11 +72,11 @@ const MathComponent = forwardRef((props,ref) => {
         // We need to check if we are in a "raw text" area and in cursor mode
         // I also keep a copy of the parent
         var parentCopy = {};
-        var cursorPathIndices = [];
+        var cursorPath = [];
         if (editMode==="cursor"){
             const result = MathTree.findCursorParent(mathTree);
             const parent = result.node;
-            cursorPathIndices = result.indices;
+            cursorPath = result.path;
             parentCopy = {...parent};
             if (parent.parseastext && event.key.length===1){
                 event.preventDefault();
@@ -131,11 +131,11 @@ const MathComponent = forwardRef((props,ref) => {
                         break;
                     case "ArrowDown":
                         event.preventDefault();
-                        if (cursorPathIndices.length>=2){ // In a frac-like sub-element. We need to go up two levels
-                            var path = cursorPathIndices.slice(0,-2);
+                        if (cursorPath.length>=1){ // In a frac-like sub-element. We need to go up two levels
+                            var path = cursorPath.slice(0,-1);
                             const grandParent = MathTree.pathToNode(mathTree,path);
-                            if ((cursorPathIndices.at(-2)===0 && grandParent.verticalorientation==="down") || (cursorPathIndices.at(-2)===1 && grandParent.verticalorientation==="up")){
-                                path.push(1-cursorPathIndices.at(-2));// Switch to the "down" part
+                            if ((cursorPath.at(-1)===0 && grandParent.verticalorientation==="down") || (cursorPath.at(-1)===1 && grandParent.verticalorientation==="up")){
+                                path.push(1-cursorPath.at(-1));// Switch to the "down" part
                                 var newtree = MathTree.removeCursor(mathTree);
                                 newtree = MathTree.putCursorAtPath(newtree,path);
                                 setMathTree(newtree);
@@ -145,11 +145,11 @@ const MathComponent = forwardRef((props,ref) => {
                     case "ArrowUp":
                         // Essentially the same as "ArrowDown"
                         event.preventDefault();
-                        if (cursorPathIndices.length>=2){
-                            var path = cursorPathIndices.slice(0,-2);
+                        if (cursorPath.length>=1){
+                            var path = cursorPath.slice(0,-1);
                             const grandParent = MathTree.pathToNode(mathTree,path);
-                            if ((cursorPathIndices.at(-2)===0 && grandParent.verticalorientation==="up") || (cursorPathIndices.at(-2)===1 && grandParent.verticalorientation==="down")){
-                                path.push(1-cursorPathIndices.at(-2));// Switch to the "up" part
+                            if ((cursorPath.at(-1)===0 && grandParent.verticalorientation==="up") || (cursorPath.at(-1)===1 && grandParent.verticalorientation==="down")){
+                                path.push(1-cursorPath.at(-1));// Switch to the "up" part
                                 var newtree = MathTree.removeCursor(mathTree);
                                 newtree = MathTree.putCursorAtPath(newtree,path);
                                 setMathTree(newtree);
