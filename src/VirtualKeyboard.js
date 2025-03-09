@@ -57,7 +57,7 @@ const FirstRow = ({reference,getShortcut}) => {
         <SymbolVirtualKey symbol="\frac" tooltip={getShortcut("\\frac")} reference={reference} className="x-small-text"/>
         <SymbolVirtualKey symbol="\sqrt" tooltip={getShortcut("\\sqrt")} reference={reference} className="small-text"/>
         <NodeVirtualKey uniqueName="nsqrt" display={MathTree.getFormula(MathTree.FracLike("\\sqrt",true))} node={MathTree.FracLike("\\sqrt")} reference={reference} className="small-text"/>
-        <VirtualKey symbol="\not" display={`/`} tooltip="not [Space]"  reference={reference}/>
+        <VirtualKey symbol="\not" display={`/`} tooltip={getShortcut("\\not")}  reference={reference}/>
         </div>
         <div className="key-row">
         {DELIMITERS.map((symbol, index) => (

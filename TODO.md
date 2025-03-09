@@ -3,6 +3,7 @@
 ## Bugs
 - Bug : Rendering "error" when selecting an element in a long sequence; sometimes
 - cursor is sometimes invisible when refocusing
+- buttons allow adding special characters / commands even in text mode
 
 ## Basic capabilities
 - Removing the style on a symbol

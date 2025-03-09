@@ -98,6 +98,7 @@ const SHORTCUTS = {
   tri:"\\triangle",
   ale:"\\aleph",
   sr:"\\sqrt",
+  not:"\\not",
 
   // Operations
   x:"\\times",
