@@ -33,6 +33,12 @@ function getNode(symbol,rawtext=false,addplaceholder=false){
   return Symbol(symbol);
 }
 
+function isValidRawText(node){
+  if (node.children) return false;
+  if (node.symbol.length>1) return false;
+  return true;
+}
+
 function getFormula(node,forEditor){
     if (node.iscursor) return forEditor ? `\\class{math-cursor}{${node.symbol}}` : "";
 
@@ -395,4 +401,4 @@ function setUids(node,nextUid=0){// Inplace
   return nextUid;
 }
 
-export default {CURSOR,FracLike,getNode,pathToNode,putCursorAtPath,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}
+export default {CURSOR,FracLike,getNode,isValidRawText,pathToNode,putCursorAtPath,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}

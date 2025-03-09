@@ -11,17 +11,23 @@ const MathComponent = forwardRef((props,ref) => {
     const [focused,setFocused] = useState(true);
     const domRef = useRef(null);
 
+    useImperativeHandle(ref, () => ({ // Can be called by the VirtualKeyboard for example
+        addSymbol,addNode
+    }));
+
+    const isCursorInModifier = () => {
+        if (editMode!=="cursor") return false;
+        return MathTree.findCursorParent(mathTree).node.ismodifier;
+    }
+
     const addSymbol = (symbol,rawtext=false) => { // Called after a key press/command entered/on-screen key press
         const newnode = MathTree.getNode(symbol,rawtext);
         addNode(newnode);
     }
 
-    useImperativeHandle(ref, () => ({ // Can be called by the VirtualKeyboard for example
-        addSymbol,addNode
-    }));
-
     const addNode = (newnode) => {
         if (editMode==="cursor"){
+            if (isCursorInModifier() && !MathTree.isValidRawText(newnode)) return; // Block adding this node
             if (Keyboard.ACCENTS.includes(newnode.symbol) || Keyboard.STYLES.includes(newnode.symbol)){
                 setMathTree(MathTree.adoptNodeBeforeCursor(mathTree,newnode));
             }
