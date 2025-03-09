@@ -3,6 +3,7 @@ import Keyboard from "./Keyboard";
 const CURSOR = {iscursor:true,symbol:"|"};
 const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"}
 const LETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"}
+const DEFAULT_TREE = {isroot:true,nodeletion:true,children:[CURSOR]};
 
 const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[PLACEHOLDER]:[],nodeletionfromright:true}};
@@ -115,24 +116,22 @@ function pathToNode(node,indices){// Recursively loops along the indices n and g
   return pathToNode(node.children[indices[0]],indices.slice(1));
 }
 
-function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor".
-  const deleter = (children) => {
-    var stopModify = false;
-    const index = children.findIndex(child => child.id === id);
-    if (index !== -1){
-      const nodeToDelete = children[index];
-      if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor") || nodeToDelete.implodes){ // Implode
-        children.splice(index,1);
-      }
-      else { // We will make it "explode" (ie leave its children).
-        children.splice(index,1,...nodeToDelete.children);
-      }
-      if (replaceWithCursor) children.splice(index,0,CURSOR);
-      stopModify = true;
+function deleteNode(node,path,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor".
+  var newnode = {...node};
+  if (path.length===1){ // We need to delete one of its children
+    const nodeToDelete = newnode.children[path[0]];
+    if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor") || nodeToDelete.implodes){ // Implode
+      newnode.children.splice(path[0],1);
     }
-    return {children,stopModify};
+    else { // We will make it "explode" (ie leave its children).
+      newnode.children.splice(path[0],1,...nodeToDelete.children);
+    }
+    if (replaceWithCursor) newnode.children.splice(path[0],0,CURSOR);
+    return newnode;
   }
-  return modifyChildren(tree,deleter).node;
+  // Else : do recursion
+  newnode.children[path[0]] = deleteNode(newnode.children[path[0]],path.slice(1));// Change the child recursively
+  return newnode;
 }
 
 
@@ -189,11 +188,11 @@ function findCursorParent(node){
         var result = findCursorParent(child);
         if (result){
           toReturn = result;
-          toReturn.indices.unshift(index);
+          toReturn.path.unshift(index);
         }
       }
     });
-    if (isCursorParent) return {node,indices:[cursorIndex]};
+    if (isCursorParent) return {node,path:[],cursorIndex};
     if (toReturn) return toReturn;
   }
   return false;
@@ -208,12 +207,15 @@ function putCursorAtPath(tree,path){// CURSOR will be pushed as a child of the n
 
 function deleteNextToCursor(tree,direction){
   const index_shift = (direction==="right") ? 1 : -1;
-  const cursorParent = findCursorParent(tree).node;
-  const index = cursorParent.children.findIndex(child => child.iscursor);
+  const cursorParentResults = findCursorParent(tree);
+  const cursorParent = cursorParentResults.node;
+  var path = cursorParentResults.path;
+  const index = cursorParentResults.cursorIndex;
   const toDelete = cursorParent.children[index+index_shift];
   if (toDelete){ // Found something to delete !
+    path.push(index+index_shift);
     // Specific case for when the node has children, and only a symbol on the left (no 'rightsymbol') : do nothing if going left !
-    if (direction==="left" && toDelete.nodeletionfromright){ // Then we should "enter" (assuming the node has children)
+    if (direction==="left" && toDelete.nodeletionfromright){ // Then we should "enter" (if the node has children), and delete nothing for now
       if (toDelete.children) {
         cursorParent.children.splice(index,1); // Remove cursor
         toDelete.children.push(CURSOR);
@@ -222,20 +224,21 @@ function deleteNextToCursor(tree,direction){
     }
     else if (toDelete.ismodifier){// Then we need to enter the modifier (depends on how many children it has)
       let nchildren = toDelete.children.length;
-      if (nchildren<=1) return deleteNode(tree,toDelete.id,"cursor"); // We empty the modifier, so we delete it completely.
+      if (nchildren<=1) return deleteNode(tree,path,"cursor"); // We empty the modifier, so we delete it completely.
       else{
         // Start by removing the cursor
         cursorParent.children.splice(index,1);
         // Then delete the node and replace it with the cursor
-        let childToDelete = (direction==="right") ? toDelete.children[0] : toDelete.children[toDelete.children.length-1];
-        return deleteNode(tree,childToDelete.id,"cursor",true);
+        let childToDeleteIndex = (direction==="right") ? 0 : toDelete.children.length-1;
+        path.push(childToDeleteIndex);
+        return deleteNode(tree,path,"cursor",true);
       }
     }
-    return deleteNode(tree,toDelete.id,"cursor");
+    return deleteNode(tree,path,"cursor");
   }
   else if (!cursorParent.nodeletion && (index+index_shift === -1 || (index+index_shift === cursorParent.children.length && !cursorParent.nodeletionfromright)) && !(cursorParent.ismodifier && cursorParent.children.length>1)){// deletion 'from inside' of cursorParent.
-    if (cursorParent.implodes) return deleteNode(tree,cursorParent.id,"cursor",true);
-    else return deleteNode(tree,cursorParent.id,"cursor",false);// The cursor will already be placed as for any other child (if explosion only)
+    if (cursorParent.implodes) return deleteNode(tree,path,"cursor",true);
+    else return deleteNode(tree,path,"cursor",false);// The cursor will already be placed as for any other child (if explosion only)
   }
   return tree;
 }
@@ -363,7 +366,7 @@ function setSelectedNode(tree,id){
 }
 
 function deleteSelectedNode(tree,replaceWithCursor){
-  return deleteNode(tree,findSelectedNode(tree).node.id,"selection",replaceWithCursor);
+  return deleteNode(tree,findSelectedNode(tree).path,"selection",replaceWithCursor);
 }
 
 function findSelectedNode(node){
@@ -418,4 +421,4 @@ function selectedToCursor(tree,side){ // Add cursor next to selected, and unsele
 
 
 
-export default {CURSOR,FracLike,getNode,isValidRawText,pathToNode,putCursorAtPath,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}
+export default {CURSOR,DEFAULT_TREE,FracLike,getNode,isValidRawText,pathToNode,putCursorAtPath,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}
