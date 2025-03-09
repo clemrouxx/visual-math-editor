@@ -76,6 +76,10 @@ function getFormula(node,forEditor){
     return string;
 }
 
+// MATH TREE MANIPULATION
+
+// Basic & general manipulations
+
 function applyToAllNodes(node, func) {// Not inplace
   const newnode = {
     ...node,
@@ -106,6 +110,71 @@ function modifyChildren(node, func, stopModify=false){// Not inplace
   return {node:newnode,stopModify};
 }
 
+function pathToNode(node,indices){// Recursively loops along the indices n and gets the n(th) children every time. Returns the node at the end.
+  if (indices.length===0) return node;
+  return pathToNode(node.children[indices[0]],indices.slice(1));
+}
+
+function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor".
+  const deleter = (children) => {
+    var stopModify = false;
+    const index = children.findIndex(child => child.id === id);
+    if (index !== -1){
+      const nodeToDelete = children[index];
+      if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor") || nodeToDelete.implodes){ // Implode
+        children.splice(index,1);
+      }
+      else { // We will make it "explode" (ie leave its children).
+        children.splice(index,1,...nodeToDelete.children);
+      }
+      if (replaceWithCursor) children.splice(index,0,CURSOR);
+      stopModify = true;
+    }
+    return {children,stopModify};
+  }
+  return modifyChildren(tree,deleter).node;
+}
+
+
+function replaceNode(tree,id,node){
+  return applyToAllNodes(tree, n => {
+    if (n.id === id) {
+      Object.assign(n, node); // Mutate node directly
+    }
+  });
+}
+
+function alignAll(tree){ // Puts the whole tree (minus the root) in an align environment
+  const alignNode = getNode("\\begin{align}");
+  alignNode.children = tree.children.flatMap(n => (n.symbol==="="?[getNode("&"),n]:[n])); // Put '&' in front of any '='
+  console.log(alignNode)
+  tree.children = [alignNode];
+  return tree;
+}
+
+function setUids(node,nextUid=0){// Inplace
+  // Let's just give ids to all nodes
+  node.id = nextUid;
+  nextUid++;
+  if (node.children){
+    node.children.forEach(childnode => {
+      nextUid = setUids(childnode,nextUid);
+    });
+  }
+  return nextUid;
+}
+
+// Cursor
+
+function removeCursor(tree){
+  return modifyChildren(tree,children => {return {children:children.filter(child=>!(child.iscursor)),stopModify:children.some(c=>c.iscursor)}}).node;
+}
+
+function appendCursor(tree){
+  tree.children.push(CURSOR);
+  return tree;
+}
+
 function findCursorParent(node){
   if (node.children){
     var isCursorParent = false;
@@ -130,76 +199,11 @@ function findCursorParent(node){
   return false;
 }
 
-function pathToNode(node,indices){// Recursively loops along the indices n and gets the n(th) children every time. Returns the node at the end.
-  if (indices.length===0) return node;
-  return pathToNode(node.children[indices[0]],indices.slice(1));
-}
 
-function putCursorAtPath(tree,indices){
-  if (indices.length===0) {tree.children.push(CURSOR); return tree;}
-  tree.children[indices[0]] = putCursorAtPath(tree.children[indices[0]],indices.slice(1));
+function putCursorAtPath(tree,path){// CURSOR will be pushed as a child of the node reached following the path
+  if (path.length===0) {tree.children.push(CURSOR); return tree;}
+  tree.children[path[0]] = putCursorAtPath(tree.children[path[0]],path.slice(1));
   return tree;
-}
-
-function findSelectedNode(node){
-  if (node.selected) return node;
-  if (node.children){
-    var results = node.children.map(findSelectedNode).filter(r=>r);
-    if (results.length>0) return results[0];
-  }
-  return false;
-}
-
-function unselect(tree){
-  return applyToAllNodes(tree,n => n.selected=false);
-}
-
-function setSelectedNode(tree,id){
-  return applyToAllNodes(tree,(n)=>{n.selected=(n.id===id)});
-}
-
-function deleteSelectedNode(tree,replaceWithCursor){
-  return deleteNode(tree,findSelectedNode(tree).id,"selection",replaceWithCursor);
-}
-
-function deleteNode(tree,id,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor".
-  const deleter = (children) => {
-    var stopModify = false;
-    const index = children.findIndex(child => child.id === id);
-    if (index !== -1){
-      const nodeToDelete = children[index];
-      if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor") || nodeToDelete.implodes){ // Implode
-        children.splice(index,1);
-      }
-      else { // We will make it "explode" (ie leave its children).
-        children.splice(index,1,...nodeToDelete.children);
-      }
-      if (replaceWithCursor) children.splice(index,0,CURSOR);
-      stopModify = true;
-    }
-    return {children,stopModify};
-  }
-  return modifyChildren(tree,deleter).node;
-}
-
-function replaceSelectedNode(tree,node,transferChildren=true){ // Replaces the selected node with 'node', and places the cursor just after. Keep the same children.
-  const replacer = (children) => {
-    const index = children.findIndex(child => child.selected);
-    if (index !== -1){
-      if (transferChildren) node.children = children[index].children;
-      children.splice(index,1,node,CURSOR);
-    }
-    return {children,stopModify:index!==-1};
-  }
-  return modifyChildren(tree,replacer).node;
-}
-
-function replaceNode(tree,id,node){
-  return applyToAllNodes(tree, n => {
-    if (n.id === id) {
-      Object.assign(n, node); // Mutate node directly
-    }
-  });
 }
 
 function deleteNextToCursor(tree,direction){
@@ -234,103 +238,6 @@ function deleteNextToCursor(tree,direction){
     else return deleteNode(tree,cursorParent.id,"cursor",false);// The cursor will already be placed as for any other child (if explosion only)
   }
   return tree;
-}
-
-function insertAtCursor(node,newnode){
-  if (newnode.children){// I will then place the cursor as last child
-    if (newnode.hasstrictlytwochildren) newnode.children[0].children.push(CURSOR);
-    else newnode.children.push(CURSOR);
-    var inserter = (children) => {return {children:children.map((child) => child.iscursor ? newnode : child),stopModify:children.some(child => child.iscursor)};};
-  }
-  else{
-    // eslint-disable-next-line
-    var inserter = (children) => {
-      const index = children.findIndex(child => child.iscursor);
-      if (index !== -1) {
-        children.splice(index, 0, newnode);
-      }
-      return {children,stopModify:index !== -1};}
-  }
-  var newtree =  modifyChildren(node,inserter).node;
-  setUids(newtree);
-  return newtree;
-}
-
-function adoptNodeBeforeCursor(tree,newnode){ // Add an accent or modifier on the node before the cursor
-  const modifier = children => {
-    const index = children.findIndex(child => child.iscursor);
-    if (index >= 1) {
-      var previousnode = children[index-1];
-      newnode.children = [previousnode];
-      children.splice(index-1, 1, newnode);
-    }
-    return {children,stopModify:index !== -1};
-  }
-  var newtree = modifyChildren(tree,modifier).node;
-  setUids(newtree);
-  return newtree;
-}
-
-function adoptSelectedNode(tree,newnode){
-  var selectedNode = findSelectedNode(tree);
-  newnode.children=[selectedNode];
-  console.log(tree,selectedNode.id);
-  var newtree = replaceNode(tree,selectedNode.id,newnode);
-  console.log(newtree);
-  setUids(newtree);
-  
-  return newtree;
-}
-
-function alignAll(tree){ // Puts the whole tree (minus the root) in an align environment
-  const alignNode = getNode("\\begin{align}");
-  alignNode.children = tree.children.flatMap(n => (n.symbol==="="?[getNode("&"),n]:[n])); // Put '&' in front of any '='
-  console.log(alignNode)
-  tree.children = [alignNode];
-  return tree;
-}
-
-function removeCursor(tree){
-  return modifyChildren(tree,children => {return {children:children.filter(child=>!(child.iscursor)),stopModify:children.some(c=>c.iscursor)}}).node;
-}
-
-function appendCursor(tree){
-  tree.children.push(CURSOR);
-  return tree;
-}
-
-function applyReplacementShortcut(tree){
-  var cursorParent = findCursorParent(tree).node;
-  const index = cursorParent.children.findIndex(c=>c.iscursor);
-  var s = "";
-  const maxlength = 6;
-  for (var i=1;i<=maxlength;i++){ // First, find the longest possible string
-    if (index-i<0 || !cursorParent.children[index-i].symbol || cursorParent.children[index-i].symbol.length !== 1) break;
-    s = cursorParent.children[index-i].symbol + s;
-  }
-  // Then, we look in priority at the longest sequences
-  const slen = s.length;
-  for (var j=0;j<=slen-1;j++){
-    let splitstring = s.slice(j);
-    if (splitstring in Keyboard.SHORTCUTS){
-      cursorParent.children.splice(index-slen+j,slen-j); // Remove the "used" nodes
-      return {tree,symbol:Keyboard.SHORTCUTS[splitstring]};
-    }
-  }
-  return {tree,symbol:undefined};
-}
-
-function selectedToCursor(tree,side){ // Add cursor next to selected, and unselect
-  const index_shift = (side==="right") ? 1 : 0;
-  const inserter = (children) => {
-    const index = children.findIndex(child => child.selected);
-    if (index !== -1) {
-      children.splice(index+index_shift, 0, CURSOR);
-    }
-    return {children,stopModify:index!==-1};
-  }
-  let newtree =  modifyChildren(tree,inserter).node;
-  return unselect(newtree);
 }
 
 function recursiveShiftCursor(node,shift) {
@@ -389,16 +296,131 @@ function shiftCursor(tree,direction){
   return recursiveShiftCursor(tree,direction==="right"?1:-1).node;
 }
 
-function setUids(node,nextUid=0){// Inplace
-  // Let's just give ids to all nodes
-  node.id = nextUid;
-  nextUid++;
+function insertAtCursor(node,newnode){
+  if (newnode.children){// I will then place the cursor as last child
+    if (newnode.hasstrictlytwochildren) newnode.children[0].children.push(CURSOR);
+    else newnode.children.push(CURSOR);
+    var inserter = (children) => {return {children:children.map((child) => child.iscursor ? newnode : child),stopModify:children.some(child => child.iscursor)};};
+  }
+  else{
+    // eslint-disable-next-line
+    var inserter = (children) => {
+      const index = children.findIndex(child => child.iscursor);
+      if (index !== -1) {
+        children.splice(index, 0, newnode);
+      }
+      return {children,stopModify:index !== -1};}
+  }
+  var newtree =  modifyChildren(node,inserter).node;
+  setUids(newtree);
+  return newtree;
+}
+
+function adoptNodeBeforeCursor(tree,newnode){ // Add an accent or modifier on the node before the cursor
+  const modifier = children => {
+    const index = children.findIndex(child => child.iscursor);
+    if (index >= 1) {
+      var previousnode = children[index-1];
+      newnode.children = [previousnode];
+      children.splice(index-1, 1, newnode);
+    }
+    return {children,stopModify:index !== -1};
+  }
+  var newtree = modifyChildren(tree,modifier).node;
+  setUids(newtree);
+  return newtree;
+}
+
+function applyReplacementShortcut(tree){
+  var cursorParent = findCursorParent(tree).node;
+  const index = cursorParent.children.findIndex(c=>c.iscursor);
+  var s = "";
+  const maxlength = 6;
+  for (var i=1;i<=maxlength;i++){ // First, find the longest possible string
+    if (index-i<0 || !cursorParent.children[index-i].symbol || cursorParent.children[index-i].symbol.length !== 1) break;
+    s = cursorParent.children[index-i].symbol + s;
+  }
+  // Then, we look in priority at the longest sequences
+  const slen = s.length;
+  for (var j=0;j<=slen-1;j++){
+    let splitstring = s.slice(j);
+    if (splitstring in Keyboard.SHORTCUTS){
+      cursorParent.children.splice(index-slen+j,slen-j); // Remove the "used" nodes
+      return {tree,symbol:Keyboard.SHORTCUTS[splitstring]};
+    }
+  }
+  return {tree,symbol:undefined};
+}
+
+// Selection
+
+function unselect(tree){
+  return applyToAllNodes(tree,n => n.selected=false);
+}
+
+function setSelectedNode(tree,id){
+  return applyToAllNodes(tree,(n)=>{n.selected=(n.id===id)});
+}
+
+function deleteSelectedNode(tree,replaceWithCursor){
+  console.log(findSelectedNode(tree));
+  return deleteNode(tree,findSelectedNode(tree).node.id,"selection",replaceWithCursor);
+}
+
+function findSelectedNode(node){
+  console.log(node);
+  if (node.selected) return {node,path:[]};
   if (node.children){
-    node.children.forEach(childnode => {
-      nextUid = setUids(childnode,nextUid);
+    for (var index=0;index<node.children.length;index++){
+      var res = findSelectedNode(node.children[index]);
+      if (res){
+        res.path.unshift(index);
+        return res;
+      }
+    }
+    node.children.forEach((child,index)=>{
+      
     });
   }
-  return nextUid;
+  return false;
 }
+
+function replaceSelectedNode(tree,node,transferChildren=true){ // Replaces the selected node with 'node', and places the cursor just after. Keep the same children.
+  const replacer = (children) => {
+    const index = children.findIndex(child => child.selected);
+    if (index !== -1){
+      if (transferChildren) node.children = children[index].children;
+      children.splice(index,1,node,CURSOR);
+    }
+    return {children,stopModify:index!==-1};
+  }
+  return modifyChildren(tree,replacer).node;
+}
+
+function adoptSelectedNode(tree,newnode){
+  var selectedNode = findSelectedNode(tree).node;
+  newnode.children=[selectedNode];
+  console.log(tree,selectedNode.id);
+  var newtree = replaceNode(tree,selectedNode.id,newnode);
+  console.log(newtree);
+  setUids(newtree);
+  
+  return newtree;
+}
+
+function selectedToCursor(tree,side){ // Add cursor next to selected, and unselect
+  const index_shift = (side==="right") ? 1 : 0;
+  const inserter = (children) => {
+    const index = children.findIndex(child => child.selected);
+    if (index !== -1) {
+      children.splice(index+index_shift, 0, CURSOR);
+    }
+    return {children,stopModify:index!==-1};
+  }
+  let newtree =  modifyChildren(tree,inserter).node;
+  return unselect(newtree);
+}
+
+
 
 export default {CURSOR,FracLike,getNode,isValidRawText,pathToNode,putCursorAtPath,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}
