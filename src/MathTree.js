@@ -134,6 +134,14 @@ function deleteNode(node,path,deletionMode="selection",replaceWithCursor=false){
   return newnode;
 }
 
+function insertAtPath(tree,path,node,replace=false){
+  var newnode = {...tree};
+  if (path.length===1){
+    newnode.children.splice(path[0],replace?1:0,node);
+  }
+  else newnode.children[path[0]] = insertAtPath(newnode.children[path[0]],path.slice(1),node,replace);
+  return newnode;
+}
 
 function replaceNode(tree,id,node){
   return applyToAllNodes(tree, n => {
@@ -176,28 +184,20 @@ function appendCursor(tree){
 
 function findCursorParent(node){
   if (node.children){
-    var isCursorParent = false;
-    var toReturn = false;
-    var cursorIndex = -1;
-    node.children.forEach((child,index)=>{
-      if (child.iscursor) {
-        isCursorParent=true;
-        cursorIndex = index;
-      }
-      if (child.children) {
+    for (var index=0;index<node.children.length;index++){
+      let child = node.children[index];
+      if (child.iscursor) return {node,path:[],cursorIndex:index};
+      else if (child.children) {
         var result = findCursorParent(child);
         if (result){
-          toReturn = result;
-          toReturn.path.unshift(index);
+          result.path.unshift(index);
+          return result;
         }
       }
-    });
-    if (isCursorParent) return {node,path:[],cursorIndex};
-    if (toReturn) return toReturn;
+    }
   }
   return false;
 }
-
 
 function putCursorAtPath(tree,path){// CURSOR will be pushed as a child of the node reached following the path
   if (path.length===0) {tree.children.push(CURSOR); return tree;}
@@ -299,9 +299,24 @@ function shiftCursor(tree,direction){
   return recursiveShiftCursor(tree,direction==="right"?1:-1).node;
 }
 
-function insertAtCursor(node,newnode){
+function insertAtCursor(tree,newnode){
+  const cursorParentResults = findCursorParent(tree);
+  var targetpath = cursorParentResults.path;
+  targetpath.push(cursorParentResults.cursorIndex);
+
+  var replace = false;
   if (newnode.children){// I will then place the cursor as last child
-    if (newnode.hasstrictlytwochildren) newnode.children[0].children.push(CURSOR);
+    if (newnode.hasstrictlytwochildren) newnode.children[0].children.push(CURSOR); // ... except in this quite specific case
+    else newnode.children.push(CURSOR);
+    replace=true;
+  }
+  var newtree = insertAtPath(tree,targetpath,newnode,replace);
+  setUids(newtree);
+  return newtree;
+
+  /*
+  if (newnode.children){// I will then place the cursor as last child
+    if (newnode.hasstrictlytwochildren) newnode.children[0].children.push(CURSOR); // ... except in this quite specific case
     else newnode.children.push(CURSOR);
     var inserter = (children) => {return {children:children.map((child) => child.iscursor ? newnode : child),stopModify:children.some(child => child.iscursor)};};
   }
@@ -316,7 +331,7 @@ function insertAtCursor(node,newnode){
   }
   var newtree =  modifyChildren(node,inserter).node;
   setUids(newtree);
-  return newtree;
+  return newtree;*/
 }
 
 function adoptNodeBeforeCursor(tree,newnode){ // Add an accent or modifier on the node before the cursor
@@ -335,8 +350,9 @@ function adoptNodeBeforeCursor(tree,newnode){ // Add an accent or modifier on th
 }
 
 function applyReplacementShortcut(tree){
-  var cursorParent = findCursorParent(tree).node;
-  const index = cursorParent.children.findIndex(c=>c.iscursor);
+  const cursorParentResults = findCursorParent(tree);
+  var cursorParent = cursorParentResults.node;
+  const index = cursorParentResults.cursorIndex;
   var s = "";
   const maxlength = 6;
   for (var i=1;i<=maxlength;i++){ // First, find the longest possible string
