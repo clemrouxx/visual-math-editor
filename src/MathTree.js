@@ -2,13 +2,15 @@ import Keyboard from "./Keyboard";
 
 const CURSOR = {iscursor:true,symbol:"|"};
 const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"}
-const LETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"}
+const SMALLLETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"}
+const BIGLETTERPLACEHOLDER = {isplaceholder:true,symbol:"A"}
 const DEFAULT_TREE = {isroot:true,nodeletion:true,children:[CURSOR]};
 
 const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[PLACEHOLDER]:[],nodeletionfromright:true}};
 const LimLike = (symbol,addplaceholder=false) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
-const Accent = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[LETTERPLACEHOLDER]:[],hassinglechild:true}}
+const Accent = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[SMALLLETTERPLACEHOLDER]:[],hassinglechild:true}}
+const Style = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[BIGLETTERPLACEHOLDER]:[],hassinglechild:true,implodes:true}}
 const Delimiter = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:addplaceholder?[PLACEHOLDER]:[],adptative:true}};
 const Modifier = (symbol,addplaceholder=false) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
 const FracLike = (symbol,addplaceholder=false) => {
@@ -25,7 +27,8 @@ const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,
 function getNode(symbol,rawtext=false,addplaceholder=false){
   if (rawtext) return Symbol(symbol);
   else if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol,addplaceholder);
-  else if (Keyboard.ACCENTS.includes(symbol) || Keyboard.STYLES.includes(symbol)) return Accent(symbol,addplaceholder);
+  else if (Keyboard.ACCENTS.includes(symbol)) return Accent(symbol,addplaceholder);
+  else if (Keyboard.STYLES.includes(symbol)) return Style(symbol,addplaceholder);
   else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol,addplaceholder);
   else if (Keyboard.MODIFIERS.includes(symbol)) return Modifier(symbol,addplaceholder);
   else if (Keyboard.FRAC_LIKE.includes(symbol) || Keyboard.SUM_LIKE.includes(symbol)) return FracLike(symbol,addplaceholder);
@@ -116,6 +119,11 @@ function pathToNode(tree,path){// Recursively loops along the indices n and gets
   return pathToNode(tree.children[path[0]],path.slice(1));
 }
 
+function lengthSkippingCursor(children){
+  if (children.some(c=>c.iscursor)) return children.length-1;
+  return children.length;
+}
+
 function deleteNode(tree,path,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor".
   var newnode = {...tree};
   if (path.length===1){ // We need to delete one of its children
@@ -130,7 +138,13 @@ function deleteNode(tree,path,deletionMode="selection",replaceWithCursor=false){
     return newnode;
   }
   // Else : do recursion
-  newnode.children[path[0]] = deleteNode(newnode.children[path[0]],path.slice(1),deletionMode,replaceWithCursor);// Change the child recursively
+  // We need to check if we have emptied a modifier or a node that has a single child :
+  var modifiedNode = deleteNode(newnode.children[path[0]],path.slice(1),deletionMode,replaceWithCursor);
+  if (modifiedNode.children && lengthSkippingCursor(modifiedNode.children)===0 && (modifiedNode.ismodifier || modifiedNode.hassinglechild)){
+    newnode.children.splice(path[0],1); // Delete that node
+    if (replaceWithCursor || deletionMode==="cursor") newnode.children.splice(path[0],0,CURSOR);
+  }
+  else newnode.children[path[0]] = modifiedNode;
   return newnode;
 }
 
