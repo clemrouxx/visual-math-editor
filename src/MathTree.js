@@ -157,10 +157,17 @@ function insertAtPath(tree,path,node,replace=false){
   return newnode;
 }
 
+function adoptAtPath(tree,path,parent){// The target node is replaced by the node 'parent', which adopts the previously present node.
+  var previousnode = pathToNode(tree,path);
+  parent.children = [previousnode];
+  tree = insertAtPath(tree,path,parent,true);
+  setUids(tree);
+  return tree;
+}
+
 function alignAll(tree){ // Puts the whole tree (minus the root) in an align environment
   const alignNode = getNode("\\begin{align}");
   alignNode.children = tree.children.flatMap(n => (n.symbol==="="?[getNode("&"),n]:[n])); // Put '&' in front of any '='
-  console.log(alignNode)
   tree.children = [alignNode];
   return tree;
 }
@@ -322,18 +329,14 @@ function insertAtCursor(tree,newnode){
 }
 
 function adoptNodeBeforeCursor(tree,newnode){ // Add an accent or modifier on the node before the cursor
-  const modifier = children => {
-    const index = children.findIndex(child => child.iscursor);
-    if (index >= 1) {
-      var previousnode = children[index-1];
-      newnode.children = [previousnode];
-      children.splice(index-1, 1, newnode);
-    }
-    return {children,stopModify:index !== -1};
+  const cpr = findCursorParent(tree);
+  if (cpr.cursorIndex>=1){
+    var path = cpr.path;
+    path.push(cpr.cursorIndex-1);
+
+    return adoptAtPath(tree,path,newnode);
   }
-  var newtree = modifyChildren(tree,modifier).node;
-  setUids(newtree);
-  return newtree;
+  return tree;
 }
 
 function applyReplacementShortcut(tree){
