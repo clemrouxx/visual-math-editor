@@ -410,24 +410,14 @@ function replaceSelectedNode(tree,node,transferChildren=true){ // Replaces the s
 }
 
 function adoptSelectedNode(tree,newnode){
-  var selection = findSelectedNode(tree);
-  
+  const selection = findSelectedNode(tree);
   return adoptAtPath(tree,selection.path,newnode);
 }
 
 function selectedToCursor(tree,side){ // Add cursor next to selected, and unselect
-  const index_shift = (side==="right") ? 1 : 0;
-  const inserter = (children) => {
-    const index = children.findIndex(child => child.selected);
-    if (index !== -1) {
-      children.splice(index+index_shift, 0, CURSOR);
-    }
-    return {children,stopModify:index!==-1};
-  }
-  let newtree =  modifyChildren(tree,inserter).node;
-  return unselect(newtree);
+  var path = findSelectedNode(tree).path;
+  if (side==="right") path[path.length-1] += 1;
+  return unselect(insertAtPath(tree,path,CURSOR,false));
 }
-
-
 
 export default {CURSOR,DEFAULT_TREE,FracLike,getNode,isValidRawText,pathToNode,putCursorAtPath,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}
