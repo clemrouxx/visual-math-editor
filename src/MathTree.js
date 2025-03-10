@@ -98,9 +98,10 @@ function pathToNode(tree,path){// Recursively loops along the indices n and gets
   return pathToNode(tree.children[path[0]],path.slice(1));
 }
 
-function lengthSkippingCursor(children){
-  if (children.some(c=>c.iscursor)) return children.length-1;
-  return children.length;
+function nChildren(node){ // Number of 'real' children
+  if (!node.children) return undefined;
+  if (node.children.some(c=>c.iscursor)) return node.children.length-1;
+  return node.children.length;
 }
 
 function deleteNode(tree,path,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor".
@@ -119,7 +120,7 @@ function deleteNode(tree,path,deletionMode="selection",replaceWithCursor=false){
   // Else : do recursion
   // We need to check if we have emptied a modifier or a node that has a single child :
   var modifiedNode = deleteNode(newnode.children[path[0]],path.slice(1),deletionMode,replaceWithCursor);
-  if (modifiedNode.children && lengthSkippingCursor(modifiedNode.children)===0 && (modifiedNode.ismodifier || modifiedNode.hassinglechild)){
+  if (nChildren(modifiedNode)===0 && (modifiedNode.ismodifier || modifiedNode.hassinglechild)){
     newnode.children.splice(path[0],1); // Delete that node
     if (replaceWithCursor || deletionMode==="cursor") newnode.children.splice(path[0],0,CURSOR);
   }
@@ -295,9 +296,7 @@ function shiftCursor(tree,direction){
 }
 
 function insertAtCursor(tree,newnode){
-  const cursorParentResults = findCursorParent(tree);
-  var targetpath = cursorParentResults.path;
-  targetpath.push(cursorParentResults.cursorIndex);
+  const targetpath = findCursorParent(tree).cursorPath;
 
   var replace = false;
   if (newnode.children){// I will then place the cursor as last child
