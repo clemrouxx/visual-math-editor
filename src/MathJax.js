@@ -137,7 +137,7 @@ const MathComponent = forwardRef((props,ref) => {
                             if ((cursorPath.at(-1)===0 && grandParent.verticalorientation==="down") || (cursorPath.at(-1)===1 && grandParent.verticalorientation==="up")){
                                 path.push(1-cursorPath.at(-1));// Switch to the "down" part
                                 var newtree = MathTree.removeCursor(mathTree);
-                                newtree = MathTree.putCursorAtPath(newtree,path);
+                                newtree = MathTree.pushCursorAtPath(newtree,path);
                                 setMathTree(newtree);
                             }
                         }
@@ -151,7 +151,7 @@ const MathComponent = forwardRef((props,ref) => {
                             if ((cursorPath.at(-1)===0 && grandParent.verticalorientation==="up") || (cursorPath.at(-1)===1 && grandParent.verticalorientation==="down")){
                                 path.push(1-cursorPath.at(-1));// Switch to the "up" part
                                 var newtree = MathTree.removeCursor(mathTree);
-                                newtree = MathTree.putCursorAtPath(newtree,path);
+                                newtree = MathTree.pushCursorAtPath(newtree,path);
                                 setMathTree(newtree);
                             }
                         }

@@ -187,7 +187,9 @@ function setUids(tree,nextUid=0){// Inplace
 // Cursor
 
 function removeCursor(tree){
-  return modifyChildren(tree,children => {return {children:children.filter(child=>!(child.iscursor)),stopModify:children.some(c=>c.iscursor)}}).node;
+  const path = findCursorParent(tree).cursorPath;
+  if (path) return deleteNode(tree,path);
+  return tree;
 }
 
 function appendCursor(tree){
@@ -199,11 +201,12 @@ function findCursorParent(tree){
   if (tree.children){
     for (var index=0;index<tree.children.length;index++){
       let child = tree.children[index];
-      if (child.iscursor) return {node:tree,path:[],cursorIndex:index};
+      if (child.iscursor) return {node:tree,path:[],cursorIndex:index,cursorPath:[index]};
       else if (child.children) {
         var result = findCursorParent(child);
         if (result){
           result.path.unshift(index);
+          result.cursorPath.unshift(index);
           return result;
         }
       }
@@ -212,9 +215,9 @@ function findCursorParent(tree){
   return false;
 }
 
-function putCursorAtPath(tree,path){// CURSOR will be pushed as a child of the node reached following the path
+function pushCursorAtPath(tree,path){// CURSOR will be pushed as a child of the node reached following the path
   if (path.length===0) {tree.children.push(CURSOR); return tree;}
-  tree.children[path[0]] = putCursorAtPath(tree.children[path[0]],path.slice(1));
+  tree.children[path[0]] = pushCursorAtPath(tree.children[path[0]],path.slice(1));
   return tree;
 }
 
@@ -420,4 +423,4 @@ function selectedToCursor(tree,side){ // Add cursor next to selected, and unsele
   return unselect(insertAtPath(tree,path,CURSOR,false));
 }
 
-export default {CURSOR,DEFAULT_TREE,FracLike,getNode,isValidRawText,pathToNode,putCursorAtPath,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}
+export default {CURSOR,DEFAULT_TREE,FracLike,getNode,isValidRawText,pathToNode,pushCursorAtPath,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}
