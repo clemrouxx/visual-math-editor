@@ -3,8 +3,8 @@
 ## Bugs
 - Bug : Rendering "error" when selecting an element in a long sequence; sometimes
 - cursor is sometimes invisible when refocusing
-- Problem with deletion of styled/accentuated symbols with cursor, and also with selection
-- Sometimes, deleting a selected symbol does not replace it with a cursor
+- Incorrect highlighting when selecting an accent
+- Replacing a selected node does not work properly
 
 ## Basic capabilities
 - Removing the style on a symbol
