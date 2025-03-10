@@ -4,6 +4,8 @@
 - Bug : Rendering "error" when selecting an element in a long sequence; sometimes
 - cursor is sometimes invisible when refocusing
 - Problem with deletion of styled/accentuated symbols with cursor, and also with selection
+- Deleting selected node when it is in a fraction does not work
+- Deleting selected node when a child does not place the cursor
 - Sometimes, deleting a selected symbol does not replace it with a cursor
 
 ## Basic capabilities

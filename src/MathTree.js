@@ -111,13 +111,13 @@ function modifyChildren(node, func, stopModify=false){// Not inplace
   return {node:newnode,stopModify};
 }
 
-function pathToNode(node,indices){// Recursively loops along the indices n and gets the n(th) children every time. Returns the node at the end.
-  if (indices.length===0) return node;
-  return pathToNode(node.children[indices[0]],indices.slice(1));
+function pathToNode(tree,path){// Recursively loops along the indices n and gets the n(th) children every time. Returns the node at the end.
+  if (path.length===0) return tree;
+  return pathToNode(tree.children[path[0]],path.slice(1));
 }
 
-function deleteNode(node,path,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor".
-  var newnode = {...node};
+function deleteNode(tree,path,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor".
+  var newnode = {...tree};
   if (path.length===1){ // We need to delete one of its children
     const nodeToDelete = newnode.children[path[0]];
     if (!nodeToDelete.children || (nodeToDelete.hassinglechild && deletionMode==="cursor") || nodeToDelete.implodes){ // Implode
@@ -143,7 +143,7 @@ function insertAtPath(tree,path,node,replace=false){
   return newnode;
 }
 
-function replaceNode(tree,id,node){
+function replaceNode(tree,id,node){ // TO CHANGE
   return applyToAllNodes(tree, n => {
     if (n.id === id) {
       Object.assign(n, node); // Mutate node directly
@@ -159,12 +159,12 @@ function alignAll(tree){ // Puts the whole tree (minus the root) in an align env
   return tree;
 }
 
-function setUids(node,nextUid=0){// Inplace
+function setUids(tree,nextUid=0){// Inplace
   // Let's just give ids to all nodes
-  node.id = nextUid;
+  tree.id = nextUid;
   nextUid++;
-  if (node.children){
-    node.children.forEach(childnode => {
+  if (tree.children){
+    tree.children.forEach(childnode => {
       nextUid = setUids(childnode,nextUid);
     });
   }
@@ -182,11 +182,11 @@ function appendCursor(tree){
   return tree;
 }
 
-function findCursorParent(node){
-  if (node.children){
-    for (var index=0;index<node.children.length;index++){
-      let child = node.children[index];
-      if (child.iscursor) return {node,path:[],cursorIndex:index};
+function findCursorParent(tree){
+  if (tree.children){
+    for (var index=0;index<tree.children.length;index++){
+      let child = tree.children[index];
+      if (child.iscursor) return {tree,path:[],cursorIndex:index};
       else if (child.children) {
         var result = findCursorParent(child);
         if (result){
