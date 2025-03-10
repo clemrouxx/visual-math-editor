@@ -186,7 +186,7 @@ function findCursorParent(tree){
   if (tree.children){
     for (var index=0;index<tree.children.length;index++){
       let child = tree.children[index];
-      if (child.iscursor) return {tree,path:[],cursorIndex:index};
+      if (child.iscursor) return {node:tree,path:[],cursorIndex:index};
       else if (child.children) {
         var result = findCursorParent(child);
         if (result){
@@ -313,25 +313,6 @@ function insertAtCursor(tree,newnode){
   var newtree = insertAtPath(tree,targetpath,newnode,replace);
   setUids(newtree);
   return newtree;
-
-  /*
-  if (newnode.children){// I will then place the cursor as last child
-    if (newnode.hasstrictlytwochildren) newnode.children[0].children.push(CURSOR); // ... except in this quite specific case
-    else newnode.children.push(CURSOR);
-    var inserter = (children) => {return {children:children.map((child) => child.iscursor ? newnode : child),stopModify:children.some(child => child.iscursor)};};
-  }
-  else{
-    // eslint-disable-next-line
-    var inserter = (children) => {
-      const index = children.findIndex(child => child.iscursor);
-      if (index !== -1) {
-        children.splice(index, 0, newnode);
-      }
-      return {children,stopModify:index !== -1};}
-  }
-  var newtree =  modifyChildren(node,inserter).node;
-  setUids(newtree);
-  return newtree;*/
 }
 
 function adoptNodeBeforeCursor(tree,newnode){ // Add an accent or modifier on the node before the cursor
