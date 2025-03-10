@@ -130,7 +130,7 @@ function deleteNode(tree,path,deletionMode="selection",replaceWithCursor=false){
     return newnode;
   }
   // Else : do recursion
-  newnode.children[path[0]] = deleteNode(newnode.children[path[0]],path.slice(1));// Change the child recursively
+  newnode.children[path[0]] = deleteNode(newnode.children[path[0]],path.slice(1),deletionMode,replaceWithCursor);// Change the child recursively
   return newnode;
 }
 
@@ -141,14 +141,6 @@ function insertAtPath(tree,path,node,replace=false){
   }
   else newnode.children[path[0]] = insertAtPath(newnode.children[path[0]],path.slice(1),node,replace);
   return newnode;
-}
-
-function replaceNode(tree,id,node){ // TO CHANGE
-  return applyToAllNodes(tree, n => {
-    if (n.id === id) {
-      Object.assign(n, node); // Mutate node directly
-    }
-  });
 }
 
 function alignAll(tree){ // Puts the whole tree (minus the root) in an align environment
@@ -378,6 +370,14 @@ function findSelectedNode(node){
     }
   }
   return false;
+}
+
+function replaceNode(tree,id,node){ // TO CHANGE
+  return applyToAllNodes(tree, n => {
+    if (n.id === id) {
+      Object.assign(n, node); // Mutate node directly
+    }
+  });
 }
 
 function replaceSelectedNode(tree,node,transferChildren=true){ // Replaces the selected node with 'node', and places the cursor just after. Keep the same children.
