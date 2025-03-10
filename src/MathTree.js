@@ -93,27 +93,6 @@ function applyToAllNodes(node, func) {// Not inplace
   return newnode;
 }
 
-function modifyChildren(node, func, stopModify=false){// Not inplace
-  const newnode = {
-    ...node,
-  };
-  if (node.children && !stopModify){
-    newnode.children = [];
-    let funcResult = func(node.children);
-    var children = funcResult.children;
-    stopModify = funcResult.stopModify;
-    children.forEach((child)=>{
-      if (!stopModify){
-        let result = modifyChildren(child,func,stopModify);
-        child = result.node;
-        stopModify = result.stopModify;
-      }
-      newnode.children.push(child);
-    })
-  }
-  return {node:newnode,stopModify};
-}
-
 function pathToNode(tree,path){// Recursively loops along the indices n and gets the n(th) children every time. Returns the node at the end.
   if (path.length===0) return tree;
   return pathToNode(tree.children[path[0]],path.slice(1));
@@ -401,15 +380,7 @@ function replaceNode(tree,id,node){ // TO CHANGE
 }
 
 function replaceSelectedNode(tree,node,transferChildren=true){ // Replaces the selected node with 'node', and places the cursor just after. Keep the same children.
-  const replacer = (children) => {
-    const index = children.findIndex(child => child.selected);
-    if (index !== -1){
-      if (transferChildren) node.children = children[index].children;
-      children.splice(index,1,node,CURSOR);
-    }
-    return {children,stopModify:index!==-1};
-  }
-  return modifyChildren(tree,replacer).node;
+  return tree;// I will rewrite this entirely anyway
 }
 
 function adoptSelectedNode(tree,newnode){
