@@ -410,14 +410,9 @@ function replaceSelectedNode(tree,node,transferChildren=true){ // Replaces the s
 }
 
 function adoptSelectedNode(tree,newnode){
-  var selectedNode = findSelectedNode(tree).node;
-  newnode.children=[selectedNode];
-  console.log(tree,selectedNode.id);
-  var newtree = replaceNode(tree,selectedNode.id,newnode);
-  console.log(newtree);
-  setUids(newtree);
+  var selection = findSelectedNode(tree);
   
-  return newtree;
+  return adoptAtPath(tree,selection.path,newnode);
 }
 
 function selectedToCursor(tree,side){ // Add cursor next to selected, and unselect
