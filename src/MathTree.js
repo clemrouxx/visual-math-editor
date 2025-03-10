@@ -314,7 +314,6 @@ function adoptNodeBeforeCursor(tree,newnode){ // Add an accent or modifier on th
   if (cpr.cursorIndex>=1){
     var path = cpr.path;
     path.push(cpr.cursorIndex-1);
-
     return adoptAtPath(tree,path,newnode);
   }
   return tree;

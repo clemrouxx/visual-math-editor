@@ -16,6 +16,7 @@
 - Improve cursor positionning when adding a node with children (ex ²)
 - Shortcuts for nodes
 - Shortcuts (and buttons) for node lists
+- Change of shortcuts for subscripts and superscripts
 
 ## Visual improvements
 - Better visuals (in particular buttons), that for the moment depend on the browser
