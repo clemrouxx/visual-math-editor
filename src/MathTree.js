@@ -388,12 +388,13 @@ function findSelectedNode(node){
   return false;
 }
 
-function replaceNode(tree,id,node){ // TO CHANGE
-  return applyToAllNodes(tree, n => {
-    if (n.id === id) {
-      Object.assign(n, node); // Mutate node directly
-    }
-  });
+function canReplace(node,newnode){
+  if ((!node.children) || node.implodes) return true; // A node with no children list can always be replaced. Same with a node that should 'implode' upon deletion
+  // node has children and does not implode
+  if (node.hasstrictlytwochildren) return (newnode.hasstrictlytwochildren);
+  if (node.hassinglechild) return (newnode.hassinglechild);
+  if (node.ismodifier) return (newnode.ismodifier);
+  return true;
 }
 
 function replaceSelectedNode(tree,node,transferChildren=true){ // Replaces the selected node with 'node', and places the cursor just after. Keep the same children.
