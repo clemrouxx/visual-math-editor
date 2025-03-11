@@ -25,7 +25,10 @@ const MathComponent = forwardRef((props,ref) => {
         addNode(newnode);
     }
 
-    const addNode = (newnode) => {
+    const addNode = (node,copyBefore=false) => {
+        var newnode = {};
+        if (copyBefore) newnode = structuredClone(node);
+        else newnode = node;
         if (editMode==="cursor"){
             if (isCursorInModifier() && !MathTree.isValidRawText(newnode)) return; // Block adding this node
             if (Keyboard.ACCENTS.includes(newnode.symbol) || Keyboard.STYLES.includes(newnode.symbol)){

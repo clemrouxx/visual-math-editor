@@ -51,7 +51,7 @@ const FirstRow = ({reference,getShortcut}) => {
     <div className="first-row">
       <h3>Common constructs</h3>
       <div className="key-row">
-        <NodeVirtualKey uniqueName="squared" display={`${PLACEHOLDER_STRING}^2`} node={{symbol:"^",children:[{symbol:"2"}]}} reference={reference}/>
+        <NodeVirtualKey uniqueName="squared" display={`${PLACEHOLDER_STRING}^2`} node={{...MathTree.getNode("^"),children:[{symbol:"2"}]}} reference={reference}/>
         <VirtualKey symbol="^" display={`A^${PLACEHOLDER_STRING}`} tooltip="^"  reference={reference}/>
         <VirtualKey symbol="_" display={`A_${PLACEHOLDER_STRING}`} tooltip="_ (Underscore)"  reference={reference}/>
         <SymbolVirtualKey symbol="\frac" tooltip={getShortcut("\\frac")} reference={reference} className="x-small-text"/>
@@ -107,7 +107,7 @@ const Category = ({title,symbols,getShortcut,reference,threasholdIndex,className
 const NodeVirtualKey = ({uniqueName,node,display,tooltip,reference,className}) => {
   return (
     <div>
-      <button onMouseDown={(e) => e.preventDefault()} data-tooltip-id={uniqueName} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addNode(node)}>
+      <button onMouseDown={(e) => e.preventDefault()} data-tooltip-id={uniqueName} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addNode(node,true)}>
             {`\\[${display} \\]`}
         </button>
         {tooltip && <Tooltip id={uniqueName} />}

@@ -13,7 +13,6 @@
 - Copy-pasting nodes/branches
 - Changing alignement in array environments
 - Multi-symbol selection
-- Improve cursor positionning when adding a node with children (ex ²)
 - Shortcuts for nodes
 - Shortcuts (and buttons) for node lists
 - Change of shortcuts for subscripts and superscripts

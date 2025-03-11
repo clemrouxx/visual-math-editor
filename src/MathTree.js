@@ -37,6 +37,25 @@ function getNode(symbol,rawtext=false,addplaceholder=false){
   return Symbol(symbol);
 }
 
+function insertCursorInNode(node){// Insert cursor at the "right place", assuming this node will be added to the math tree
+  if (!node.children) return false; // Cannot insert cursor
+  const nchildren = nChildren(node);
+  var newnode = {...node};
+  if (nchildren===0) {
+    newnode.children = [CURSOR];
+    return newnode;
+  }
+  for (var i=0;i<nchildren;i++){
+    const modifiedNode = insertCursorInNode(node.children[i]); // Recursivity
+    if (modifiedNode){// Success
+      newnode.children[i] = modifiedNode;
+      return newnode;
+    }
+  }
+  // No success
+  return false;
+}
+
 function isValidRawText(node){
   if (node.children) return false;
   if (node.symbol.length>1) return false;
@@ -297,14 +316,14 @@ function shiftCursor(tree,direction){
 
 function insertAtCursor(tree,newnode){
   const targetpath = findCursorParent(tree).cursorPath;
-
-  var replace = false;
-  if (newnode.children){// I will then place the cursor as last child
-    if (newnode.hasstrictlytwochildren) newnode.children[0].children.push(CURSOR); // ... except in this quite specific case
-    else newnode.children.push(CURSOR);
-    replace=true;
+  const modifiedNode = insertCursorInNode(newnode);
+  var newtree = {};
+  if (modifiedNode){// Case where we inserted the cursor, then we need to remove it by replacing it.
+    newtree = insertAtPath(tree,targetpath,modifiedNode,true);
   }
-  var newtree = insertAtPath(tree,targetpath,newnode,replace);
+  else{
+    newtree = insertAtPath(tree,targetpath,newnode,false);
+  }
   setUids(newtree);
   return newtree;
 }
@@ -392,4 +411,4 @@ function selectedToCursor(tree,side){ // Add cursor next to selected, and unsele
   return unselect(insertAtPath(tree,path,CURSOR,false));
 }
 
-export default {CURSOR,DEFAULT_TREE,FracLike,getNode,isValidRawText,pathToNode,pushCursorAtPath,getFormula,applyToAllNodes,setUids,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}
+export default {CURSOR,DEFAULT_TREE,FracLike,getNode,isValidRawText,pathToNode,pushCursorAtPath,getFormula,applyToAllNodes,setUids,insertCursorInNode,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}
