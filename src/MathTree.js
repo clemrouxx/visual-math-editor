@@ -183,6 +183,33 @@ function setUids(tree,nextUid=0){// Inplace
   return nextUid;
 }
 
+function canReplace(node,newnode){
+  if ((!node.children) || node.implodes) return true; // A node with no children list can always be replaced. Same with a node that should 'implode' upon deletion
+  // node has children and does not implode
+  if (node.hasstrictlytwochildren) return (newnode.hasstrictlytwochildren);
+  if (node.hassinglechild) return (newnode.hassinglechild);
+  if (node.ismodifier) return (newnode.ismodifier);
+  return true;
+}
+
+function replaceAndAdopt(tree,path,newnode,placeCursor=false){
+  const node = pathToNode(tree,path);
+  var newtree = tree;
+  if (node.children) newnode.children = node.children;
+  if (placeCursor){
+    const modifiedNewnode = insertCursorInNode(newnode);
+    if (modifiedNewnode) newnode = modifiedNewnode;
+    else{
+      var cursorPath = [...path];
+      cursorPath[cursorPath.length-1] = path.at(-1)+1;
+      newtree = insertAtPath(newtree,cursorPath,CURSOR);
+    }
+  }
+  var newtree = insertAtPath(tree,path,newnode,true);
+  setUids(newtree);
+  return newtree;
+}
+
 // Cursor
 
 function removeCursor(tree){
@@ -388,27 +415,6 @@ function findSelectedNode(node){
   return false;
 }
 
-function canReplace(node,newnode){
-  if ((!node.children) || node.implodes) return true; // A node with no children list can always be replaced. Same with a node that should 'implode' upon deletion
-  // node has children and does not implode
-  if (node.hasstrictlytwochildren) return (newnode.hasstrictlytwochildren);
-  if (node.hassinglechild) return (newnode.hassinglechild);
-  if (node.ismodifier) return (newnode.ismodifier);
-  return true;
-}
-
-function replaceAndAdopt(tree,path,newnode){
-  const node = pathToNode(tree,path);
-  newnode.children = node.children;
-  var newtree = insertAtPath(tree,path,newnode,true);
-  setUids(newtree);
-  return newtree;
-}
-
-function replaceSelectedNode(tree,node,transferChildren=true){ // Replaces the selected node with 'node', and places the cursor just after. Keep the same children.
-  return tree;// I will rewrite this entirely anyway
-}
-
 function adoptSelectedNode(tree,newnode){
   const selection = findSelectedNode(tree);
   return adoptAtPath(tree,selection.path,newnode);
@@ -420,4 +426,4 @@ function selectedToCursor(tree,side){ // Add cursor next to selected, and unsele
   return unselect(insertAtPath(tree,path,CURSOR,false));
 }
 
-export default {CURSOR,DEFAULT_TREE,FracLike,getNode,isValidRawText,pathToNode,pushCursorAtPath,getFormula,applyToAllNodes,setUids,insertCursorInNode,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll,findSelectedNode,canReplace,replaceAndAdopt}
+export default {CURSOR,DEFAULT_TREE,FracLike,getNode,isValidRawText,pathToNode,pushCursorAtPath,getFormula,applyToAllNodes,setUids,insertCursorInNode,deleteSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll,findSelectedNode,canReplace,replaceAndAdopt}

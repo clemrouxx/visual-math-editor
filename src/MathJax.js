@@ -43,7 +43,7 @@ const MathComponent = forwardRef((props,ref) => {
             else{
                 const selection = MathTree.findSelectedNode(mathTree);
                 if (MathTree.canReplace(selection.node,newnode)){
-                    setMathTree(MathTree.replaceAndAdopt(mathTree,selection.path,newnode));
+                    setMathTree(MathTree.replaceAndAdopt(mathTree,selection.path,newnode,true));
                     setEditMode("cursor");
                 }
                 
