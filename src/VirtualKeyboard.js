@@ -52,8 +52,8 @@ const FirstRow = ({reference,getShortcut}) => {
       <h3>Common constructs</h3>
       <div className="key-row">
         <NodeVirtualKey uniqueName="squared" display={`${PLACEHOLDER_STRING}^2`} node={{...MathTree.getNode("^"),children:[{symbol:"2"}]}} reference={reference}/>
-        <VirtualKey symbol="^" display={`A^${PLACEHOLDER_STRING}`} tooltip="^"  reference={reference}/>
-        <VirtualKey symbol="_" display={`A_${PLACEHOLDER_STRING}`} tooltip="_ (Underscore)"  reference={reference}/>
+        <VirtualKey symbol="^" display={`A^${PLACEHOLDER_STRING}`} tooltip="Ctrl+u OR ^"  reference={reference}/>
+        <VirtualKey symbol="_" display={`A_${PLACEHOLDER_STRING}`} tooltip="Ctrl+d OR _"  reference={reference}/>
         <SymbolVirtualKey symbol="\frac" tooltip={getShortcut("\\frac")} reference={reference} className="x-small-text"/>
         <SymbolVirtualKey symbol="\sqrt" tooltip={getShortcut("\\sqrt")} reference={reference} className="small-text"/>
         <NodeVirtualKey uniqueName="nsqrt" display={MathTree.getFormula(MathTree.FracLike("\\sqrt",true))} node={MathTree.FracLike("\\sqrt")} reference={reference} className="small-text"/>

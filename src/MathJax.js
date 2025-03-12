@@ -78,6 +78,7 @@ const MathComponent = forwardRef((props,ref) => {
     const handleKeyDown = (event) => {
         // We need to check if we are in a "raw text" area and in cursor mode
         // I also keep a copy of the parent
+        //console.log(event);
         var parentCopy = {};
         var cursorPath = [];
         if (editMode==="cursor"){
@@ -93,9 +94,19 @@ const MathComponent = forwardRef((props,ref) => {
         }
 
         if (command===""){// Not writing a command
-            if (event.key==="i" && event.ctrlKey) {
-                event.preventDefault();
-                setCommand("\\");
+            if (event.ctrlKey){ // All control-based shortcuts
+                if (event.key==="i"){
+                    event.preventDefault();
+                    setCommand("\\");
+                }
+                else if (event.key==="u"){
+                    event.preventDefault();
+                    addSymbol("^");
+                }
+                else if (event.key==="d"){
+                    event.preventDefault();
+                    addSymbol("_");
+                }
             }
             else if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
             {
