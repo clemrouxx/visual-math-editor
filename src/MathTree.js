@@ -189,6 +189,7 @@ function canReplace(node,newnode){
   if (node.hasstrictlytwochildren) return (newnode.hasstrictlytwochildren);
   if (node.hassinglechild) return (newnode.hassinglechild);
   if (node.ismodifier) return (newnode.ismodifier);
+  if (node.ismultiline) return (newnode.ismultiline);
   return true;
 }
 
