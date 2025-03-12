@@ -107,6 +107,32 @@ const MathComponent = forwardRef((props,ref) => {
                     event.preventDefault();
                     addSymbol("_");
                 }
+                else if (event.key==="c" && editMode==="selection"){
+                    const selectedNode = MathTree.unselect(MathTree.findSelectedNode(mathTree).node);
+                    const string = JSON.stringify(selectedNode);
+                    navigator.clipboard.writeText(string);
+                    console.log(string);
+                }
+                else if (event.key==="x" && editMode==="selection"){
+                    const selection = MathTree.findSelectedNode(mathTree);
+                    const string = JSON.stringify(MathTree.unselect(selection.node));
+                    navigator.clipboard.writeText(string);
+                    setEditMode("cursor");
+                    setMathTree(MathTree.deleteSelectedNode(mathTree,true));
+                }
+                else if (event.key==="v"){
+                    let string = navigator.clipboard.readText().then((string)=>{
+                        let json ={};
+                        try{
+                            json = JSON.parse(string);
+                        }
+                        catch{
+                            return;// Invalid JSON input
+                        }
+                        console.log(json);
+                        addNode(json);
+                    })
+                }
             }
             else if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
             {
