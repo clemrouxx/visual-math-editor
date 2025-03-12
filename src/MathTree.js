@@ -397,6 +397,14 @@ function canReplace(node,newnode){
   return true;
 }
 
+function replaceAndAdopt(tree,path,newnode){
+  const node = pathToNode(tree,path);
+  newnode.children = node.children;
+  var newtree = insertAtPath(tree,path,newnode,true);
+  setUids(newtree);
+  return newtree;
+}
+
 function replaceSelectedNode(tree,node,transferChildren=true){ // Replaces the selected node with 'node', and places the cursor just after. Keep the same children.
   return tree;// I will rewrite this entirely anyway
 }
@@ -412,4 +420,4 @@ function selectedToCursor(tree,side){ // Add cursor next to selected, and unsele
   return unselect(insertAtPath(tree,path,CURSOR,false));
 }
 
-export default {CURSOR,DEFAULT_TREE,FracLike,getNode,isValidRawText,pathToNode,pushCursorAtPath,getFormula,applyToAllNodes,setUids,insertCursorInNode,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll}
+export default {CURSOR,DEFAULT_TREE,FracLike,getNode,isValidRawText,pathToNode,pushCursorAtPath,getFormula,applyToAllNodes,setUids,insertCursorInNode,deleteSelectedNode,replaceSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll,findSelectedNode,canReplace,replaceAndAdopt}

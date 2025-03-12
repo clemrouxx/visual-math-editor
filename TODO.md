@@ -1,7 +1,7 @@
 # TODO list
 
 ## Bugs
-- Bug : Rendering "error" when selecting an element in a long sequence; sometimes
+- Bug : Rendering "error" when selecting an element in a long sequence; sometimes. Also on the title for some reason
 - cursor is sometimes invisible when refocusing
 - Incorrect highlighting when selecting an accent
 - Replacing a selected node does not work properly
@@ -16,9 +16,10 @@
 - Shortcuts for nodes
 - Shortcuts (and buttons) for node lists
 - Change of shortcuts for subscripts and superscripts
+- Undo-redo
+- Paste any valid character
 
 ## Visual improvements
 - Better visuals (in particular buttons), that for the moment depend on the browser
 
 ## Code improvements
-- Refactor MathTree.js (in particular use more of tree indices); to prepare for rewrite of code regarding selection

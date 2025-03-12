@@ -41,8 +41,12 @@ const MathComponent = forwardRef((props,ref) => {
                 setMathTree(MathTree.adoptSelectedNode(mathTree,newnode));
             }
             else{
-                setMathTree(MathTree.replaceSelectedNode(mathTree,newnode));
-                setEditMode("cursor");
+                const selection = MathTree.findSelectedNode(mathTree);
+                if (MathTree.canReplace(selection.node,newnode)){
+                    setMathTree(MathTree.replaceAndAdopt(mathTree,selection.path,newnode));
+                    setEditMode("cursor");
+                }
+                
             }
         }
     };
