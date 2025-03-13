@@ -53,6 +53,7 @@ function getNode(symbol,rawtext=false,addplaceholder=false){
   else if (FRAC_LIKE.includes(symbol) || SUM_LIKE.includes(symbol)) return FracLike(symbol,addplaceholder);
   else if (LIM_LIKE.includes(symbol)) return LimLike(symbol,addplaceholder);
   else if (symbol in ENVIRONMENTS) return Environment(symbol,addplaceholder);
+  else if (symbol in NAMED_NODES) return NAMED_NODES[symbol];
   return Symbol(symbol);
 }
 

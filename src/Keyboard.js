@@ -163,7 +163,10 @@ const SHORTCUTS = {
 
   // Environments
   mat:"\\begin{pmatrix}",
-  cas:"\\begin{cases}"
+  cas:"\\begin{cases}",
+
+  // Named nodes
+  sq:"squared",
 };
 
 

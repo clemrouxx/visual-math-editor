@@ -52,12 +52,12 @@ const FirstRow = ({reference,getShortcut}) => {
     <div className="first-row">
       <h3>Common constructs</h3>
       <div className="key-row">
-        <NodeVirtualKey nodeName="squared" display={`${PLACEHOLDER_STRING}^2`} reference={reference}/>
+        <NodeVirtualKey nodeName="squared" tooltip={getShortcut("squared")} display={`${PLACEHOLDER_STRING}^2`} reference={reference}/>
         <VirtualKey symbol="^" display={`A^${PLACEHOLDER_STRING}`} tooltip="Ctrl+u OR ^"  reference={reference}/>
         <VirtualKey symbol="_" display={`A_${PLACEHOLDER_STRING}`} tooltip="Ctrl+d OR _"  reference={reference}/>
         <SymbolVirtualKey symbol="\frac" tooltip={getShortcut("\\frac")} reference={reference} className="x-small-text"/>
         <SymbolVirtualKey symbol="\sqrt" tooltip={getShortcut("\\sqrt")} reference={reference} className="small-text"/>
-        <NodeVirtualKey nodeName="nsqrt" display={MathNodes.getFormula(MathNodes.FracLike("\\sqrt",true))}  reference={reference} className="small-text"/>
+        <NodeVirtualKey nodeName="nsqrt" tooltip={getShortcut("nsqrt")} display={MathNodes.getFormula(MathNodes.FracLike("\\sqrt",true))}  reference={reference} className="small-text"/>
         <VirtualKey symbol="\not" display={`/`} tooltip={getShortcut("\\not")}  reference={reference}/>
         </div>
         <div className="key-row">
