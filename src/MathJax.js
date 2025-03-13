@@ -12,9 +12,14 @@ const MathComponent = forwardRef((props,ref) => {
     const [focused,setFocused] = useState(true);
     const domRef = useRef(null);
 
-    useImperativeHandle(ref, () => ({ // Can be called by the VirtualKeyboard for example
+    useImperativeHandle(ref, () => ({ // Functions that can be called by an 'outside' element, VirtualKeyboard for example
         addSymbol,addNode
     }));
+
+    const changeMathTree = (newtree) => { // 'Real' changes (ie not just cursor movement or selection) to the math tree. Relevant for the undo-redo functionnality
+        console.log("math tree changed");
+        setMathTree(newtree);
+    }
 
     const isCursorInModifier = () => {
         if (editMode!=="cursor") return false;
@@ -33,18 +38,18 @@ const MathComponent = forwardRef((props,ref) => {
         if (editMode==="cursor"){
             if (isCursorInModifier() && !MathNodes.isValidRawText(newnode)) return; // Block adding this node
             if (MathNodes.ACCENTS.includes(newnode.symbol) || MathNodes.STYLES.includes(newnode.symbol)){
-                setMathTree(MathTree.adoptNodeBeforeCursor(mathTree,newnode));
+                changeMathTree(MathTree.adoptNodeBeforeCursor(mathTree,newnode));
             }
-            else setMathTree(MathTree.insertAtCursor(mathTree,newnode));
+            else changeMathTree(MathTree.insertAtCursor(mathTree,newnode));
         }
         else if (editMode==="selection"){
             if (MathNodes.ACCENTS.includes(newnode.symbol) || MathNodes.STYLES.includes(newnode.symbol)){
-                setMathTree(MathTree.adoptSelectedNode(mathTree,newnode));
+                changeMathTree(MathTree.adoptSelectedNode(mathTree,newnode));
             }
             else{
                 const selection = MathTree.findSelectedNode(mathTree);
                 if (MathTree.canReplace(selection.node,newnode)){
-                    setMathTree(MathTree.replaceAndAdopt(mathTree,selection.path,newnode,true));
+                    changeMathTree(MathTree.replaceAndAdopt(mathTree,selection.path,newnode,true));
                     setEditMode("cursor");
                 }
                 
@@ -118,7 +123,7 @@ const MathComponent = forwardRef((props,ref) => {
                     const string = JSON.stringify(MathTree.unselect(selection.node));
                     navigator.clipboard.writeText(string);
                     setEditMode("cursor");
-                    setMathTree(MathTree.deleteSelectedNode(mathTree,true));
+                    changeMathTree(MathTree.deleteSelectedNode(mathTree,true));
                 }
                 else if (event.key==="v"){
                     navigator.clipboard.readText().then((string)=>{
@@ -163,7 +168,7 @@ const MathComponent = forwardRef((props,ref) => {
                             addSymbol("\\\\");
                         }
                         else if (parentCopy.isroot){//AutoAlign
-                            setMathTree(MathTree.alignAll(mathTree));
+                            changeMathTree(MathTree.alignAll(mathTree));
                             addSymbol("\\\\");
                         }
                         break;
@@ -205,11 +210,11 @@ const MathComponent = forwardRef((props,ref) => {
                         break;
                     case "Backspace":
                         event.preventDefault();
-                        setMathTree(MathTree.deleteNextToCursor(mathTree,"left"));
+                        changeMathTree(MathTree.deleteNextToCursor(mathTree,"left"));
                         break;
                     case "Delete":
                         event.preventDefault();
-                        setMathTree(MathTree.deleteNextToCursor(mathTree,"right"));
+                        changeMathTree(MathTree.deleteNextToCursor(mathTree,"right"));
                         break;
                     case " ": // Space
                         event.preventDefault();
@@ -234,7 +239,7 @@ const MathComponent = forwardRef((props,ref) => {
                     case "Delete":
                     case "Backspace":
                         event.preventDefault();
-                        setMathTree(MathTree.deleteSelectedNode(mathTree,true));
+                        changeMathTree(MathTree.deleteSelectedNode(mathTree,true));
                         setEditMode("cursor");
                         break;
                     case "ArrowRight":
