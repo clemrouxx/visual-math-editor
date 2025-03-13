@@ -111,7 +111,6 @@ const MathComponent = forwardRef((props,ref) => {
                     const selectedNode = MathTree.unselect(MathTree.findSelectedNode(mathTree).node);
                     const string = JSON.stringify(selectedNode);
                     navigator.clipboard.writeText(string);
-                    console.log(string);
                 }
                 else if (event.key==="x" && editMode==="selection"){
                     const selection = MathTree.findSelectedNode(mathTree);
@@ -121,16 +120,19 @@ const MathComponent = forwardRef((props,ref) => {
                     setMathTree(MathTree.deleteSelectedNode(mathTree,true));
                 }
                 else if (event.key==="v"){
-                    let string = navigator.clipboard.readText().then((string)=>{
-                        let json ={};
-                        try{
-                            json = JSON.parse(string);
+                    navigator.clipboard.readText().then((string)=>{
+                        if ([...string].length===1){
+                            addSymbol(string);
                         }
-                        catch{
-                            return;// Invalid JSON input
+                        else{
+                            try{
+                                let json = JSON.parse(string);
+                                addNode(json);
+                            }
+                            catch{
+                                return;// Invalid JSON input
+                            }
                         }
-                        console.log(json);
-                        addNode(json);
                     })
                 }
             }
