@@ -1,28 +1,27 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 
 export const useUndoRedo = (initialState) => {
-  const [state, setState] = useState(initialState);
-  const historyRef = useRef({ past: [], future: [] });
+  const historyRef = useRef({ past: [structuredClone(initialState)], future: [] });
 
-  const set = (newState) => {
-    historyRef.current.past.push(state); // Save current state
+  const setNewState = (newState) => {
+    historyRef.current.past.push(structuredClone(newState)); // Save (copy of) current state
     historyRef.current.future = []; // Clear redo history
-    setState(newState);
   };
 
   const undo = () => {
-    if (historyRef.current.past.length > 0) {
-      historyRef.current.future.unshift(state);
-      setState(historyRef.current.past.pop());
+    if (historyRef.current.past.length > 1) {
+        historyRef.current.future.unshift(historyRef.current.past.pop());
+        return structuredClone(historyRef.current.past.at(-1));
     }
   };
 
   const redo = () => {
     if (historyRef.current.future.length > 0) {
-      historyRef.current.past.push(state);
-      setState(historyRef.current.future.shift());
+      //historyRef.current.past.push(state);
+      historyRef.current.past.push(historyRef.current.future.shift());
+      return structuredClone(historyRef.current.past.at(-1));
     }
   };
 
-  return { state, set, undo, redo };
+  return { setNewState, undo, redo };
 };

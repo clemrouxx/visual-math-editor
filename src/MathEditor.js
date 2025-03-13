@@ -3,6 +3,7 @@ import {MathJax,MathJaxContext} from "better-react-mathjax";
 import MathTree from "./MathTree";
 import Keyboard from "./Keyboard";
 import MathNodes from "./MathNodes";
+import { useUndoRedo } from "./UndoRedo";
 
 const MathEditor = forwardRef((props,ref) => {
     const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
@@ -11,13 +12,14 @@ const MathEditor = forwardRef((props,ref) => {
     const [command,setCommand] = useState("");
     const [focused,setFocused] = useState(true);
     const domRef = useRef(null);
+    const { setNewState, undo, redo } = useUndoRedo(MathNodes.DEFAULT_TREE);
 
     useImperativeHandle(ref, () => ({ // Functions that can be called by an 'outside' element, VirtualKeyboard for example
         addSymbol,addNode
     }));
 
     const changeMathTree = (newtree) => { // 'Real' changes (ie not just cursor movement or selection) to the math tree. Relevant for the undo-redo functionnality
-        console.log("math tree changed");
+        setNewState(structuredClone(newtree));
         setMathTree(newtree);
     }
 
@@ -104,6 +106,14 @@ const MathEditor = forwardRef((props,ref) => {
                 if (event.key==="i"){
                     event.preventDefault();
                     setCommand("\\");
+                }
+                else if (event.key==="z"){
+                    const undoResult = undo();
+                    if (undoResult) setMathTree(undoResult);
+                }
+                else if (event.key==="y"){
+                    const redoResult = redo();
+                    if (redoResult) setMathTree(redoResult);
                 }
                 else if (event.key==="u"){
                     event.preventDefault();
