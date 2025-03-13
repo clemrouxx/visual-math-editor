@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import { Tooltip } from "react-tooltip";
 import Keyboard from "./Keyboard";
 import MathTree from "./MathTree";
+import MathNodes from "./MathNodes";
 
 const GREEK_LETTERS = ["\\alpha","\\beta","\\gamma","\\Gamma","\\delta","\\Delta","\\epsilon","\\varepsilon","\\zeta","\\eta","\\theta","\\vartheta","\\Theta","\\iota","\\kappa","\\varkappa","\\lambda","\\Lambda","\\mu","\\nu","\\xi","\\Xi","\\pi","\\Pi","\\rho","\\varrho","\\sigma","\\Sigma","\\tau","\\upsilon","\\Upsilon","\\phi","\\varphi","\\Phi","\\chi","\\psi","\\Psi","\\omega","\\Omega"];
 const MISC = ["\\infty","\\partial","\\forall","\\exists","\\nexists","\\varnothing","\\ell","\\nabla","\\triangle","\\square","\\hbar","\\Im","\\Re","\\complement","\\dagger","\\top","\\therefore","\\dots","\\because","\\vdots","\\ddots","\\ddagger","\\_","\\bigstar","\\emptyset","\\imath","\\jmath","\\sharp","\\flat","\\natural","\\diagdown","\\diagup","\\diamond","\\Diamond","\\Finv","\\Game","\\hslash","\\mho","\\prime","\\surd","\\wp","\\angle","\\measuredangle","\\sphericalangle","\\triangledown","\\vartriangle","\\blacklozenge","\\blacksquare","\\blacktriangle","\\blacktriangledown","\\backprime","\\circledS","\\circledR","\\digamma","\\neg","\\eth","\\S","\\checkmark","\\maltese"];
 const ARROWS = ["\\rightarrow","\\mapsto","\\Rightarrow","\\leftarrow","\\Leftarrow","\\leftrightarrow","\\Leftrightarrow","\\Longleftrightarrow","\\rightleftarrows","\\downarrow","\\Downarrow","\\uparrow","\\updownarrow","\\Updownarrow","\\xrightarrow","\\xleftarrow","\\Uparrow","\\longleftarrow","\\Longleftarrow","\\longleftrightarrow","\\longmapsto","\\longrightarrow","\\Longrightarrow","\\nearrow","\\searrow","\\swarrow","\\nwarrow","\\rightharpoondown","\\leftharpoondown","\\rightharpoonup","\\leftharpoonup","\\circlearrowleft","\\circlearrowright","\\curvearrowleft","\\curvearrowright","\\dashleftarrow","\\dashrightarrow","\\downdownarrows","\\upuparrows","\\leftleftarrows","\\rightrightarrows","\\leftrightarrows","\\rightleftarrows","\\leftarrowtail","\\rightarrowtail","\\rightsquigarrow","\\leftrightsquigarrow","\\Lleftarrow","\\Rrightarrow","\\looparrowleft","\\looparrowright","\\Lsh","\\Rsh","\\twoheadleftarrow","\\twoheadrightarrow","\\nLeftarrow","\\nRightarrow","\\nLeftrightarrow","\\nleftarrow","\\nrightarrow","\\nleftrightarrow","\\rightleftharpoons","\\leftrightharpoons","\\downharpoonleft","\\downharpoonright","\\upharpoonleft","\\upharpoonright"];
 // I should have a default and extended table for some of the categories
-const ACCENTS = Keyboard.ACCENTS;
+const ACCENTS = MathNodes.ACCENTS;
 
 const ENVIRONMENT_NAMES = ["cases","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
 const ENVIRONMENT_DISPLAY_INNER = ". & . \\\\ . & .";
@@ -51,12 +52,12 @@ const FirstRow = ({reference,getShortcut}) => {
     <div className="first-row">
       <h3>Common constructs</h3>
       <div className="key-row">
-        <NodeVirtualKey uniqueName="squared" display={`${PLACEHOLDER_STRING}^2`} node={{...MathTree.getNode("^"),children:[{symbol:"2"}]}} reference={reference}/>
+        <NodeVirtualKey nodeName="squared" display={`${PLACEHOLDER_STRING}^2`} reference={reference}/>
         <VirtualKey symbol="^" display={`A^${PLACEHOLDER_STRING}`} tooltip="Ctrl+u OR ^"  reference={reference}/>
         <VirtualKey symbol="_" display={`A_${PLACEHOLDER_STRING}`} tooltip="Ctrl+d OR _"  reference={reference}/>
         <SymbolVirtualKey symbol="\frac" tooltip={getShortcut("\\frac")} reference={reference} className="x-small-text"/>
         <SymbolVirtualKey symbol="\sqrt" tooltip={getShortcut("\\sqrt")} reference={reference} className="small-text"/>
-        <NodeVirtualKey uniqueName="nsqrt" display={MathTree.getFormula(MathTree.FracLike("\\sqrt",true))} node={MathTree.FracLike("\\sqrt")} reference={reference} className="small-text"/>
+        <NodeVirtualKey nodeName="nsqrt" display={MathNodes.getFormula(MathNodes.FracLike("\\sqrt",true))}  reference={reference} className="small-text"/>
         <VirtualKey symbol="\not" display={`/`} tooltip={getShortcut("\\not")}  reference={reference}/>
         </div>
         <div className="key-row">
@@ -104,13 +105,13 @@ const Category = ({title,symbols,getShortcut,reference,threasholdIndex,className
   </div>)
 }
 
-const NodeVirtualKey = ({uniqueName,node,display,tooltip,reference,className}) => {
+const NodeVirtualKey = ({nodeName,display,tooltip,reference,className}) => {
   return (
     <div>
-      <button onMouseDown={(e) => e.preventDefault()} data-tooltip-id={uniqueName} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addNode(node,true)}>
+      <button onMouseDown={(e) => e.preventDefault()} data-tooltip-id={nodeName} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addNode(MathNodes.NAMED_NODES[nodeName],true)}>
             {`\\[${display} \\]`}
         </button>
-        {tooltip && <Tooltip id={uniqueName} />}
+        {tooltip && <Tooltip id={nodeName} />}
     </div>
   );
 }
@@ -125,7 +126,7 @@ const VirtualKey = ({symbol,display,tooltip,reference,className}) => {
 }
 
 const SymbolVirtualKey = ({symbol,tooltip,reference,className}) => {
-  const formula = MathTree.getFormula(MathTree.getNode(symbol,false,true));
+  const formula = MathNodes.getFormula(MathNodes.getNode(symbol,false,true));
   return (
     <VirtualKey symbol={symbol} display={formula} tooltip={tooltip} reference={reference} className={className}/>
   );

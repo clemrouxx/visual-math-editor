@@ -1,48 +1,14 @@
 import Keyboard from "./Keyboard";
+import MathNodes from "./MathNodes";
 
-const CURSOR = {iscursor:true,symbol:"|"};
-const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"}
-const SMALLLETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"}
-const BIGLETTERPLACEHOLDER = {isplaceholder:true,symbol:"A"}
-const DEFAULT_TREE = {isroot:true,nodeletion:true,children:[CURSOR]};
-
-const Symbol = (symbol) => {return {symbol}};
-const ParentSymbol = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[PLACEHOLDER]:[],nodeletionfromright:true}};
-const LimLike = (symbol,addplaceholder=false) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
-const Accent = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[SMALLLETTERPLACEHOLDER]:[],hassinglechild:true}}
-const Style = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[BIGLETTERPLACEHOLDER]:[],hassinglechild:true,implodes:true}}
-const Delimiter = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:Keyboard.DELIMITERS[symbol],children:addplaceholder?[PLACEHOLDER]:[],adptative:true}};
-const Modifier = (symbol,addplaceholder=false) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
-const FracLike = (symbol,addplaceholder=false) => {
-  var childrenstring = "{§0}{§1}";
-  var verticalorientation = "down";
-  if (Keyboard.SUM_LIKE.includes(symbol)) {childrenstring = "_{§0}^{§1}"; verticalorientation="up";}
-  else if (symbol === "\\underbrace") childrenstring = "{§0}_{§1}";
-  else if (symbol === "\\overbrace") {childrenstring = "{§0}^{§1}"; verticalorientation="up";}
-  else if (symbol === "\\sqrt") childrenstring = "[§0]{§1}";
-  return {symbol,verticalorientation,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,childrenstring}
-};
-const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:Keyboard.ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true}};
-
-function getNode(symbol,rawtext=false,addplaceholder=false){
-  if (rawtext) return Symbol(symbol);
-  else if (Keyboard.PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol,addplaceholder);
-  else if (Keyboard.ACCENTS.includes(symbol)) return Accent(symbol,addplaceholder);
-  else if (Keyboard.STYLES.includes(symbol)) return Style(symbol,addplaceholder);
-  else if (symbol in Keyboard.DELIMITERS) return Delimiter(symbol,addplaceholder);
-  else if (Keyboard.MODIFIERS.includes(symbol)) return Modifier(symbol,addplaceholder);
-  else if (Keyboard.FRAC_LIKE.includes(symbol) || Keyboard.SUM_LIKE.includes(symbol)) return FracLike(symbol,addplaceholder);
-  else if (Keyboard.LIM_LIKE.includes(symbol)) return LimLike(symbol,addplaceholder);
-  else if (symbol in Keyboard.ENVIRONMENTS) return Environment(symbol,addplaceholder);
-  return Symbol(symbol);
-}
+// Now only for math tree manipulation
 
 function insertCursorInNode(node){// Insert cursor at the "right place", assuming this node will be added to the math tree
   if (!node.children) return false; // Cannot insert cursor
   const nchildren = nChildren(node);
   var newnode = {...node};
   if (nchildren===0) {
-    newnode.children = [CURSOR];
+    newnode.children = [MathNodes.CURSOR];
     return newnode;
   }
   for (var i=0;i<nchildren;i++){
@@ -54,49 +20,6 @@ function insertCursorInNode(node){// Insert cursor at the "right place", assumin
   }
   // No success
   return false;
-}
-
-function isValidRawText(node){
-  if (node.children) return false;
-  if (node.symbol.length>1) return false;
-  return true;
-}
-
-function getFormula(node,forEditor){
-    if (node.iscursor) return forEditor ? `\\class{math-cursor}{${node.symbol}}` : "";
-
-    var string =  "";
-    if (node.symbol) string += node.symbol;
-    else if (node.leftsymbol){
-      if (node.adptative) string += "\\left ";
-      string += node.leftsymbol;
-    }
-
-    if (node.parseastext){
-      let inside = node.children.map(c=>(c.iscursor && !forEditor)?"":c.symbol).join("");
-      string += `{${inside}}`;
-    }
-    else if (node.hasstrictlytwochildren){
-      string += node.childrenstring.replace("§0",getFormula(node.children[0],forEditor)).replace("§1",getFormula(node.children[1],forEditor))
-    }
-    else if (node.children){
-      if (node.symbol){
-        if (node.childrenaredown) string += "_";// For limits...
-        string += `{${node.children.map(c=>getFormula(c,forEditor)).join("")}}`;
-      }
-      else string += node.children.map(c=>getFormula(c,forEditor)).join(""); // Just a simple grouping
-    }
-    if (node.rightsymbol){
-      if (node.adptative) string += "\\right ";
-      string += node.rightsymbol;
-    }
-
-    // Surrounding commands for classes & ids
-    const invisible = Keyboard.INVISIBLE_SYMBOLS.includes(node.symbol);
-    if (forEditor && !node.isroot && !invisible) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
-    if (node.selected && forEditor) string = `\\class{math-selected}{${string}}`;
-    else if (node.isplaceholder) string = `\\class{math-placeholder}{${string}}`;
-    return string;
 }
 
 // MATH TREE MANIPULATION
@@ -133,7 +56,7 @@ function deleteNode(tree,path,deletionMode="selection",replaceWithCursor=false){
     else { // We will make it "explode" (ie leave its children).
       newnode.children.splice(path[0],1,...nodeToDelete.children);
     }
-    if (replaceWithCursor) newnode.children.splice(path[0],0,CURSOR);
+    if (replaceWithCursor) newnode.children.splice(path[0],0,MathNodes.CURSOR);
     return newnode;
   }
   // Else : do recursion
@@ -141,7 +64,7 @@ function deleteNode(tree,path,deletionMode="selection",replaceWithCursor=false){
   var modifiedNode = deleteNode(newnode.children[path[0]],path.slice(1),deletionMode,replaceWithCursor);
   if (nChildren(modifiedNode)===0 && (modifiedNode.ismodifier || modifiedNode.hassinglechild)){
     newnode.children.splice(path[0],1); // Delete that node
-    if (replaceWithCursor || deletionMode==="cursor") newnode.children.splice(path[0],0,CURSOR);
+    if (replaceWithCursor || deletionMode==="cursor") newnode.children.splice(path[0],0,MathNodes.CURSOR);
   }
   else newnode.children[path[0]] = modifiedNode;
   return newnode;
@@ -165,8 +88,8 @@ function adoptAtPath(tree,path,parent){// The target node is replaced by the nod
 }
 
 function alignAll(tree){ // Puts the whole tree (minus the root) in an align environment
-  const alignNode = getNode("\\begin{align}");
-  alignNode.children = tree.children.flatMap(n => (n.symbol==="="?[getNode("&"),n]:[n])); // Put '&' in front of any '='
+  const alignNode = MathNodes.getNode("\\begin{align}");
+  alignNode.children = tree.children.flatMap(n => (n.symbol==="="?[MathNodes.getNode("&"),n]:[n])); // Put '&' in front of any '='
   tree.children = [alignNode];
   return tree;
 }
@@ -203,7 +126,7 @@ function replaceAndAdopt(tree,path,newnode,placeCursor=false){
     else{
       var cursorPath = [...path];
       cursorPath[cursorPath.length-1] = path.at(-1)+1;
-      newtree = insertAtPath(newtree,cursorPath,CURSOR);
+      newtree = insertAtPath(newtree,cursorPath,MathNodes.CURSOR);
     }
   }
   var newtree = insertAtPath(tree,path,newnode,true);
@@ -220,7 +143,7 @@ function removeCursor(tree){
 }
 
 function appendCursor(tree){
-  tree.children.push(CURSOR);
+  tree.children.push(MathNodes.CURSOR);
   return tree;
 }
 
@@ -242,8 +165,8 @@ function findCursorParent(tree){
   return false;
 }
 
-function pushCursorAtPath(tree,path){// CURSOR will be pushed as a child of the node reached following the path
-  if (path.length===0) {tree.children.push(CURSOR); return tree;}
+function pushCursorAtPath(tree,path){// MathNodes.CURSOR will be pushed as a child of the node reached following the path
+  if (path.length===0) {tree.children.push(MathNodes.CURSOR); return tree;}
   tree.children[path[0]] = pushCursorAtPath(tree.children[path[0]],path.slice(1));
   return tree;
 }
@@ -261,7 +184,7 @@ function deleteNextToCursor(tree,direction){
     if (direction==="left" && toDelete.nodeletionfromright){ // Then we should "enter" (if the node has children), and delete nothing for now
       if (toDelete.children) {
         cursorParent.children.splice(index,1); // Remove cursor
-        toDelete.children.push(CURSOR);
+        toDelete.children.push(MathNodes.CURSOR);
       }
       return tree; 
     }
@@ -300,33 +223,33 @@ function recursiveShiftCursor(node,shift) {
         let results1 = recursiveShiftCursor(node.children[1],shift);
         newnode.children = [results0.node,results1.node];
         if ((shift===-1 && results0.justFoundCursor) || (shift===1 && results1.justFoundCursor)) return {node:newnode,justFoundCursor:true};// Send the cursor another level up
-        else if (shift===1 && results0.justFoundCursor) newnode.children[1].children.splice(0,0,CURSOR);// Move cursor from up to down
-        else if (shift === -1 && results1.justFoundCursor) newnode.children[0].children.push(CURSOR); // From down to up
+        else if (shift===1 && results0.justFoundCursor) newnode.children[1].children.splice(0,0,MathNodes.CURSOR);// Move cursor from up to down
+        else if (shift === -1 && results1.justFoundCursor) newnode.children[0].children.push(MathNodes.CURSOR); // From down to up
         else return {node:newnode,justFoundCursor:false};
       }
       else{
         node.children.forEach(child => {
           let results = recursiveShiftCursor(child,shift);
-          if (shift===-1 && results.justFoundCursor) newnode.children.push(CURSOR);
+          if (shift===-1 && results.justFoundCursor) newnode.children.push(MathNodes.CURSOR);
           newnode.children.push(results.node);
-          if (shift===1 && results.justFoundCursor) newnode.children.push(CURSOR);
+          if (shift===1 && results.justFoundCursor) newnode.children.push(MathNodes.CURSOR);
         });
       }
     }
-    else{ // CURSOR is a direct child of newnode
+    else{ // MathNodes.CURSOR is a direct child of newnode
       var nextnode = newnode.children[index+shift];
       if (nextnode){ // Simple case : we don't leave this branch
         if (nextnode.hasstrictlytwochildren){ // Special case, we need to go down 2 levels
           newnode.children.splice(index,1); // Remove the cursor
-          if (shift === 1) nextnode.children[0].children.splice(0,0,CURSOR);
-          else nextnode.children[1].children.splice(nextnode.children[0].children.length,0,CURSOR);
+          if (shift === 1) nextnode.children[0].children.splice(0,0,MathNodes.CURSOR);
+          else nextnode.children[1].children.splice(nextnode.children[0].children.length,0,MathNodes.CURSOR);
         }
         else if (nextnode.children && !nextnode.hassinglechild){// We need to go down the tree, and insert the cursor as a new leaf.
           newnode.children.splice(index,1); // Remove the cursor
-          nextnode.children.splice((shift===1)?0:nextnode.children.length,0,CURSOR);
+          nextnode.children.splice((shift===1)?0:nextnode.children.length,0,MathNodes.CURSOR);
         }
-        else{// Just exchange CURSOR and nextnode
-          [newnode.children[index],newnode.children[index+shift]] = [nextnode,CURSOR];
+        else{// Just exchange MathNodes.CURSOR and nextnode
+          [newnode.children[index],newnode.children[index+shift]] = [nextnode,MathNodes.CURSOR];
         }
       }
       else{ // We need to go up the tree. We do that by returning a flag saying we just found the cursor
@@ -424,7 +347,7 @@ function adoptSelectedNode(tree,newnode){
 function selectedToCursor(tree,side){ // Add cursor next to selected, and unselect
   var path = findSelectedNode(tree).path;
   if (side==="right") path[path.length-1] += 1;
-  return unselect(insertAtPath(tree,path,CURSOR,false));
+  return unselect(insertAtPath(tree,path,MathNodes.CURSOR,false));
 }
 
-export default {CURSOR,DEFAULT_TREE,FracLike,getNode,isValidRawText,pathToNode,pushCursorAtPath,getFormula,applyToAllNodes,setUids,insertCursorInNode,deleteSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll,findSelectedNode,canReplace,replaceAndAdopt}
+export default {pathToNode,pushCursorAtPath,applyToAllNodes,setUids,insertCursorInNode,deleteSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll,findSelectedNode,canReplace,replaceAndAdopt}

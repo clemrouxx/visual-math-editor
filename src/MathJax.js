@@ -2,10 +2,11 @@ import React, { useEffect, useState, useRef, useImperativeHandle, forwardRef } f
 import {MathJax,MathJaxContext} from "better-react-mathjax";
 import MathTree from "./MathTree";
 import Keyboard from "./Keyboard";
+import MathNodes from "./MathNodes";
 
 const MathComponent = forwardRef((props,ref) => {
     const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
-    const [mathTree,setMathTree] = useState(MathTree.DEFAULT_TREE);
+    const [mathTree,setMathTree] = useState(MathNodes.DEFAULT_TREE);
     const [formula,setFormula] = useState("");
     const [command,setCommand] = useState("");
     const [focused,setFocused] = useState(true);
@@ -21,7 +22,7 @@ const MathComponent = forwardRef((props,ref) => {
     }
 
     const addSymbol = (symbol,rawtext=false) => { // Called after a key press/command entered/on-screen key press
-        const newnode = MathTree.getNode(symbol,rawtext);
+        const newnode = MathNodes.getNode(symbol,rawtext);
         addNode(newnode);
     }
 
@@ -30,14 +31,14 @@ const MathComponent = forwardRef((props,ref) => {
         if (copyBefore) newnode = structuredClone(node);
         else newnode = node;
         if (editMode==="cursor"){
-            if (isCursorInModifier() && !MathTree.isValidRawText(newnode)) return; // Block adding this node
-            if (Keyboard.ACCENTS.includes(newnode.symbol) || Keyboard.STYLES.includes(newnode.symbol)){
+            if (isCursorInModifier() && !MathNodes.isValidRawText(newnode)) return; // Block adding this node
+            if (MathNodes.ACCENTS.includes(newnode.symbol) || MathNodes.STYLES.includes(newnode.symbol)){
                 setMathTree(MathTree.adoptNodeBeforeCursor(mathTree,newnode));
             }
             else setMathTree(MathTree.insertAtCursor(mathTree,newnode));
         }
         else if (editMode==="selection"){
-            if (Keyboard.ACCENTS.includes(newnode.symbol) || Keyboard.STYLES.includes(newnode.symbol)){
+            if (MathNodes.ACCENTS.includes(newnode.symbol) || MathNodes.STYLES.includes(newnode.symbol)){
                 setMathTree(MathTree.adoptSelectedNode(mathTree,newnode));
             }
             else{
@@ -52,7 +53,7 @@ const MathComponent = forwardRef((props,ref) => {
     };
 
     const copyToClipboard = async () => {
-        const latex = MathTree.getFormula(mathTree,false);
+        const latex = MathNodes.getFormula(mathTree,false);
         try {
             await navigator.clipboard.writeText(latex);
             console.log("Copied to clipboard:", latex);
@@ -219,7 +220,7 @@ const MathComponent = forwardRef((props,ref) => {
                         }
                         break;
                     default:
-                        if (Object.values(Keyboard.DELIMITERS).includes(event.key)){
+                        if (Object.values(MathNodes.DELIMITERS).includes(event.key)){
                             if (parentCopy.rightsymbol===event.key && parentCopy.children[parentCopy.children.length-1].iscursor){
                                 // Close the delimiter
                                 setMathTree(MathTree.shiftCursor(mathTree,"right"));
@@ -288,7 +289,7 @@ const MathComponent = forwardRef((props,ref) => {
 
     useEffect(() => {
         //console.log(mathTree,MathTree.getFormula(mathTree,true));
-        setFormula(MathTree.getFormula(mathTree,true));
+        setFormula(MathNodes.getFormula(mathTree,true));
     }, [mathTree]);
 
     const focus = () => {
