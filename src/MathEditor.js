@@ -4,7 +4,7 @@ import MathTree from "./MathTree";
 import Keyboard from "./Keyboard";
 import MathNodes from "./MathNodes";
 
-const MathComponent = forwardRef((props,ref) => {
+const MathEditor = forwardRef((props,ref) => {
     const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
     const [mathTree,setMathTree] = useState(MathNodes.DEFAULT_TREE);
     const [formula,setFormula] = useState("");
@@ -341,5 +341,5 @@ const MathComponent = forwardRef((props,ref) => {
   );
 });
 
-export default MathComponent;
+export default MathEditor;
 

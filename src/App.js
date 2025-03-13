@@ -1,8 +1,8 @@
 import React, {useState,useEffect,useRef} from 'react';
-import MathComponent from './MathJax';
 import './App.css';
 import { MathJax, MathJaxContext } from 'better-react-mathjax';
 import VirtualKeyboard from './VirtualKeyboard';
+import MathEditor from './MathEditor';
 
 function App() {
 
@@ -42,7 +42,7 @@ function App() {
       </div>
       <div className="centeredcontent">
         <h1><MathJax>{`\\[ \\sqrt{\\text{isual}} \\text{ } \\mathcal{M}\\text{ath } \\mathbb{E}\\text{ditor} \\]`}</MathJax></h1>
-        <MathComponent ref={formulaEditor}/>
+        <MathEditor ref={formulaEditor}/>
         <VirtualKeyboard formulaEditorRef={formulaEditor} />
       </div>
       </MathJaxContext>
