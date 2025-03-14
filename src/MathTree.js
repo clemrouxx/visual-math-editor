@@ -1,26 +1,5 @@
-import Keyboard from "./Keyboard";
+import MathKeyboard from "./MathKeyboard";
 import MathNodes from "./MathNodes";
-
-// Now only for math tree manipulation
-
-function insertCursorInNode(node){// Insert cursor at the "right place", assuming this node will be added to the math tree
-  if (!node.children) return false; // Cannot insert cursor
-  const nchildren = nChildren(node);
-  var newnode = {...node};
-  if (nchildren===0) {
-    newnode.children = [MathNodes.CURSOR];
-    return newnode;
-  }
-  for (var i=0;i<nchildren;i++){
-    const modifiedNode = insertCursorInNode(node.children[i]); // Recursivity
-    if (modifiedNode){// Success
-      newnode.children[i] = modifiedNode;
-      return newnode;
-    }
-  }
-  // No success
-  return false;
-}
 
 // MATH TREE MANIPULATION
 
@@ -40,11 +19,6 @@ function pathToNode(tree,path){// Recursively loops along the indices n and gets
   return pathToNode(tree.children[path[0]],path.slice(1));
 }
 
-function nChildren(node){ // Number of 'real' children
-  if (!node.children) return undefined;
-  if (node.children.some(c=>c.iscursor)) return node.children.length-1;
-  return node.children.length;
-}
 
 function deleteNode(tree,path,deletionMode="selection",replaceWithCursor=false){ // Deletion mode : "selection"|"cursor".
   var newnode = {...tree};
@@ -62,7 +36,7 @@ function deleteNode(tree,path,deletionMode="selection",replaceWithCursor=false){
   // Else : do recursion
   // We need to check if we have emptied a modifier or a node that has a single child :
   var modifiedNode = deleteNode(newnode.children[path[0]],path.slice(1),deletionMode,replaceWithCursor);
-  if (nChildren(modifiedNode)===0 && (modifiedNode.ismodifier || modifiedNode.hassinglechild)){
+  if (MathNodes.nChildren(modifiedNode)===0 && (modifiedNode.ismodifier || modifiedNode.hassinglechild)){
     newnode.children.splice(path[0],1); // Delete that node
     if (replaceWithCursor || deletionMode==="cursor") newnode.children.splice(path[0],0,MathNodes.CURSOR);
   }
@@ -121,7 +95,7 @@ function replaceAndAdopt(tree,path,newnode,placeCursor=false){
   var newtree = tree;
   if (node.children) newnode.children = node.children;
   if (placeCursor){
-    const modifiedNewnode = insertCursorInNode(newnode);
+    const modifiedNewnode = MathNodes.insertCursorInNode(newnode);
     if (modifiedNewnode) newnode = modifiedNewnode;
     else{
       var cursorPath = [...path];
@@ -134,7 +108,7 @@ function replaceAndAdopt(tree,path,newnode,placeCursor=false){
   return newtree;
 }
 
-// Cursor
+// Cursor manipulations
 
 function removeCursor(tree){
   const path = findCursorParent(tree).cursorPath;
@@ -267,7 +241,7 @@ function shiftCursor(tree,direction){
 
 function insertAtCursor(tree,newnode){
   const targetpath = findCursorParent(tree).cursorPath;
-  const modifiedNode = insertCursorInNode(newnode);
+  const modifiedNode = MathNodes.insertCursorInNode(newnode);
   var newtree = {};
   if (modifiedNode){// Case where we inserted the cursor, then we need to remove it by replacing it.
     newtree = insertAtPath(tree,targetpath,modifiedNode,true);
@@ -303,9 +277,9 @@ function applyReplacementShortcut(tree){
   const slen = s.length;
   for (var j=0;j<=slen-1;j++){
     let splitstring = s.slice(j);
-    if (splitstring in Keyboard.SHORTCUTS){
+    if (splitstring in MathKeyboard.SHORTCUTS){
       cursorParent.children.splice(index-slen+j,slen-j); // Remove the "used" nodes
-      return {tree,symbol:Keyboard.SHORTCUTS[splitstring]};
+      return {tree,symbol:MathKeyboard.SHORTCUTS[splitstring]};
     }
   }
   return {tree,symbol:undefined};
@@ -350,4 +324,4 @@ function selectedToCursor(tree,side){ // Add cursor next to selected, and unsele
   return unselect(insertAtPath(tree,path,MathNodes.CURSOR,false));
 }
 
-export default {pathToNode,pushCursorAtPath,applyToAllNodes,setUids,insertCursorInNode,deleteSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll,findSelectedNode,canReplace,replaceAndAdopt}
+export default {pathToNode,pushCursorAtPath,applyToAllNodes,setUids,deleteSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll,findSelectedNode,canReplace,replaceAndAdopt}

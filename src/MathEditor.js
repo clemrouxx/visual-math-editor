@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useImperativeHandle, forwardRef } from "react";
-import {MathJax,MathJaxContext} from "better-react-mathjax";
+import {MathJax} from "better-react-mathjax";
 import MathTree from "./MathTree";
-import Keyboard from "./Keyboard";
+import MathKeyboard from "./MathKeyboard";
 import MathNodes from "./MathNodes";
 import { useUndoRedo } from "./UndoRedo";
 
@@ -152,16 +152,16 @@ const MathEditor = forwardRef((props,ref) => {
                     })
                 }
             }
-            else if (Keyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
+            else if (MathKeyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
             {
                 event.preventDefault();
                 addSymbol(event.key);
             }
-            else if (event.key in Keyboard.SIMPLE_REPLACEMENT){
+            else if (event.key in MathKeyboard.SIMPLE_REPLACEMENT){
                 event.preventDefault();
-                addSymbol(Keyboard.SIMPLE_REPLACEMENT[event.key]);
+                addSymbol(MathKeyboard.SIMPLE_REPLACEMENT[event.key]);
             }
-            else if (Keyboard.ESCAPED_SYMBOLS.includes(event.key)){
+            else if (MathKeyboard.ESCAPED_SYMBOLS.includes(event.key)){
                 event.preventDefault();
                 addSymbol("\\"+event.key);
             }

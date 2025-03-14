@@ -47,8 +47,6 @@ const SHORTCUTS = {
   ome:"\\omega",
   Ome:"\\Omega",
 
-  
-
   // Arrows
   left:"\\leftarrow",
   "<-":"\\leftarrow",
@@ -164,6 +162,10 @@ const SHORTCUTS = {
   // Environments
   mat:"\\begin{pmatrix}",
   cas:"\\begin{cases}",
+
+  // Constructions
+  ket:"\\ket",
+  bra:"\\bra",
 
   // Named nodes
   sq:"squared",

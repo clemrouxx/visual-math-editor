@@ -103,6 +103,32 @@ function isValidRawText(node){
     if (node.children) return false;
     if (node.symbol.length>1) return false;
     return true;
-  }
+}
 
-export default {DEFAULT_TREE,CURSOR,getNode,getFormula,isValidRawText,FracLike,NAMED_NODES,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,LIM_LIKE,SUM_LIKE};
+function nChildren(node){ // Number of 'real' children
+  if (!node.children) return undefined;
+  if (node.children.some(c=>c.iscursor)) return node.children.length-1;
+  return node.children.length;
+}
+
+function insertCursorInNode(node){// Insert cursor at the "right place", assuming this node will be added to the math tree
+  if (!node.children) return false; // Cannot insert cursor
+  const nchildren = nChildren(node);
+  var newnode = {...node};
+  if (nchildren===0) {
+    newnode.children = [CURSOR];
+    return newnode;
+  }
+  for (var i=0;i<nchildren;i++){
+    const modifiedNode = insertCursorInNode(node.children[i]); // Recursivity
+    if (modifiedNode){// Success
+      newnode.children[i] = modifiedNode;
+      return newnode;
+    }
+  }
+  // No success
+  return false;
+}
+  
+
+export default {DEFAULT_TREE,CURSOR,getNode,getFormula,isValidRawText,FracLike,nChildren,insertCursorInNode,NAMED_NODES,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,LIM_LIKE,SUM_LIKE};
