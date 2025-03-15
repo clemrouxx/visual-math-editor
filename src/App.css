@@ -24,8 +24,6 @@ h1{
   margin: 1rem;
 }
 
-
-
 .menu button{
   margin: 0;
 }
@@ -100,6 +98,10 @@ button mjx-container[jax="CHTML"][display="true"]{
 
 .formula-editor .math-selected{
   color: var(--selection-color);
+}
+
+.formula-editor .math-selected .math-node{
+  color: var(--text-color);
 }
 
 .math-placeholder{
