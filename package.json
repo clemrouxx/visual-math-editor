@@ -5,6 +5,7 @@
   "dependencies": {
     "better-react-mathjax": "^2.1.0",
     "cra-template": "1.2.0",
+    "gh-pages": "^6.3.0",
     "mathjax": "^3.2.2",
     "mathjax-full": "^3.2.2",
     "react": "^19.0.0",
@@ -17,8 +18,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy":"yarn build",
+    "deploy":"gh-pages -d build"
   },
+  "homepage":"http://clemrouxx.github.io/visual-math-editor",
   "eslintConfig": {
     "extends": [
       "react-app",
