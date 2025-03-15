@@ -36,9 +36,10 @@ function App() {
     <div className="App">
       <MathJaxContext config={config}>
       <div className="menu">
-      <button onClick={() => setDarkMode(!darkMode)} onMouseDown={(e) => e.preventDefault()}>
-        Toggle Dark Mode
-      </button>
+        <button onClick={() => setDarkMode(!darkMode)} onMouseDown={(e) => e.preventDefault()}>
+          Toggle Dark Mode
+        </button>
+        <a href='https://github.com/clemrouxx/visual-math-editor'>Info</a>
       </div>
       <div className="centeredcontent">
         <h1><MathJax>{`\\[ \\sqrt{\\text{isual}} \\text{ } \\mathcal{M}\\text{ath } \\mathbb{E}\\text{ditor} \\]`}</MathJax></h1>
