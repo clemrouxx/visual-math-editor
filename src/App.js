@@ -12,15 +12,12 @@ function App() {
 
   
   const config = {
-      loader: { load: ["[tex]/html","output/chtml"] },
+      loader: { load: ["input/tex","[tex]/html","output/chtml"] },
       tex: {
-        packages: { "[+]": ["html"] },
+        packages: { "[+]": ["html","ams","physics"] },
       },
       options: {
         enableMenu : false,
-        renderActions: {
-          assistiveMml: [], // Prevents additional MathML rendering
-        },
       },
       output: {
         renderer: "chtml", // Force CHTML instead of SVG

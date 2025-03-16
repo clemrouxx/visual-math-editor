@@ -333,6 +333,10 @@ const MathEditor = forwardRef((props,ref) => {
   return (
       <div className={`formula-editor ${focused ? "focused" : "unfocused"}`} ref={domRef}>
         <MathJax className="math-display">{`\\[ ${formula} \\]`}</MathJax>
+        <MathJax>{`\\[ ${formula} \\]`}</MathJax>
+        <MathJax className="math-display">{`\\[ | \\]`}</MathJax>
+        <MathJax className="math-display">{`\\[ \\class{math-cursor}{|} \\]`}</MathJax>
+        <MathJax className="math-display">{`\\[ \\cssId{math-cursor}{|} \\]`}</MathJax>
         <div>
             <button className="formula-copy"
                 onClick={(e) => {
