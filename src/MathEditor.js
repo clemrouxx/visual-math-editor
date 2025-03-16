@@ -7,7 +7,7 @@ import { useUndoRedo } from "./UndoRedo";
 
 const MathEditor = forwardRef((props,ref) => {
     const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
-    const [mathTree,setMathTree] = useState(MathNodes.DEFAULT_TREE);
+    const [mathTree,setMathTree] = useState(structuredClone(MathNodes.DEFAULT_TREE));
     const [formula,setFormula] = useState("");
     const [command,setCommand] = useState("");
     const [focused,setFocused] = useState(true);
@@ -21,6 +21,10 @@ const MathEditor = forwardRef((props,ref) => {
     const changeMathTree = (newtree) => { // 'Real' changes (ie not just cursor movement or selection) to the math tree. Relevant for the undo-redo functionnality
         setNewState(structuredClone(newtree));
         setMathTree(newtree);
+    }
+
+    const erase = () => {
+        changeMathTree(structuredClone(MathNodes.DEFAULT_TREE));
     }
 
     const isCursorInModifier = () => {
@@ -84,6 +88,8 @@ const MathEditor = forwardRef((props,ref) => {
     };
 
     const handleKeyDown = (event) => {
+        if (editMode==="none") return;
+
         // We need to check if we are in a "raw text" area and in cursor mode
         // I also keep a copy of the parent
         //console.log(event);
@@ -103,53 +109,61 @@ const MathEditor = forwardRef((props,ref) => {
 
         if (command===""){// Not writing a command
             if (event.ctrlKey){ // All control-based shortcuts
-                if (event.key==="i"){
-                    event.preventDefault();
-                    setCommand("\\");
-                }
-                else if (event.key==="z"){
-                    const undoResult = undo();
-                    if (undoResult) setMathTree(undoResult);
-                }
-                else if (event.key==="y"){
-                    const redoResult = redo();
-                    if (redoResult) setMathTree(redoResult);
-                }
-                else if (event.key==="u"){
-                    event.preventDefault();
-                    addSymbol("^");
-                }
-                else if (event.key==="d"){
-                    event.preventDefault();
-                    addSymbol("_");
-                }
-                else if (event.key==="c" && editMode==="selection"){
-                    const selectedNode = MathTree.unselect(MathTree.findSelectedNode(mathTree).node);
-                    const string = JSON.stringify(selectedNode);
-                    navigator.clipboard.writeText(string);
-                }
-                else if (event.key==="x" && editMode==="selection"){
-                    const selection = MathTree.findSelectedNode(mathTree);
-                    const string = JSON.stringify(MathTree.unselect(selection.node));
-                    navigator.clipboard.writeText(string);
-                    setEditMode("cursor");
-                    changeMathTree(MathTree.deleteSelectedNode(mathTree,true));
-                }
-                else if (event.key==="v"){
-                    navigator.clipboard.readText().then((string)=>{
-                        if ([...string].length===1){
-                            addSymbol(string);
+                switch (event.key){
+                    case "i":
+                        setCommand("\\");
+                        break;
+                    case "z":
+                        const undoResult = undo();
+                        if (undoResult) setMathTree(undoResult);
+                        break;
+                    case "y":
+                        const redoResult = redo();
+                        if (redoResult) setMathTree(redoResult);
+                        break;
+                    case "u":
+                        event.preventDefault();
+                        addSymbol("^");
+                        break;
+                    case "d":
+                        addSymbol("_");
+                        break;
+                    case "a":
+                        event.preventDefault();
+                        // Maybe select all nodes (as a list ?)
+                        break;
+                    case "c":
+                        if (editMode==="selection"){
+                            const selectedNode = MathTree.unselect(MathTree.findSelectedNode(mathTree).node);
+                            const string = JSON.stringify(selectedNode);
+                            navigator.clipboard.writeText(string);
                         }
-                        else{
-                            try{
-                                let json = JSON.parse(string);
-                                addNode(json);
-                            }
-                            catch{
-                                return;// Invalid JSON input
-                            }
+                        break;
+                    case "x":
+                        if (editMode==="selection"){
+                            const selection = MathTree.findSelectedNode(mathTree);
+                            const string = JSON.stringify(MathTree.unselect(selection.node));
+                            navigator.clipboard.writeText(string);
+                            setEditMode("cursor");
+                            changeMathTree(MathTree.deleteSelectedNode(mathTree,true));
                         }
-                    })
+                        break;
+                    case "v":
+                        navigator.clipboard.readText().then((string)=>{
+                            if ([...string].length===1){
+                                addSymbol(string);
+                            }
+                            else{
+                                try{
+                                    addNode(JSON.parse(string));
+                                }
+                                catch{
+                                    alert("Could not paste text. Only valid imputs are single-character strings or formula parts directly copied.")
+                                    return;// Invalid JSON input
+                                }
+                            }
+                        })
+                        break;
                 }
             }
             else if (MathKeyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
@@ -334,19 +348,15 @@ const MathEditor = forwardRef((props,ref) => {
 
   return (
       <div className={`formula-editor ${focused ? "focused" : "unfocused"}`} ref={domRef}>
+        <button className="formula-copy" onClick={(e) => {e.stopPropagation();copyToClipboard();}} onMouseDown={(e) => e.preventDefault()}>
+                Copy LaTeX <br/> 
+                to clipboard
+            </button>
         <MathJax key={formula} className="math-display">{`\\[ ${formula} \\]`}</MathJax>
         <div>
-            <button className="formula-copy"
-                onClick={(e) => {
-                e.stopPropagation();
-                copyToClipboard(); // Copy message to clipboard
-                }}
-            >
-                Copy LaTeX <br/> to clipboard
-            </button>
+            <button onClick={(e) => {e.stopPropagation();erase();}} onMouseDown={(e) => e.preventDefault()}>Reset</button>
             <div>{command}</div>
         </div>
-        
       </div>
   );
 });
