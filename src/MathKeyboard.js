@@ -169,6 +169,9 @@ const SHORTCUTS = {
 
   // Named nodes
   sq:"squared",
+  inv:"inverse",
+  T:"transpose",
+  dag:"updagger",
 };
 
 

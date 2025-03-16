@@ -60,6 +60,9 @@ function getNode(symbol,rawtext=false,addplaceholder=false){
 const NAMED_NODES = {
   squared:{...getNode("^"),children:[{symbol:"2"}]},
   nsqrt: FracLike("\\sqrt"),
+  inverse: {...getNode("^"),children:[{symbol:"-"},{symbol:"1"}]},
+  transpose: {...getNode("^"),children:[{symbol:"\\top"}]},
+  updagger: {...getNode("^"),children:[{symbol:"\\dagger"}]},
 }
 
 function getFormula(node,forEditor){

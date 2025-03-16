@@ -332,9 +332,7 @@ const MathEditor = forwardRef((props,ref) => {
 
   return (
       <div className={`formula-editor ${focused ? "focused" : "unfocused"}`} ref={domRef}>
-        
-        <MathJax className="math-display">{"\\[ " + formula + " \\]"}</MathJax>
-        
+        <MathJax className="math-display">{`\\[ ${formula} \\]`}</MathJax>
         <div>
             <button className="formula-copy"
                 onClick={(e) => {
