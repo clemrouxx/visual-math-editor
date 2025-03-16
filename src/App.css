@@ -4,6 +4,7 @@
   --text-color: black;
   --cursor-color:blue;
   --selection-color:red;
+  --secondary-selection-color:#a33;
 }
 
 .dark {
@@ -12,6 +13,7 @@
     --text-color: white;
     --cursor-color:cyan;
     --selection-color:orange;
+    --secondary-selection-color:yellow;
 }
 
 .menu{
@@ -84,7 +86,6 @@ button mjx-container[jax="CHTML"][display="true"]{
   flex-grow: 1;
 }
 
-
 .math-cursor{
   color: var(--cursor-color);
 }
@@ -110,7 +111,7 @@ button mjx-container[jax="CHTML"][display="true"]{
 }
 
 .formula-editor .math-selected .math-node{
-  color: var(--text-color);
+  color: var(--secondary-selection-color);
 }
 
 .math-placeholder{
