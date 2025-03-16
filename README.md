@@ -1,6 +1,6 @@
 # Visual Math Editor
 
-This project is a web-based visual editor for writing math formula, with LaTeX code as main output.
+This project is a web-based visual editor for writing math formula, with LaTeX code as main output. Online demo : https://clemrouxx.github.io/visual-math-editor.
 
 # Use
 
