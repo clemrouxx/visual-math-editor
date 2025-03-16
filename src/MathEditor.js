@@ -268,7 +268,7 @@ const MathEditor = forwardRef((props,ref) => {
             }
         }
         else{ // Writing a command
-            if (/^[a-zA-Z\\\{\}]$/.test(event.key)){
+            if (/^[a-zA-Z\\{}]$/.test(event.key)){
                 event.preventDefault();
                 setCommand(command+event.key);
             }

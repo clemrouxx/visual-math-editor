@@ -1,7 +1,7 @@
 // Defines useful lists / constants / simple functions regarding math nodes, and trnasforming symbols into nodes and nodes into LaTeX
 
 // The following lists / dictionnaries determine the propesrties of the inserted node (regarding selection, cursor placement, deletion...)
-// Include the core and AMS commands
+// Includes the core and AMS commands (as well as a few commands from the physics package)
 const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow","\\bra","\\ket","\\braket"];
 const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","\\check","\\tilde","\\breve","\\acute","\\grave","\\mathring"];
 const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
@@ -23,8 +23,10 @@ const CURSOR = {iscursor:true,symbol:"|"};
 const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"}
 const SMALLLETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"}
 const BIGLETTERPLACEHOLDER = {isplaceholder:true,symbol:"A"}
+
 const DEFAULT_TREE = {isroot:true,nodeletion:true,children:[CURSOR]};
 
+// Functions that act like node constructors
 const Symbol = (symbol) => {return {symbol}};
 const ParentSymbol = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[PLACEHOLDER]:[],nodeletionfromright:true}};
 const LimLike = (symbol,addplaceholder=false) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
@@ -43,6 +45,7 @@ const FracLike = (symbol,addplaceholder=false) => {
 };
 const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true}};
 
+// Automatically create node for a given symbol
 function getNode(symbol,rawtext=false,addplaceholder=false){
   if (rawtext) return Symbol(symbol);
   else if (PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol,addplaceholder);
@@ -59,26 +62,30 @@ function getNode(symbol,rawtext=false,addplaceholder=false){
 
 const NAMED_NODES = {
   squared:{...getNode("^"),children:[{symbol:"2"}]},
-  nsqrt: FracLike("\\sqrt"),
+  nsqrt: FracLike("\\sqrt"),// Like sqrt, but with an additionnal argument (in [...]).
   inverse: {...getNode("^"),children:[{symbol:"-"},{symbol:"1"}]},
   transpose: {...getNode("^"),children:[{symbol:"\\top"}]},
   updagger: {...getNode("^"),children:[{symbol:"\\dagger"}]},
 }
 
+// LaTeX formula
 function getFormula(node,forEditor){
     if (node.iscursor) return forEditor ? `\\class{math-cursor}{${node.symbol}}` : "";
 
     var string =  "";
+    // First / main symbol
     if (node.symbol) string += node.symbol;
     else if (node.leftsymbol){
       if (node.adptative) string += "\\left ";
       string += node.leftsymbol;
     }
 
-    if (node.parseastext){
+    // Now we consider the node children
+    if (node.parseastext){// Raw text
       let inside = node.children.map(c=>(c.iscursor && !forEditor)?"":c.symbol).join("");
       string += `{${inside}}`;
     }
+    // In all other cases, there is recursion
     else if (node.hasstrictlytwochildren){
       string += node.childrenstring.replace("§0",getFormula(node.children[0],forEditor)).replace("§1",getFormula(node.children[1],forEditor))
     }
@@ -89,14 +96,16 @@ function getFormula(node,forEditor){
       }
       else string += node.children.map(c=>getFormula(c,forEditor)).join(""); // Just a simple grouping
     }
+
+    // Second symbol if it exists (ex closing delimiter)
     if (node.rightsymbol){
       if (node.adptative) string += "\\right ";
       string += node.rightsymbol;
     }
 
     // Surrounding commands for classes & ids
-    const invisible = INVISIBLE_SYMBOLS.includes(node.symbol);
-    if (forEditor && !node.isroot && !invisible) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
+    const isinvisible = INVISIBLE_SYMBOLS.includes(node.symbol);
+    if (forEditor && !node.isroot && !isinvisible) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
     if (node.selected && forEditor) string = `\\class{math-selected}{${string}}`;
     else if (node.isplaceholder) string = `\\class{math-placeholder}{${string}}`;
     return string;
