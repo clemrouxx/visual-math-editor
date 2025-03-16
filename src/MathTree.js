@@ -159,8 +159,9 @@ function deleteNextToCursor(tree,direction){
       if (toDelete.children) {
         cursorParent.children.splice(index,1); // Remove cursor
         toDelete.children.push(MathNodes.CURSOR);
+        return tree;
       }
-      return tree; 
+      return false; 
     }
     else if (toDelete.ismodifier){// Then we need to enter the modifier (depends on how many children it has)
       let nchildren = toDelete.children.length;
@@ -180,7 +181,7 @@ function deleteNextToCursor(tree,direction){
     if (cursorParent.implodes) return deleteNode(tree,path,"cursor",true);
     else return deleteNode(tree,path,"cursor",false);// The cursor will already be placed as for any other child (if explosion only)
   }
-  return tree;
+  return false;
 }
 
 function recursiveShiftCursor(node,shift) {

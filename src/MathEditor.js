@@ -220,11 +220,13 @@ const MathEditor = forwardRef((props,ref) => {
                         break;
                     case "Backspace":
                         event.preventDefault();
-                        changeMathTree(MathTree.deleteNextToCursor(mathTree,"left"));
+                        var deletionResult = MathTree.deleteNextToCursor(mathTree,"left");
+                        if (deletionResult) changeMathTree(deletionResult);
                         break;
                     case "Delete":
                         event.preventDefault();
-                        changeMathTree(MathTree.deleteNextToCursor(mathTree,"right"));
+                        var deletionResult = MathTree.deleteNextToCursor(mathTree,"right");
+                        if (deletionResult) changeMathTree(deletionResult);
                         break;
                     case " ": // Space
                         event.preventDefault();
