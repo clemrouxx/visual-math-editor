@@ -4,7 +4,7 @@ This project is a web-based visual editor for writing math formula, with LaTeX c
 
 # Use
 
-The webapp provides a on-screen keyboard containing almost all of the LaTeX symbols that are included in the standard LaTeX and in the AMS package. Many keyboard shortcuts are available, and you can visualize them by hovering over the corresponding on-screen key. To add a symbol that is not included, you can use the shortcut Ctrl+I and type the relevant command. It may however not work properly if the command expects arguments.
+The webapp provides a on-screen keyboard containing almost all of the LaTeX symbols that are included in the standard LaTeX and in the AMS package. Many keyboard shortcuts are available, and you can visualize them by hovering over the corresponding on-screen key. To add a symbol that is not included, you can use the shortcut Ctrl+I and type the relevant command. The webapp also supports undo-redo using Ctrl+Z and Ctrl+Y, as well as some simple cut/copy-paste with usual shortcuts.
 
 # Contribute
 

@@ -1,7 +1,6 @@
 # TODO list
 
 ## Bugs
-- Bug : Rendering "error" when selecting an element in a long sequence; sometimes. Also on the title for some reason (on Chrome, but not Firefox)
 - cursor is sometimes invisible when refocusing
 
 ## Basic capabilities
@@ -14,5 +13,3 @@
 
 ## Visual improvements
 - Better visuals (in particular buttons), that for the moment depend on the browser
-
-## Code improvements
