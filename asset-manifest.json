@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/visual-math-editor/static/css/main.1e635805.css",
-    "main.js": "/visual-math-editor/static/js/main.38b9a547.js",
+    "main.js": "/visual-math-editor/static/js/main.d5c0798b.js",
     "index.html": "/visual-math-editor/index.html",
     "main.1e635805.css.map": "/visual-math-editor/static/css/main.1e635805.css.map",
-    "main.38b9a547.js.map": "/visual-math-editor/static/js/main.38b9a547.js.map"
+    "main.d5c0798b.js.map": "/visual-math-editor/static/js/main.d5c0798b.js.map"
   },
   "entrypoints": [
     "static/css/main.1e635805.css",
-    "static/js/main.38b9a547.js"
+    "static/js/main.d5c0798b.js"
   ]
 }
