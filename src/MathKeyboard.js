@@ -119,6 +119,7 @@ const SHORTCUTS = {
   sum:"\\sum",
   int:"\\int",
   fr:"\\frac",
+  over:"\\overset",
 
   // Accents
   d:"\\dot",
@@ -172,6 +173,8 @@ const SHORTCUTS = {
   inv:"inverse",
   T:"transpose",
   dag:"updagger",
+  "=!":"=!",
+  "=?":"=?"
 };
 
 

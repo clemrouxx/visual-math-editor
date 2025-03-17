@@ -282,7 +282,7 @@ const MathEditor = forwardRef((props,ref) => {
             }
         }
         else{ // Writing a command
-            if (/^[a-zA-Z\\{}]$/.test(event.key)){
+            if (MathKeyboard.DIRECT_INPUT.includes(event.key) || "{}".includes(event.key)){
                 event.preventDefault();
                 setCommand(command+event.key);
             }

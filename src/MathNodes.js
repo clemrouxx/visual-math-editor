@@ -7,7 +7,7 @@ const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","
 const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\lvert":"\\rvert","\\lVert":"\\rVert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil","\\ulcorner":"\\urcorner","\\llcorner":"\\lrcorner"};
 const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
-const FRAC_LIKE = ["\\frac","\\overbrace","\\underbrace"]; // Symbols that have strictly 2 children (other than sum-like)
+const FRAC_LIKE = ["\\frac","\\overbrace","\\underbrace","\\overset","\\underset"]; // Symbols that have strictly 2 children (other than sum-like)
 const SUM_LIKE = ["\\sum","\\int","\\bigcap","\\bigcup","\\bigodot","\\bigoplus","\\bigotimes","\\bigsqcup","\\biguplus","\\bigvee","\\bigwedge","\\coprod","\\prod"]; // Also strictly 2 children, but displayed differently as fractions
 const LIM_LIKE = ["\\lim","\\iint","\\iiint","\\iiiint","\\oint","\\idotsint"];
 const ENVIRONMENTS_NAMES = ["align","cases","matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
@@ -41,6 +41,7 @@ const FracLike = (symbol,addplaceholder=false) => {
   else if (symbol === "\\underbrace") childrenstring = "{§0}_{§1}";
   else if (symbol === "\\overbrace") {childrenstring = "{§0}^{§1}"; verticalorientation="up";}
   else if (symbol === "\\sqrt") childrenstring = "[§0]{§1}";
+  else if (symbol==="\\underset") verticalorientation="up";
   return {symbol,verticalorientation,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,childrenstring}
 };
 const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true}};
@@ -66,6 +67,8 @@ const NAMED_NODES = {
   inverse: {...getNode("^"),children:[{symbol:"-"},{symbol:"1"}]},
   transpose: {...getNode("^"),children:[{symbol:"\\top"}]},
   updagger: {...getNode("^"),children:[{symbol:"\\dagger"}]},
+  "=?" : {...getNode("\\overset"),children:[{symbol:"?"},{symbol:"="}]},
+  "=!" : {...getNode("\\overset"),children:[{symbol:"!"},{symbol:"="}]},
 }
 
 // LaTeX formula
