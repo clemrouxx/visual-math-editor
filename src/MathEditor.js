@@ -65,12 +65,8 @@ const MathEditor = forwardRef((props,ref) => {
 
     const copyToClipboard = async () => {
         const latex = MathNodes.getFormula(mathTree,false);
-        try {
-            await navigator.clipboard.writeText(latex);
-            console.log("Copied to clipboard:", latex);
-        } catch (err) {
-            console.error("Failed to copy:", err);
-        }
+        await navigator.clipboard.writeText(latex);
+        // console.log("Copied to clipboard:", latex);
     };
 
     const handleClick =  (event) => {
@@ -348,15 +344,15 @@ const MathEditor = forwardRef((props,ref) => {
 
   return (
       <div className={`formula-editor ${focused ? "focused" : "unfocused"}`} ref={domRef}>
-        <button className="formula-copy" onClick={(e) => {e.stopPropagation();copyToClipboard();}} onMouseDown={(e) => e.preventDefault()}>
-                Copy LaTeX <br/> 
-                to clipboard
-            </button>
-        <MathJax key={formula} className="math-display">{`\\[ ${formula} \\]`}</MathJax>
         <div>
             <button onClick={(e) => {e.stopPropagation();erase();}} onMouseDown={(e) => e.preventDefault()}>Reset</button>
             <div>{command}</div>
         </div>
+        <MathJax key={formula} className="math-display">{`\\[ ${formula} \\]`}</MathJax>
+        <button className="formula-copy" onClick={(e) => {e.stopPropagation();copyToClipboard();}} onMouseDown={(e) => e.preventDefault()}>
+            Copy LaTeX <br/> 
+            to clipboard
+        </button>
       </div>
   );
 });
