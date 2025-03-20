@@ -5,6 +5,7 @@
 
 ## Basic capabilities
 - Removing the style on a symbol
+- Export to SVG (tried, but didn't manage to do it)
 
 ## Typing improvements
 - Changing alignement in array environments
