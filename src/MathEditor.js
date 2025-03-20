@@ -357,8 +357,8 @@ const MathEditor = forwardRef((props,ref) => {
             <button onClick={(e) => {e.stopPropagation();erase();}} onMouseDown={(e) => e.preventDefault()}>Reset</button>
             <div>{command}</div>
         </div>
-        <MathJax className="math-display">{`\\[ ${formula} \\]`}</MathJax>
-        <div className="nodisplay" id="exportFormulaElement"><MathJax className="math-display">{`\\[ ${exportFormula} \\]`}</MathJax></div>
+        <MathJax key={formula} className="math-display">{`\\[ ${formula} \\]`}</MathJax>
+        <div className="nodisplay" id="exportFormulaElement"><MathJax key={exportFormula} className="math-display">{`\\[ ${exportFormula} \\]`}</MathJax></div>
         <div>
             <button className="formula-copy" onClick={(e) => {e.stopPropagation();copyToClipboard();}} onMouseDown={(e) => e.preventDefault()}>Copy LaTeX</button>
             <button className="formula-copy" onClick={(e) => {e.stopPropagation();copySvgToClipboard();}} onMouseDown={(e) => e.preventDefault()}>Copy SVG</button>
