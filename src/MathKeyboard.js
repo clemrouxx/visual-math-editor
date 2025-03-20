@@ -134,6 +134,7 @@ const SHORTCUTS = {
   B:"\\mathbb",
   F:"\\mathfrak",
   b:"\\mathbf",
+  S:"\\mathsf",
   te:"\\text",
   
 
