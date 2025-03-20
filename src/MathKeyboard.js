@@ -158,6 +158,8 @@ const SHORTCUTS = {
   ker:"\\ker",
   det:"\\det",
   deg:"\\deg",
+  Tr:"\\operatorname{Tr}",
+  tr:"\\operatorname{tr}",
 
 
   // Environments
