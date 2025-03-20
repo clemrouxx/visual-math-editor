@@ -9,6 +9,7 @@ const MathEditor = forwardRef((props,ref) => {
     const [editMode,setEditMode] = useState("cursor"); // "none"|"selection"|"cursor"
     const [mathTree,setMathTree] = useState(structuredClone(MathNodes.DEFAULT_TREE));
     const [formula,setFormula] = useState("");
+    const [exportFormula,setExportFormula] = useState("");
     const [command,setCommand] = useState("");
     const [focused,setFocused] = useState(true);
     const domRef = useRef(null);
@@ -21,6 +22,7 @@ const MathEditor = forwardRef((props,ref) => {
     const changeMathTree = (newtree) => { // 'Real' changes (ie not just cursor movement or selection) to the math tree. Relevant for the undo-redo functionnality
         setNewState(structuredClone(newtree));
         setMathTree(newtree);
+        setExportFormula(MathNodes.getFormula(newtree,false));
     }
 
     const erase = () => {
@@ -64,10 +66,17 @@ const MathEditor = forwardRef((props,ref) => {
     };
 
     const copyToClipboard = async () => {
-        const latex = MathNodes.getFormula(mathTree,false);
-        await navigator.clipboard.writeText(latex);
-        // console.log("Copied to clipboard:", latex);
+        await navigator.clipboard.writeText(exportFormula);
     };
+
+    const copySvgToClipboard = async () => {
+        const svgElement = domRef.current.querySelector("#exportFormulaElement svg");
+        const svgString = new XMLSerializer().serializeToString(svgElement);
+        const blob = new Blob([svgString], { type: "image/svg+xml" });
+        await navigator.clipboard.write([
+            new ClipboardItem({ "image/svg+xml": blob })
+        ]);
+    }
 
     const handleClick =  (event) => {
         event.preventDefault();
@@ -348,11 +357,12 @@ const MathEditor = forwardRef((props,ref) => {
             <button onClick={(e) => {e.stopPropagation();erase();}} onMouseDown={(e) => e.preventDefault()}>Reset</button>
             <div>{command}</div>
         </div>
-        <MathJax key={formula} className="math-display">{`\\[ ${formula} \\]`}</MathJax>
-        <button className="formula-copy" onClick={(e) => {e.stopPropagation();copyToClipboard();}} onMouseDown={(e) => e.preventDefault()}>
-            Copy LaTeX <br/> 
-            to clipboard
-        </button>
+        <MathJax className="math-display">{`\\[ ${formula} \\]`}</MathJax>
+        <div className="nodisplay" id="exportFormulaElement"><MathJax className="math-display">{`\\[ ${exportFormula} \\]`}</MathJax></div>
+        <div>
+            <button className="formula-copy" onClick={(e) => {e.stopPropagation();copyToClipboard();}} onMouseDown={(e) => e.preventDefault()}>Copy LaTeX</button>
+            <button className="formula-copy" onClick={(e) => {e.stopPropagation();copySvgToClipboard();}} onMouseDown={(e) => e.preventDefault()}>Copy SVG</button>
+        </div>
       </div>
   );
 });

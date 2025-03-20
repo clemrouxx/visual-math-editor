@@ -10,17 +10,13 @@ function App() {
   const [darkMode, setDarkMode] = useState(prefersDark);
   const formulaEditor = useRef();
 
-  
   const config = {
-      loader: { load: ["input/tex","[tex]/html","output/chtml"] },
+      loader: { load: ["[tex]/html"] },
       tex: {
         packages: { "[+]": ["html","ams","physics"] },
       },
       options: {
         enableMenu : false,
-      },
-      output: {
-        renderer: "chtml", // Force CHTML instead of SVG
       },
     };
 
@@ -31,7 +27,7 @@ function App() {
 
   return (
     <div className="App">
-      <MathJaxContext config={config}>
+      <MathJaxContext config={config} src={"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"}>
       <div className="menu">
         <button onClick={() => setDarkMode(!darkMode)} onMouseDown={(e) => e.preventDefault()}>
           Toggle Dark Mode
