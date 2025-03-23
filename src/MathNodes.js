@@ -111,6 +111,7 @@ function getFormula(node,forEditor){
     if (forEditor && !node.isroot && !isinvisible) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
     if (node.selected && forEditor) string = `\\class{math-selected}{${string}}`;
     else if (node.isplaceholder) string = `\\class{math-placeholder}{${string}}`;
+    if (!forEditor) string += " "; // Ensures good separation
     return string;
 }
 
