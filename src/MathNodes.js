@@ -2,7 +2,7 @@
 
 // The following lists / dictionnaries determine the propesrties of the inserted node (regarding selection, cursor placement, deletion...)
 // Includes the core and AMS commands (as well as a few commands from the physics package)
-const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow","\\bra","\\ket","\\braket"];
+const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow","\\bra","\\ket","\\Bra","\\Ket"];
 const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","\\check","\\tilde","\\breve","\\acute","\\grave","\\mathring"];
 const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\lvert":"\\rvert","\\lVert":"\\rVert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil","\\ulcorner":"\\urcorner","\\llcorner":"\\lrcorner"};

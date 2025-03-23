@@ -168,8 +168,8 @@ const SHORTCUTS = {
   cas:"\\begin{cases}",
 
   // Constructions
-  ket:"\\ket",
-  bra:"\\bra",
+  ket:"\\Ket",
+  bra:"\\Bra",
 
   // Named nodes
   sq:"squared",
