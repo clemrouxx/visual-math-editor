@@ -80,6 +80,11 @@ const SHORTCUTS = {
   sr:"\\sqrt",
   not:"\\not",
   hbar:"\\hbar",
+  dd:"\\dd",
+  grad:"\\grad",
+  div:"\\div",
+  curl:"\\curl",
+  lapl:"\\laplacian",
 
   // Operations
   x:"\\times",
@@ -120,6 +125,8 @@ const SHORTCUTS = {
   int:"\\int",
   fr:"\\frac",
   over:"\\overset",
+  dv:"\\dv",
+  pdv:"\\pdv",
 
   // Accents
   d:"\\dot",
@@ -159,8 +166,8 @@ const SHORTCUTS = {
   ker:"\\ker",
   det:"\\det",
   deg:"\\deg",
-  Tr:"\\operatorname{Tr}",
-  tr:"\\operatorname{tr}",
+  Tr:"\\Tr",
+  tr:"\\tr",
 
 
   // Environments
@@ -168,8 +175,10 @@ const SHORTCUTS = {
   cas:"\\begin{cases}",
 
   // Constructions
-  ket:"\\Ket",
-  bra:"\\Bra",
+  ket:"\\ket",
+  bra:"\\bra",
+  brk:"\\braket",
+  kbr:"\\ketbra",
 
   // Named nodes
   sq:"squared",

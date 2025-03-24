@@ -2,7 +2,8 @@
 
 ## Bugs
 - cursor is sometimes invisible when refocusing
-- cannot get the "\braket" to work correctly for some reason, despite using the physics package
+- Ctrl-Z not working when the cursor is in text mode
+- Weird bug when typing "dd[Space]"
 
 ## Basic capabilities
 - Removing the style on a symbol

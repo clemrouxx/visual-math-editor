@@ -11,7 +11,7 @@ function App() {
   const formulaEditor = useRef();
 
   const config = {
-      loader: { load: ["[tex]/html"] },
+      loader: { load: ["[tex]/html","[tex]/physics"] },
       tex: {
         packages: { "[+]": ["html","ams","physics"] },
       },
