@@ -19,7 +19,6 @@ function App() {
         enableMenu : false,
       },
     };
-
   
     useEffect(() => {
       document.body.classList.toggle("dark", darkMode);
