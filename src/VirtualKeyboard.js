@@ -23,29 +23,31 @@ const CONSTRUCTS = ["\\sum","\\prod","\\int","\\iint","\\iiint","\\oint","\\bigc
 
 const NAMED_FUNCTIONS = ["\\exp","\\log","\\min","\\max","\\arg","\\lim","\\cos","\\sin","\\tan","\\arccos","\\arcsin","\\arctan","\\cosh","\\sinh","\\tanh","\\det","\\ker","\\inf","\\sup","\\deg","\\cot","\\sec","\\csc","\\dim","\\gcd","\\hom","\\lg","\\liminf","\\limsup","\\Pr","\\sup","\\injlim","\\projlim","\\varinjlim","\\varprojlim","\\varliminf","\\varlimsup","\\Tr","\\tr","\\rank","\\erf","\\Res","\\pv","\\PV","\\Re","\\Im"];
 
+
+const reversedShortcuts = Object.fromEntries(Object.entries(MathKeyboard.SHORTCUTS).map(([key, value]) => [value, key]));
+const getShortcut = (symbol) => reversedShortcuts[symbol] ? `${reversedShortcuts[symbol]} [Space]` : undefined;
+
 const VirtualKeyboard = ({ formulaEditorRef }) => {
-  const reversedShortcuts = Object.fromEntries(Object.entries(MathKeyboard.SHORTCUTS).map(([key, value]) => [value, key]));
-  const getShortcut = (symbol) => reversedShortcuts[symbol] ? `${reversedShortcuts[symbol]} [Space]` : undefined;
   return (
     <MathJax>
     <div className="virtual-keyboard">
-      <FirstRow reference={formulaEditorRef} getShortcut={getShortcut} />
-      <Category title="Greek letters" symbols={GREEK_LETTERS} getShortcut={getShortcut} reference={formulaEditorRef} className="wide-category"/>
-      <Category title="Miscellaneous" symbols={MISC} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={17}/>
-      <MultilineCategory getShortcut={getShortcut} reference={formulaEditorRef}/>
-      <Category title="Arrows" symbols={ARROWS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={14}/>
-      <Category title="Binary 'equivalence' relations" symbols={RELATIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={12}/>
-      <Category title="Binary 'ordering' relations" symbols={ORDER} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={16}/>
-      <Category title="Binary operators" symbols={BINARY_OPERATORS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={13}/>
-      <Category title="Other constructs" symbols={CONSTRUCTS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15} keyClassName="x-small-text larger-button"/>
-      <Category title="Functions & similar" symbols={NAMED_FUNCTIONS} getShortcut={getShortcut} reference={formulaEditorRef} threasholdIndex={15} className="wide-category"/>
-      <Category title="Accents" symbols={ACCENTS} getShortcut={getShortcut} reference={formulaEditorRef}/>
+      <FirstRow reference={formulaEditorRef} />
+      <Category title="Greek letters" symbols={GREEK_LETTERS} reference={formulaEditorRef} className="wide-category"/>
+      <Category title="Miscellaneous" symbols={MISC} reference={formulaEditorRef} threasholdIndex={17}/>
+      <MultilineCategory reference={formulaEditorRef}/>
+      <Category title="Arrows" symbols={ARROWS} reference={formulaEditorRef} threasholdIndex={14}/>
+      <Category title="Binary 'equivalence' relations" symbols={RELATIONS} reference={formulaEditorRef} threasholdIndex={12}/>
+      <Category title="Binary 'ordering' relations" symbols={ORDER} reference={formulaEditorRef} threasholdIndex={16}/>
+      <Category title="Binary operators" symbols={BINARY_OPERATORS} reference={formulaEditorRef} threasholdIndex={13}/>
+      <Category title="Other constructs" symbols={CONSTRUCTS} reference={formulaEditorRef} threasholdIndex={15} keyClassName="x-small-text larger-button"/>
+      <Category title="Functions & similar" symbols={NAMED_FUNCTIONS} reference={formulaEditorRef} threasholdIndex={15} className="wide-category"/>
+      <Category title="Accents" symbols={ACCENTS} reference={formulaEditorRef}/>
     </div>
     </MathJax>
   );
 };
 
-const FirstRow = ({reference,getShortcut}) => {
+const FirstRow = ({reference}) => {
   const PLACEHOLDER_STRING = "\\class{math-placeholder}{\\square}"
   return (
     <div className="first-row">
@@ -54,14 +56,14 @@ const FirstRow = ({reference,getShortcut}) => {
         <NodeVirtualKey nodeName="squared" tooltip={getShortcut("squared")} display={`${PLACEHOLDER_STRING}^2`} reference={reference}/>
         <VirtualKey symbol="^" display={`A^${PLACEHOLDER_STRING}`} tooltip="Ctrl+u OR ^"  reference={reference}/>
         <VirtualKey symbol="_" display={`A_${PLACEHOLDER_STRING}`} tooltip="Ctrl+d OR _"  reference={reference}/>
-        <SymbolVirtualKey symbol="\frac" tooltip={getShortcut("\\frac")} reference={reference} className="x-small-text"/>
-        <SymbolVirtualKey symbol="\sqrt" tooltip={getShortcut("\\sqrt")} reference={reference} className="small-text"/>
+        <SymbolVirtualKey symbol="\frac" reference={reference} className="x-small-text"/>
+        <SymbolVirtualKey symbol="\sqrt" reference={reference} className="small-text"/>
         <NodeVirtualKey nodeName="nsqrt" tooltip={getShortcut("nsqrt")} display={MathNodes.getFormula(MathNodes.FracLike("\\sqrt",true))}  reference={reference} className="small-text"/>
         <VirtualKey symbol="\not" display={`/`} tooltip={getShortcut("\\not")}  reference={reference}/>
         </div>
         <div className="key-row">
         {DELIMITERS.map((symbol, index) => (
-          <SymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index}/>
+          <SymbolVirtualKey symbol={symbol} reference={reference} key={index}/>
         ))}
       </div>
       <h3>Styles</h3>
@@ -77,7 +79,7 @@ const FirstRow = ({reference,getShortcut}) => {
   );
 }
 
-const MultilineCategory =  ({reference,getShortcut}) => {
+const MultilineCategory =  ({reference}) => {
   return (
   <div>
     <h3>Multiline environments</h3>
@@ -90,14 +92,14 @@ const MultilineCategory =  ({reference,getShortcut}) => {
   </div>);
 }
 
-const Category = ({title,symbols,getShortcut,reference,threasholdIndex,className,keyClassName}) => {
+const Category = ({title,symbols,reference,threasholdIndex,className,keyClassName}) => {
   const [showAll,setShowAll] = useState(false);
 
   return (<div className={className}>
     <h3>{title}</h3>
     <div className={"key-row "}>
       {symbols.map((symbol, index) => (
-        <SymbolVirtualKey symbol={symbol} tooltip={getShortcut(symbol)} reference={reference} key={index} className={(threasholdIndex && index>threasholdIndex && !showAll ?"hidden":"") + " "+keyClassName}/>
+        <SymbolVirtualKey symbol={symbol} reference={reference} key={index} className={(threasholdIndex && index>threasholdIndex && !showAll ?"hidden":"") + " "+keyClassName}/>
       ))}
     </div>
     {threasholdIndex && <button className="drawer-handle" onMouseDown={(e) => e.preventDefault()} onClick={()=>{setShowAll(!showAll)}}>{showAll?"Show less":"Show all"}</button>}
@@ -124,10 +126,10 @@ const VirtualKey = ({symbol,display,tooltip,reference,className}) => {
   );
 }
 
-const SymbolVirtualKey = ({symbol,tooltip,reference,className}) => {
+const SymbolVirtualKey = ({symbol,reference,className}) => {
   const formula = MathNodes.getFormula(MathNodes.getNode(symbol,false,true));
   return (
-    <VirtualKey symbol={symbol} display={formula} tooltip={tooltip} reference={reference} className={className}/>
+    <VirtualKey symbol={symbol} display={formula} tooltip={getShortcut(symbol)} reference={reference} className={className}/>
   );
 }
 
