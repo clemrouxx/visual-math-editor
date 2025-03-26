@@ -17,7 +17,7 @@ var ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
   }, {});
 ENVIRONMENTS[`\\begin{array}{}`] = "\\end{array}";
 
-const INVISIBLE_SYMBOLS = ["_","^","\\\\","&"]; // Don't have classes attached
+const INVISIBLE_SYMBOLS = ["_","^","\\\\","&","\\hline"]; // Don't have classes attached. Unfortunately seems necessary for hline
 
 const CURSOR = {iscursor:true,symbol:"|"};
 const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"}

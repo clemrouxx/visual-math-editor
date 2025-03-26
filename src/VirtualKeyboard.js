@@ -89,6 +89,9 @@ const MultilineCategory =  ({reference}) => {
         <VirtualKey symbol={`\\begin{${name}}`} display={`\\begin{${name}}${ENVIRONMENT_DISPLAY_INNER}\\end{${name}}`} tooltip={getShortcut(`\\begin{${name}}`)} reference={reference} key={index} className="x-small-text larger-button"/>
       ))}
     </div>
+    <div className="key-row">
+      <VirtualKey symbol="\hline" display={`-`} tooltip={undefined}  reference={reference}/>
+    </div>
   </div>);
 }
 

@@ -23,6 +23,7 @@ const MathEditor = forwardRef((props,ref) => {
         setNewState(structuredClone(newtree));
         setMathTree(newtree);
         setExportFormula(MathNodes.getFormula(newtree,false));
+        console.log(MathNodes.getFormula(newtree,true));
     }
 
     const erase = () => {
