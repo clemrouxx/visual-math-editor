@@ -173,6 +173,8 @@ const SHORTCUTS = {
   // Environments
   mat:"\\begin{pmatrix}",
   cas:"\\begin{cases}",
+  arr:"\\begin{array}{}",
+  "--":"\\hline",
 
   // Constructions
   ket:"\\ket",
