@@ -108,6 +108,41 @@ function replaceAndAdopt(tree,path,newnode,placeCursor=false){
   return newtree;
 }
 
+function getPositionInArray(tree,path){
+  const targetIndex = path.at(-1);
+  const parent = pathToNode(tree,path.slice(0,path.length-1));
+  const siblings = parent.children;
+  if (!parent.ismultiline) return false;
+  var ilig = 0, icol = 0;
+  for (var i=0;i<targetIndex;i++){
+    if (siblings[i].symbol==="&") icol += 1;
+    else if (siblings[i].symbol==="\\\\"){
+      ilig += 1;
+      icol = 0;
+    }
+  }
+  return {ilig,icol};
+}
+
+function alignCol(tree,path,value){
+  const icol = getPositionInArray(tree,path).icol;
+  const arrpath = path.slice(0,path.length-1);
+  var arr = pathToNode(tree,arrpath);
+  if (arr.colparams.length > icol){
+    arr.colparams = [...arr.colparams.slice(0, icol), value, ...arr.colparams.slice(icol + 1)].join("");
+    console.log(arr.colparams);
+  }
+  else{
+    arr.colparams += "c".repeat(icol-arr.colparams.length) + value;
+  }
+  return insertAtPath(tree,arrpath,arr,true);
+}
+
+function findCurrentPath(tree,editMode){
+  if (editMode==="cursor") return findCursorParent(tree).cursorPath;
+  else if (editMode==="selection") return findSelectedNode(tree).path;
+}
+
 // Cursor manipulations
 
 function removeCursor(tree){
@@ -325,4 +360,4 @@ function selectedToCursor(tree,side){ // Add cursor next to selected, and unsele
   return unselect(insertAtPath(tree,path,MathNodes.CURSOR,false));
 }
 
-export default {pathToNode,pushCursorAtPath,deleteSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll,findSelectedNode,canReplace,replaceAndAdopt}
+export default {pathToNode,getPositionInArray,findCurrentPath,alignCol,pushCursorAtPath,deleteSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll,findSelectedNode,canReplace,replaceAndAdopt}

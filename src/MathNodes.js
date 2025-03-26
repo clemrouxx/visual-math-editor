@@ -44,7 +44,7 @@ const FracLike = (symbol,addplaceholder=false) => {
   else if (symbol==="\\underset") verticalorientation="up";
   return {symbol,verticalorientation,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,childrenstring}
 };
-const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true}};
+const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true,colparams:""}};
 
 // Automatically create node for a given symbol
 function getNode(symbol,rawtext=false,addplaceholder=false){
@@ -81,7 +81,8 @@ function getFormula(node,forEditor){
     if (node.symbol) string += node.symbol;
     else if (node.leftsymbol){
       if (node.adptative) string += "\\left ";
-      string += node.leftsymbol;
+      if (node.colparams) string += node.leftsymbol.replace("{}",`{${node.colparams}}`);
+      else string += node.leftsymbol;
     }
 
     // Now we consider the node children

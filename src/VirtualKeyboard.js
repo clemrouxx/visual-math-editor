@@ -91,6 +91,9 @@ const MultilineCategory =  ({reference}) => {
     </div>
     <div className="key-row">
       <VirtualKey symbol="\hline" display={`-`} tooltip={undefined}  reference={reference}/>
+      <CustomVirtualKey name="array-align-l" display={"| \\leftarrow"} reference={reference}/>
+      <CustomVirtualKey name="array-align-c" display={"\\rightarrow | \\leftarrow"} reference={reference}/>
+      <CustomVirtualKey name="array-align-r" display={"\\rightarrow |"} reference={reference}/>
     </div>
   </div>);
 }
@@ -125,6 +128,14 @@ const VirtualKey = ({symbol,display,tooltip,reference,className}) => {
   return (
       <button onMouseDown={(e) => e.preventDefault()} data-tooltip-id={tooltipId} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addSymbol(symbol)}>
             {`\\[${display} \\]`} {tooltip && <Tooltip id={tooltipId} />}
+      </button>
+  );
+}
+
+const CustomVirtualKey = ({name,display,tooltip,reference,className}) => {
+  return (
+      <button onMouseDown={(e) => e.preventDefault()} data-tooltip-id={name} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.customAction(name)}>
+            {`\\[${display} \\]`} {tooltip && <Tooltip id={name} />}
       </button>
   );
 }

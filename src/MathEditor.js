@@ -16,14 +16,13 @@ const MathEditor = forwardRef((props,ref) => {
     const { setNewState, undo, redo } = useUndoRedo(MathNodes.DEFAULT_TREE);
 
     useImperativeHandle(ref, () => ({ // Functions that can be called by an 'outside' element, VirtualKeyboard for example
-        addSymbol,addNode
+        addSymbol,addNode,customAction
     }));
 
     const changeMathTree = (newtree) => { // 'Real' changes (ie not just cursor movement or selection) to the math tree. Relevant for the undo-redo functionnality
         setNewState(structuredClone(newtree));
         setMathTree(newtree);
         setExportFormula(MathNodes.getFormula(newtree,false));
-        console.log(MathNodes.getFormula(newtree,true));
     }
 
     const erase = () => {
@@ -65,6 +64,19 @@ const MathEditor = forwardRef((props,ref) => {
             }
         }
     };
+
+    const customAction = (name) => {
+        console.log(name);
+        const splitname = name.split("-");
+        if (splitname[0]==="array"){
+            if (editMode==="cursor" || editMode==="selection"){
+                const path = MathTree.findCurrentPath(mathTree,editMode);
+                if (splitname[1]==="align"){
+                    changeMathTree(MathTree.alignCol(mathTree,path,splitname[2]));
+                }
+            }
+        }
+    }
 
     const copyToClipboard = async () => {
         await navigator.clipboard.writeText(exportFormula);
