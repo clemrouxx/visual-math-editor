@@ -80,7 +80,6 @@ const SHORTCUTS = {
   sr:"\\sqrt",
   not:"\\not",
   hbar:"\\hbar",
-  dd:"\\dd",
   grad:"\\grad",
   div:"\\div",
   curl:"\\curl",
@@ -88,7 +87,6 @@ const SHORTCUTS = {
 
   // Operations
   x:"\\times",
-  div:"\\div",
   U:"\\cup",
   inter:"\\cap",
   ".":"\\cdot",
