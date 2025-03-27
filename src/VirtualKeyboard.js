@@ -21,7 +21,7 @@ const ORDER = ["\\leq","\\geq","\\ll","\\gg","\\subset","\\supset","\\subseteq",
 
 const CONSTRUCTS = ["\\sum","\\prod","\\int","\\iint","\\iiint","\\oint","\\bigcup","\\bigcap","\\bigoplus","\\bigotimes","\\overbrace","\\underbrace","\\widehat","\\overrightarrow","\\ket","\\bra","\\braket","\\ketbra","\\bigwedge","\\bigvee","\\bigodot","\\biguplus","\\iiiint","\\idotsint","\\widetilde","\\overleftarrow","\\overline","\\underline","\\overleftrightarrow","\\underleftrightarrow","\\underleftarrow","\\underrightarrow","\\ulcorner","\\llcorner","\\overset","\\underset","inverse","transpose","updagger","\\dv","\\pdv"];
 
-const NAMED_FUNCTIONS = ["\\exp","\\log","\\min","\\max","\\arg","\\lim","\\cos","\\sin","\\tan","\\arccos","\\arcsin","\\arctan","\\cosh","\\sinh","\\tanh","\\det","\\ker","\\inf","\\sup","\\deg","\\cot","\\sec","\\csc","\\dim","\\gcd","\\hom","\\lg","\\liminf","\\limsup","\\Pr","\\sup","\\injlim","\\projlim","\\varinjlim","\\varprojlim","\\varliminf","\\varlimsup","\\Tr","\\tr","\\rank","\\erf","\\Res","\\pv","\\PV","\\Re","\\Im"];
+const NAMED_FUNCTIONS = ["\\exp","\\log","\\ln","\\min","\\max","\\arg","\\lim","\\cos","\\sin","\\tan","\\arccos","\\arcsin","\\arctan","\\cosh","\\sinh","\\tanh","\\det","\\ker","\\inf","\\sup","\\deg","\\cot","\\sec","\\csc","\\dim","\\gcd","\\hom","\\lg","\\liminf","\\limsup","\\Pr","\\sup","\\injlim","\\projlim","\\varinjlim","\\varprojlim","\\varliminf","\\varlimsup","\\Tr","\\tr","\\rank","\\erf","\\Res","\\pv","\\PV","\\Re","\\Im"];
 
 
 const reversedShortcuts = Object.fromEntries(Object.entries(MathKeyboard.SHORTCUTS).map(([key, value]) => [value, key]));

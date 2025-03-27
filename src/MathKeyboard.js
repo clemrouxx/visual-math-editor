@@ -146,6 +146,7 @@ const SHORTCUTS = {
   // Named functions
   exp:"\\exp",
   log:"\\log",
+  ln:"\\ln",
   min:"\\min",
   max:"\\max",
   arg:"\\arg",
