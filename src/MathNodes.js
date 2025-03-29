@@ -78,11 +78,12 @@ function getFormula(node,forEditor){
     var string =  "";
     
     // First / main symbol
-    if (node.symbol) string += node.symbol;
+    if (node.symbol) string += node.symbol + " ";
     else if (node.leftsymbol){
-      if (node.adptative) string += "\\left ";
+      if (node.adptative) string += "\\left";
       if (node.colparams) string += node.leftsymbol.replace("{}",`{${node.colparams}}`);
       else string += node.leftsymbol;
+      string += " ";
     }
 
     // Now we consider the node children
@@ -106,6 +107,7 @@ function getFormula(node,forEditor){
     if (node.rightsymbol){
       if (node.adptative) string += "\\right ";
       string += node.rightsymbol;
+      string += " "; // Ensures good separation
     }
 
     // Surrounding commands for classes & ids
@@ -113,7 +115,6 @@ function getFormula(node,forEditor){
     if (forEditor && !node.isroot && !isinvisible) string = `\\class{math-node}{\\cssId{math-${node.id}}{${string}}}`;
     if (node.selected && forEditor) string = `\\class{math-selected}{${string}}`;
     else if (node.isplaceholder) string = `\\class{math-placeholder}{${string}}`;
-    if (!forEditor) string += " "; // Ensures good separation
     return string;
 }
 

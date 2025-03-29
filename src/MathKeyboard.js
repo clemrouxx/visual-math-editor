@@ -114,6 +114,10 @@ const SHORTCUTS = {
   "===":"\\equiv",
   cong:"\\cong",
   prop:"\\propto",
+  "+-":"\\pm",
+  "pm":"\\pm",
+  "-+":"\\mp",
+  "mp":"\\mp",
 
   // delimiters
   avg:"\\langle",
