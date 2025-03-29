@@ -84,6 +84,8 @@ const SHORTCUTS = {
   div:"\\div",
   curl:"\\curl",
   lapl:"\\laplacian",
+  ll:"\\ell",
+  dd:"\\dd",
 
   // Operations
   x:"\\times",
@@ -110,7 +112,8 @@ const SHORTCUTS = {
   box:"\\Box",
   xbox:"\\boxtimes",
   "===":"\\equiv",
-  cong:"\\cong",  
+  cong:"\\cong",
+  prop:"\\propto",
 
   // delimiters
   avg:"\\langle",
@@ -127,9 +130,9 @@ const SHORTCUTS = {
   pdv:"\\pdv",
 
   // Accents
-  d:"\\dot",
+  dot:"\\dot",
   v:"\\vec",
-  dd:"\\ddot",
+  ddot:"\\ddot",
   bar:"\\bar",
   hat:"\\hat",
   til:"\\tilde",
