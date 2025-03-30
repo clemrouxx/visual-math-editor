@@ -118,6 +118,7 @@ const SHORTCUTS = {
   "pm":"\\pm",
   "-+":"\\mp",
   "mp":"\\mp",
+  circ:"\\circ",
 
   // delimiters
   avg:"\\langle",
