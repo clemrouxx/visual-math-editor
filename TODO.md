@@ -2,8 +2,6 @@
 
 ## Bugs
 - cursor is sometimes invisible when refocusing
-- Ctrl-Z not working when the cursor is in text mode
-- problem with division symbol and physics package
 
 ## Basic capabilities
 - Removing the style on a symbol

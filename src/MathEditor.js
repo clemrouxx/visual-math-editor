@@ -117,7 +117,7 @@ const MathEditor = forwardRef((props,ref) => {
             const parent = result.node;
             cursorPath = result.path;
             parentCopy = {...parent};
-            if (parent.parseastext && event.key.length===1){
+            if (parent.parseastext && event.key.length===1 && !event.ctrlKey){
                 event.preventDefault();
                 addSymbol(event.key,true);
                 return;
