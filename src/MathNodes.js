@@ -10,6 +10,7 @@ const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
 const FRAC_LIKE = ["\\frac","\\overbrace","\\underbrace","\\overset","\\underset","\\dv","\\pdv","\\fdv","\\braket","\\ketbra","\\dyad"]; // Symbols that have strictly 2 children (other than sum-like)
 const SUM_LIKE = ["\\sum","\\int","\\bigcap","\\bigcup","\\bigodot","\\bigoplus","\\bigotimes","\\bigsqcup","\\biguplus","\\bigvee","\\bigwedge","\\coprod","\\prod"]; // Also strictly 2 children, but displayed differently as fractions
 const LIM_LIKE = ["\\lim","\\iint","\\iiint","\\iiiint","\\oint","\\idotsint"];
+const THREE_CHILDREN = ["\\eval"];
 const ENVIRONMENTS_NAMES = ["align","cases","matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
 var ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
     acc[`\\begin{${name}}`] = `\\end{${name}}`;
@@ -44,6 +45,10 @@ const FracLike = (symbol,addplaceholder=false) => {
   else if (symbol==="\\underset") verticalorientation="up";
   return {symbol,verticalorientation,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],fixedchildren:true,implodes:true,childrenstring}
 };
+const ThreeChildren = (symbol,addplaceholder=false) => {
+  var childrenstring = "{§0}_§1^§2";
+  return {symbol,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],fixedchildren:true,implodes:true,childrenstring}
+};
 const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true,colparams:""}};
 
 // Automatically create node for a given symbol
@@ -56,6 +61,7 @@ function getNode(symbol,rawtext=false,addplaceholder=false){
   else if (MODIFIERS.includes(symbol)) return Modifier(symbol,addplaceholder);
   else if (FRAC_LIKE.includes(symbol) || SUM_LIKE.includes(symbol)) return FracLike(symbol,addplaceholder);
   else if (LIM_LIKE.includes(symbol)) return LimLike(symbol,addplaceholder);
+  else if (THREE_CHILDREN.includes(symbol)) return ThreeChildren(symbol,addplaceholder);
   else if (symbol in ENVIRONMENTS) return Environment(symbol,addplaceholder);
   else if (symbol in NAMED_NODES) return structuredClone(NAMED_NODES[symbol]);
   return Symbol(symbol);
@@ -93,7 +99,8 @@ function getFormula(node,forEditor){
     }
     // In all other cases, there is recursion
     else if (node.fixedchildren){
-      string += node.childrenstring.replace("§0",getFormula(node.children[0],forEditor)).replace("§1",getFormula(node.children[1],forEditor)).replace("§2",getFormula(node.children[1],forEditor))
+      if (node.children.length===2) string += node.childrenstring.replace("§0",getFormula(node.children[0],forEditor)).replace("§1",getFormula(node.children[1],forEditor));
+      else string += node.childrenstring.replace("§0",getFormula(node.children[0],forEditor)).replace("§1",getFormula(node.children[1],forEditor)).replace("§2",getFormula(node.children[2],forEditor));
     }
     else if (node.children){
       if (node.symbol){
