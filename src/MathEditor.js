@@ -60,7 +60,6 @@ const MathEditor = forwardRef((props,ref) => {
                     changeMathTree(MathTree.replaceAndAdopt(mathTree,selection.path,newnode,true));
                     setEditMode("cursor");
                 }
-                
             }
         }
     };
@@ -202,6 +201,7 @@ const MathEditor = forwardRef((props,ref) => {
                     case "Tab":
                         event.preventDefault();
                         if (parentCopy.ismultiline) addSymbol("&");
+                        else if (parentCopy.isroot) addSymbol("\\quad");
                         else setMathTree(MathTree.shiftCursor(mathTree,"right"));
                         break;
                     case "Enter":
