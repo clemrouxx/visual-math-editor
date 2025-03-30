@@ -10,6 +10,7 @@
 - Multi-symbol selection
 - Shortcuts (and buttons) for node lists
 - Allow for more than 2 fixed children (ex for \eval, \dv)
+- Vertical separators in arrays
 
 ## Visual improvements
 - Better visuals (in particular buttons), that for the moment depend on the browser

@@ -42,7 +42,7 @@ const FracLike = (symbol,addplaceholder=false) => {
   else if (symbol === "\\overbrace") {childrenstring = "{§0}^{§1}"; verticalorientation="up";}
   else if (symbol === "\\sqrt") childrenstring = "[§0]{§1}";
   else if (symbol==="\\underset") verticalorientation="up";
-  return {symbol,verticalorientation,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],hasstrictlytwochildren:true,implodes:true,childrenstring}
+  return {symbol,verticalorientation,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],fixedchildren:true,implodes:true,childrenstring}
 };
 const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true,colparams:""}};
 
@@ -92,8 +92,8 @@ function getFormula(node,forEditor){
       string += `{${inside}}`;
     }
     // In all other cases, there is recursion
-    else if (node.hasstrictlytwochildren){
-      string += node.childrenstring.replace("§0",getFormula(node.children[0],forEditor)).replace("§1",getFormula(node.children[1],forEditor))
+    else if (node.fixedchildren){
+      string += node.childrenstring.replace("§0",getFormula(node.children[0],forEditor)).replace("§1",getFormula(node.children[1],forEditor)).replace("§2",getFormula(node.children[1],forEditor))
     }
     else if (node.children){
       if (node.symbol){

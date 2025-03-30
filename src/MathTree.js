@@ -83,7 +83,7 @@ function setUids(tree,nextUid=0){// Inplace
 function canReplace(node,newnode){
   if ((!node.children) || node.implodes) return true; // A node with no children list can always be replaced. Same with a node that should 'implode' upon deletion
   // node has children and does not implode
-  if (node.hasstrictlytwochildren) return (newnode.hasstrictlytwochildren);
+  if (node.fixedchildren) return (newnode.fixedchildren && newnode.children.length===node.children.length);
   if (node.hassinglechild) return (newnode.hassinglechild);
   if (node.ismodifier) return (newnode.ismodifier);
   if (node.ismultiline) return (newnode.ismultiline);
@@ -228,14 +228,18 @@ function recursiveShiftCursor(node,shift) {
     const index = node.children.findIndex(child => child.iscursor);// Looking for the cursor
     if (index===-1){// Not found among direct children. recursion.
       newnode.children = [];
-      if (newnode.hasstrictlytwochildren){
-        let results0 = recursiveShiftCursor(node.children[0],shift);
-        let results1 = recursiveShiftCursor(node.children[1],shift);
-        newnode.children = [results0.node,results1.node];
-        if ((shift===-1 && results0.justFoundCursor) || (shift===1 && results1.justFoundCursor)) return {node:newnode,justFoundCursor:true};// Send the cursor another level up
-        else if (shift===1 && results0.justFoundCursor) newnode.children[1].children.splice(0,0,MathNodes.CURSOR);// Move cursor from up to down
-        else if (shift === -1 && results1.justFoundCursor) newnode.children[0].children.push(MathNodes.CURSOR); // From down to up
-        else return {node:newnode,justFoundCursor:false};
+      if (newnode.fixedchildren){
+        let results = node.children.map(c=>recursiveShiftCursor(c,shift));
+        newnode.children = results.map(c=>c.node);
+        const justFoundCursorIndex = results.findIndex(r => r.justFoundCursor);
+        if (justFoundCursorIndex===-1) return {node:newnode,justFoundCursor:false}; // Cursor not found
+        const shiftedIndex = justFoundCursorIndex+shift;
+        if (0 <= shiftedIndex && shiftedIndex < newnode.children.length){ // Moving from one child to another
+          if (shift===1) newnode.children[shiftedIndex].children.splice(0,0,MathNodes.CURSOR);// Move cursor to the 'right'
+          else newnode.children[shiftedIndex].children.push(MathNodes.CURSOR); // Move to the 'left'
+          return {node:newnode,justFoundCursor:false}; // Not necessary statement, but makes the code slightly clearer
+        }
+        else return {node:newnode,justFoundCursor:true}; // Send the cursor another level up
       }
       else{
         node.children.forEach(child => {
@@ -249,10 +253,10 @@ function recursiveShiftCursor(node,shift) {
     else{ // MathNodes.CURSOR is a direct child of newnode
       var nextnode = newnode.children[index+shift];
       if (nextnode){ // Simple case : we don't leave this branch
-        if (nextnode.hasstrictlytwochildren){ // Special case, we need to go down 2 levels
+        if (nextnode.fixedchildren){ // Special case, we need to go down 2 levels
           newnode.children.splice(index,1); // Remove the cursor
-          if (shift === 1) nextnode.children[0].children.splice(0,0,MathNodes.CURSOR);
-          else nextnode.children[1].children.splice(nextnode.children[0].children.length,0,MathNodes.CURSOR);
+          if (shift === 1) nextnode.children.at(0).children.splice(0,0,MathNodes.CURSOR);
+          else nextnode.children.at(-1).children.splice(nextnode.children.at(-1).children.length,0,MathNodes.CURSOR);
         }
         else if (nextnode.children && !nextnode.hassinglechild){// We need to go down the tree, and insert the cursor as a new leaf.
           newnode.children.splice(index,1); // Remove the cursor
