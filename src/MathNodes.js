@@ -4,13 +4,13 @@
 // Includes the core and AMS commands (as well as a few commands from the physics package)
 const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow","\\bra","\\ket","\\Bra","\\Ket","\\abs","\\norm","\\order"];
 const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","\\check","\\tilde","\\breve","\\acute","\\grave","\\mathring"];
-const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf"];
+const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf","\\vb","\\vu","\\va"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\lvert":"\\rvert","\\lVert":"\\rVert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil","\\ulcorner":"\\urcorner","\\llcorner":"\\lrcorner"};
 const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
-const FRAC_LIKE = ["\\frac","\\overbrace","\\underbrace","\\overset","\\underset","\\dv","\\pdv","\\fdv","\\braket","\\ketbra","\\dyad"]; // Symbols that have strictly 2 children (other than sum-like)
+const FRAC_LIKE = ["\\frac","\\overbrace","\\underbrace","\\overset","\\underset","\\dv","\\pdv","\\fdv","\\braket","\\ketbra","\\dyad","\\comm","\\acomm","\\pb","\\ip","\\op","\\expval","\\ev"]; // Symbols that have strictly 2 children (other than sum-like)
 const SUM_LIKE = ["\\sum","\\int","\\bigcap","\\bigcup","\\bigodot","\\bigoplus","\\bigotimes","\\bigsqcup","\\biguplus","\\bigvee","\\bigwedge","\\coprod","\\prod"]; // Also strictly 2 children, but displayed differently as fractions
 const LIM_LIKE = ["\\lim","\\iint","\\iiint","\\iiiint","\\oint","\\idotsint"];
-const THREE_CHILDREN = ["\\eval"];
+const THREE_CHILDREN = ["\\eval","\\matrixel","\\mel","\\mel**"];
 const ENVIRONMENTS_NAMES = ["align","cases","matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
 var ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
     acc[`\\begin{${name}}`] = `\\end{${name}}`;
@@ -76,6 +76,9 @@ const NAMED_NODES = {
   updagger: {...getNode("^"),children:[{symbol:"\\dagger"}]},
   "=?" : {...getNode("\\overset"),children:[{symbol:"?"},{symbol:"="}]},
   "=!" : {...getNode("\\overset"),children:[{symbol:"!"},{symbol:"="}]},
+  dvn : {...ThreeChildren("\\dv"),childrenstring:"[§0]{§1}{§2}"},
+  pdvn : {...ThreeChildren("\\pdv"),childrenstring:"[§0]{§1}{§2}"},
+  pdvmixed : ThreeChildren("\\pdv"),
 }
 
 // LaTeX formula
