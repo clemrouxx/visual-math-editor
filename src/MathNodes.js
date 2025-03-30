@@ -46,7 +46,8 @@ const FracLike = (symbol,addplaceholder=false) => {
   return {symbol,verticalorientation,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],fixedchildren:true,implodes:true,childrenstring}
 };
 const ThreeChildren = (symbol,addplaceholder=false) => {
-  var childrenstring = "{§0}_§1^§2";
+  var childrenstring = "{§0}{§1}{§2}";
+  if (symbol==="\\eval") childrenstring = "{§0}_§1^§2";
   return {symbol,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],fixedchildren:true,implodes:true,childrenstring}
 };
 const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true,colparams:""}};
