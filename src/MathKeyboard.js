@@ -62,7 +62,7 @@ const SHORTCUTS = {
   Up:"\\Uparrow",
   Down:"\\Downarrow",
   map:"\\mapsto",
-  "-->":"xrightarrow",
+  "-->":"\\xrightarrow",
 
   // Misc symbols
   inf:"\\infty",
@@ -181,6 +181,7 @@ const SHORTCUTS = {
   deg:"\\deg",
   Tr:"\\Tr",
   tr:"\\tr",
+  lim:"\\lim",
 
   // Environments
   mat:"\\begin{pmatrix}",

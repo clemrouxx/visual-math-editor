@@ -66,6 +66,10 @@ button mjx-container
   margin: 0 !important;
 }
 
+mjx-container.MathJax[jax="SVG"][display="true"]{
+  margin: 0;
+}
+
 .formula-editor {
   border: solid grey 1px;
   font-size: larger;
@@ -75,6 +79,10 @@ button mjx-container
   align-items: center;
   position: sticky;
   top: 0;
+}
+
+.math-display{
+  padding: 0.5rem;
 }
 
 .formula-editor.unfocused{
@@ -176,23 +184,23 @@ button mjx-container
   align-items: center;
 }
 
-.virtual-keyboard button{
+.virtual-keyboard button.key{
   font-size: large;
   min-width: 2.2rem;
   height: 2.2rem;
   margin: 0;
-  padding: 0.2em 0.5em;
+  padding: 0.2rem 0.5rem;
 }
 
 .virtual-keyboard button.larger-button{
   height: 2.7rem;
 }
 
-.virtual-keyboard .small-text{
+.virtual-keyboard button.small-text{
   font-size:small;
 }
 
-.virtual-keyboard .x-small-text{
+.virtual-keyboard button.x-small-text{
   font-size:x-small;
 }
 
@@ -202,8 +210,11 @@ button mjx-container
 
 button.drawer-handle{
   opacity: 0.6;
-  margin: 0.2rem;
-  font-size: medium;
+  margin-top: 0.2rem;
+  font-size: larger;
+  padding: 0;
+  height: 1.8rem;
+  width: 1.8rem;
 }
 
 .react-tooltip{
