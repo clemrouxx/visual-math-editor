@@ -29,13 +29,13 @@ const DEFAULT_TREE = {isroot:true,nodeletion:true,children:[CURSOR]};
 
 // Functions that act like node constructors
 const Symbol = (symbol) => {return {symbol}};
-const ParentSymbol = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[PLACEHOLDER]:[],nodeletionfromright:true}};
-const LimLike = (symbol,addplaceholder=false) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
-const Accent = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[SMALLLETTERPLACEHOLDER]:[],hassinglechild:true}}
-const Style = (symbol,addplaceholder=false) => {return {symbol,children:addplaceholder?[BIGLETTERPLACEHOLDER]:[],hassinglechild:true,implodes:true}}
-const Delimiter = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:DELIMITERS[symbol],children:addplaceholder?[PLACEHOLDER]:[],adptative:true}};
-const Modifier = (symbol,addplaceholder=false) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
-const FracLike = (symbol,addplaceholder=false) => {
+const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright:true}};
+const LimLike = (symbol) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
+const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
+const Style = (symbol) => {return {symbol,children:[],hassinglechild:true,implodes:true}}
+const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:DELIMITERS[symbol],children:[],adptative:true}};
+const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
+const FracLike = (symbol) => {
   var childrenstring = "{§0}{§1}";
   var verticalorientation = "down";
   if (SUM_LIKE.includes(symbol)) {childrenstring = "_{§0}^{§1}"; verticalorientation="up";}
@@ -43,37 +43,41 @@ const FracLike = (symbol,addplaceholder=false) => {
   else if (symbol === "\\overbrace") {childrenstring = "{§0}^{§1}"; verticalorientation="up";}
   else if (symbol === "\\sqrt") childrenstring = "[§0]{§1}";
   else if (symbol==="\\underset") verticalorientation="up";
-  return {symbol,verticalorientation,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],fixedchildren:true,implodes:true,childrenstring}
+  return {symbol,verticalorientation,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],fixedchildren:true,implodes:true,childrenstring}
 };
-const ThreeChildren = (symbol,addplaceholder=false) => {
+const ThreeChildren = (symbol) => {
   var childrenstring = "{§0}{§1}{§2}";
   if (symbol==="\\eval") childrenstring = "{§0}_§1^§2";
-  return {symbol,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],fixedchildren:true,implodes:true,childrenstring}
+  return {symbol,children:[{children:[],nodeletion:true},{children:[],nodeletion:true},{children:[],nodeletion:true}],fixedchildren:true,implodes:true,childrenstring}
 };
-const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true,colparams:""}};
+const Environment = (symbol) => {return {leftsymbol:symbol,rightsymbol:ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true,colparams:""}};
 
 
 function includePlaceholders(node){
   if (!node.children) return node;
-  else if (ACCENTS.includes(node.symbol)) return {...node,children:[SMALLLETTERPLACEHOLDER]};
-  else if (STYLES.includes(node.symbol)) return {...node,children:[BIGLETTERPLACEHOLDER]};
-  else if (node.fixedchildren) return {...node,children:node.children.map(c=>{return {...c,children:[PLACEHOLDER]};})};
+  if (ACCENTS.includes(node.symbol)) return {...node,children:[SMALLLETTERPLACEHOLDER]};
+  if (STYLES.includes(node.symbol)) return {...node,children:[BIGLETTERPLACEHOLDER]};
+  if (node.fixedchildren) return {...node,children:node.children.map(c=>{return {...c,children:[PLACEHOLDER]};})};
+  return {...node,children:[PLACEHOLDER]};
 }
 
 // Automatically create node for a given symbol
-function getNode(symbol,rawtext=false,addplaceholder=false){
-  if (rawtext) return Symbol(symbol);
-  else if (PARENT_SYMBOLS.includes(symbol)) return ParentSymbol(symbol,addplaceholder);
-  else if (ACCENTS.includes(symbol)) return Accent(symbol,addplaceholder);
-  else if (STYLES.includes(symbol)) return Style(symbol,addplaceholder);
-  else if (symbol in DELIMITERS) return Delimiter(symbol,addplaceholder);
-  else if (MODIFIERS.includes(symbol)) return Modifier(symbol,addplaceholder);
-  else if (FRAC_LIKE.includes(symbol) || SUM_LIKE.includes(symbol)) return FracLike(symbol,addplaceholder);
-  else if (LIM_LIKE.includes(symbol)) return LimLike(symbol,addplaceholder);
-  else if (THREE_CHILDREN.includes(symbol)) return ThreeChildren(symbol,addplaceholder);
-  else if (symbol in ENVIRONMENTS) return Environment(symbol,addplaceholder);
-  else if (symbol in NAMED_NODES) return structuredClone(NAMED_NODES[symbol]);
-  return Symbol(symbol);
+function getNode(symbol,rawtext=false,addplaceholders=false){
+  var node = {};
+  if (rawtext) node = Symbol(symbol);
+  else if (PARENT_SYMBOLS.includes(symbol)) node = ParentSymbol(symbol);
+  else if (ACCENTS.includes(symbol)) node = Accent(symbol);
+  else if (STYLES.includes(symbol)) node = Style(symbol);
+  else if (symbol in DELIMITERS) node = Delimiter(symbol);
+  else if (MODIFIERS.includes(symbol)) node = Modifier(symbol);
+  else if (FRAC_LIKE.includes(symbol) || SUM_LIKE.includes(symbol)) node = FracLike(symbol);
+  else if (LIM_LIKE.includes(symbol)) node = LimLike(symbol);
+  else if (THREE_CHILDREN.includes(symbol)) node = ThreeChildren(symbol);
+  else if (symbol in ENVIRONMENTS) node = Environment(symbol);
+  else if (symbol in NAMED_NODES) node = structuredClone(NAMED_NODES[symbol]);
+  else node = Symbol(symbol);
+  if (addplaceholders) return includePlaceholders(node);
+  else return node;
 }
 
 const NAMED_NODES = {
