@@ -21,9 +21,9 @@ ENVIRONMENTS[`\\begin{array}{}`] = "\\end{array}";
 const INVISIBLE_SYMBOLS = ["_","^","\\\\","&","\\hline"]; // Don't have classes attached. Unfortunately seems necessary for hline
 
 const CURSOR = {iscursor:true,symbol:"|"};
-const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"}
-const SMALLLETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"}
-const BIGLETTERPLACEHOLDER = {isplaceholder:true,symbol:"A"}
+const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"};
+const SMALLLETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"};
+const BIGLETTERPLACEHOLDER = {symbol:"A"};// Removed the placeholder flag so that it is not transluscent
 
 const DEFAULT_TREE = {isroot:true,nodeletion:true,children:[CURSOR]};
 
@@ -52,13 +52,26 @@ const ThreeChildren = (symbol) => {
 };
 const Environment = (symbol) => {return {leftsymbol:symbol,rightsymbol:ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true,colparams:""}};
 
+const NAMED_NODES = {
+  squared:{...getNode("^"),children:[{symbol:"2"}]},
+  nsqrt: FracLike("\\sqrt"),// Like sqrt, but with an additionnal argument (in [...]).
+  inverse: {...getNode("^"),children:[{symbol:"-"},{symbol:"1"}]},
+  transpose: {...getNode("^"),children:[{symbol:"\\top"}]},
+  updagger: {...getNode("^"),children:[{symbol:"\\dagger"}]},
+  "=?" : {...getNode("\\overset"),children:[{symbol:"?"},{symbol:"="}]},
+  "=!" : {...getNode("\\overset"),children:[{symbol:"!"},{symbol:"="}]},
+  dvn : {...ThreeChildren("\\dv"),childrenstring:"[§0]{§1}{§2}"},
+  pdvn : {...ThreeChildren("\\pdv"),childrenstring:"[§0]{§1}{§2}"},
+  pdvmixed : ThreeChildren("\\pdv"),
+}
 
 function includePlaceholders(node){
   if (!node.children) return node;
   if (ACCENTS.includes(node.symbol)) return {...node,children:[SMALLLETTERPLACEHOLDER]};
   if (STYLES.includes(node.symbol)) return {...node,children:[BIGLETTERPLACEHOLDER]};
-  if (node.fixedchildren) return {...node,children:node.children.map(c=>{return {...c,children:[PLACEHOLDER]};})};
-  return {...node,children:[PLACEHOLDER]};
+  if (node.fixedchildren) return {...node,children:node.children.map(c=>{return c.children?{...c,children:[PLACEHOLDER]}:c;})};
+  if (node.children.length===0) return {...node,children:[PLACEHOLDER]};
+  return node;
 }
 
 // Automatically create node for a given symbol
@@ -78,19 +91,6 @@ function getNode(symbol,rawtext=false,addplaceholders=false){
   else node = Symbol(symbol);
   if (addplaceholders) return includePlaceholders(node);
   else return node;
-}
-
-const NAMED_NODES = {
-  squared:{...getNode("^"),children:[{symbol:"2"}]},
-  nsqrt: FracLike("\\sqrt"),// Like sqrt, but with an additionnal argument (in [...]).
-  inverse: {...getNode("^"),children:[{symbol:"-"},{symbol:"1"}]},
-  transpose: {...getNode("^"),children:[{symbol:"\\top"}]},
-  updagger: {...getNode("^"),children:[{symbol:"\\dagger"}]},
-  "=?" : {...getNode("\\overset"),children:[{symbol:"?"},{symbol:"="}]},
-  "=!" : {...getNode("\\overset"),children:[{symbol:"!"},{symbol:"="}]},
-  dvn : {...ThreeChildren("\\dv"),childrenstring:"[§0]{§1}{§2}"},
-  pdvn : {...ThreeChildren("\\pdv"),childrenstring:"[§0]{§1}{§2}"},
-  pdvmixed : ThreeChildren("\\pdv"),
 }
 
 // LaTeX formula
