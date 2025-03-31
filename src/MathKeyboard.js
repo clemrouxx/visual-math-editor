@@ -128,6 +128,8 @@ const SHORTCUTS = {
   "<sim":"\\lesssim",
   ">sim":"\\gtrsim",
   copr:"\\amalg",
+  "=!":"\\stackrel{!}{=}",
+  "=?":"\\stackrel{?}{=}",
 
   // delimiters
   avg:"\\langle",
@@ -205,8 +207,6 @@ const SHORTCUTS = {
   inv:"inverse",
   T:"transpose",
   dag:"updagger",
-  "=!":"=!",
-  "=?":"=?",
 };
 
 

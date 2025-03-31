@@ -2,7 +2,7 @@
 
 // The following lists / dictionnaries determine the propesrties of the inserted node (regarding selection, cursor placement, deletion...)
 // Includes the core and AMS commands (as well as a few commands from the physics package)
-const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow","\\bra","\\ket","\\Bra","\\Ket","\\abs","\\norm","\\order"];
+const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow","\\bra","\\ket","\\Bra","\\Ket","\\abs","\\norm","\\order","\\stackrel{!}","\\stackrel{?}"];
 const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","\\vu","\\check","\\tilde","\\breve","\\acute","\\grave","\\mathring"];
 const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf","\\vb","\\va"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\lvert":"\\rvert","\\lVert":"\\rVert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil","\\ulcorner":"\\urcorner","\\llcorner":"\\lrcorner"};
@@ -58,8 +58,6 @@ const NAMED_NODES = {
   inverse: {...getNode("^"),children:[{symbol:"-"},{symbol:"1"}]},
   transpose: {...getNode("^"),children:[{symbol:"\\top"}]},
   updagger: {...getNode("^"),children:[{symbol:"\\dagger"}]},
-  "=?" : {...getNode("\\overset"),children:[{symbol:"?"},{symbol:"="}]},
-  "=!" : {...getNode("\\overset"),children:[{symbol:"!"},{symbol:"="}]},
   dvn : {...ThreeChildren("\\dv"),childrenstring:"[§0]{§1}{§2}"},
   pdvn : {...ThreeChildren("\\pdv"),childrenstring:"[§0]{§1}{§2}"},
   pdvmixed : ThreeChildren("\\pdv"),
