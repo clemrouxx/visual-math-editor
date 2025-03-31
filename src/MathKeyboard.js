@@ -2,6 +2,7 @@
 
 // valid characters (including some that can have children) that can be typed directly
 const DIRECT_INPUT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+=*,.'`<>/_^([|!?\";:";
+
 const ESCAPED_SYMBOLS = "%{$#"; // Will be automatically preceded by a backlash
 const TEXTMODE_ESCAPED_SYMBOLS = "${}";
 const SIMPLE_REPLACEMENT = {"\\":"\\backslash"};
@@ -55,13 +56,13 @@ const SHORTCUTS = {
   "<->":"\\leftrightarrow",
   up:"\\uparrow",
   down:"\\downarrow",
-  Left:"\\Leftarrow",
-  Right:"\\Rightarrow",
+  "=>":"\\Rightarrow",
   "<=>":"\\Leftrightarrow",
   "<==>":"\\Longleftrightarrow",
   Up:"\\Uparrow",
   Down:"\\Downarrow",
-  maps:"\\mapsto",
+  map:"\\mapsto",
+  "-->":"xrightarrow",
 
   // Misc symbols
   inf:"\\infty",
@@ -74,7 +75,7 @@ const SHORTCUTS = {
   pd:"\\partial",
   empty:"\\varnothing",
   neg:"\\neg",
-  "...":"\\cdots",
+  "...":"\\dots",
   tri:"\\triangle",
   ale:"\\aleph",
   sr:"\\sqrt",
@@ -86,8 +87,10 @@ const SHORTCUTS = {
   lapl:"\\laplacian",
   ll:"\\ell",
   dd:"\\dd",
+  squ:"\\square",
+  tfr:"\\therefore",
 
-  // Operations
+  // Operations, binaries
   x:"\\times",
   U:"\\cup",
   inter:"\\cap",
@@ -102,6 +105,7 @@ const SHORTCUTS = {
   "!=":"\\neq",
   neq:"\\neq",
   sub:"\\subset",
+  subeq:"\\subseteq",
   seq:"\\simeq",
   sim:"\\sim",
   app:"\\approx",
@@ -119,20 +123,19 @@ const SHORTCUTS = {
   "-+":"\\mp",
   "mp":"\\mp",
   circ:"\\circ",
+  "//":"\\parallel",
+  "=tri":"\\triangleq",
+  "<sim":"\\lesssim",
+  ">sim":"\\gtrsim",
+  copr:"\\amalg",
 
   // delimiters
   avg:"\\langle",
+  abs:"\\lvert",
+  "|":"\\lvert",
   mod:"\\lvert",
-  norm:"\\lVert",
   "||":"\\lVert",
-
-  // Sums...
-  sum:"\\sum",
-  int:"\\int",
-  fr:"\\frac",
-  over:"\\overset",
-  dv:"\\dv",
-  pdv:"\\pdv",
+  norm:"\\lVert",
 
   // Accents
   dot:"\\dot",
@@ -141,6 +144,8 @@ const SHORTCUTS = {
   bar:"\\bar",
   hat:"\\hat",
   til:"\\tilde",
+  uv:"\\vu",
+  ring:"\\mathring",
 
   // Styles
   C:"\\mathcal",
@@ -150,7 +155,6 @@ const SHORTCUTS = {
   S:"\\mathsf",
   te:"\\text",
   
-
   // Named functions
   exp:"\\exp",
   log:"\\log",
@@ -176,18 +180,25 @@ const SHORTCUTS = {
   Tr:"\\Tr",
   tr:"\\tr",
 
-
   // Environments
   mat:"\\begin{pmatrix}",
   cas:"\\begin{cases}",
-  arr:"\\begin{array}{}",
+  arr:"\\begin{array}",
   "--":"\\hline",
 
   // Constructions
+  sum:"\\sum",
+  prod:"\\prod",
+  int:"\\int",
+  fr:"\\frac",
+  over:"\\overset",
+  dv:"\\dv",
+  pdv:"\\pdv",
   ket:"\\ket",
   bra:"\\bra",
   brk:"\\braket",
   kbr:"\\ketbra",
+  mel:"\\mel**",
 
   // Named nodes
   sq:"squared",
@@ -195,7 +206,7 @@ const SHORTCUTS = {
   T:"transpose",
   dag:"updagger",
   "=!":"=!",
-  "=?":"=?"
+  "=?":"=?",
 };
 
 

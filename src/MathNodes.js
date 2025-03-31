@@ -3,8 +3,8 @@
 // The following lists / dictionnaries determine the propesrties of the inserted node (regarding selection, cursor placement, deletion...)
 // Includes the core and AMS commands (as well as a few commands from the physics package)
 const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow","\\bra","\\ket","\\Bra","\\Ket","\\abs","\\norm","\\order"];
-const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","\\check","\\tilde","\\breve","\\acute","\\grave","\\mathring"];
-const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf","\\vb","\\vu","\\va"];
+const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","\\vu","\\check","\\tilde","\\breve","\\acute","\\grave","\\mathring"];
+const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf","\\vb","\\va"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\lvert":"\\rvert","\\lVert":"\\rVert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil","\\ulcorner":"\\urcorner","\\llcorner":"\\lrcorner"};
 const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
 const FRAC_LIKE = ["\\frac","\\overbrace","\\underbrace","\\overset","\\underset","\\dv","\\pdv","\\fdv","\\braket","\\ketbra","\\dyad","\\comm","\\acomm","\\pb","\\ip","\\op","\\expval","\\ev"]; // Symbols that have strictly 2 children (other than sum-like)
@@ -51,6 +51,14 @@ const ThreeChildren = (symbol,addplaceholder=false) => {
   return {symbol,children:[{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true},{children:addplaceholder?[PLACEHOLDER]:[],nodeletion:true}],fixedchildren:true,implodes:true,childrenstring}
 };
 const Environment = (symbol,addplaceholder=false) => {return {leftsymbol:symbol,rightsymbol:ENVIRONMENTS[symbol],children:[],ismultiline:true,nodeletionfromright:true,implodes:true,colparams:""}};
+
+
+function includePlaceholders(node){
+  if (!node.children) return node;
+  else if (ACCENTS.includes(node.symbol)) return {...node,children:[SMALLLETTERPLACEHOLDER]};
+  else if (STYLES.includes(node.symbol)) return {...node,children:[BIGLETTERPLACEHOLDER]};
+  else if (node.fixedchildren) return {...node,children:node.children.map(c=>{return {...c,children:[PLACEHOLDER]};})};
+}
 
 // Automatically create node for a given symbol
 function getNode(symbol,rawtext=false,addplaceholder=false){
