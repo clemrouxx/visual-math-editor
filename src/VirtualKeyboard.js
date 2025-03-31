@@ -48,12 +48,12 @@ const FirstRow = ({reference}) => {
     <div className="first-row">
       <h3>Common constructs</h3>
       <div className="key-row">
-        <NodeVirtualKey nodeName="squared" tooltip={getShortcut("squared")} display={`${PLACEHOLDER_STRING}^2`} reference={reference}/>
+        <VirtualKey symbol="squared" tooltip={getShortcut("squared")} display={`${PLACEHOLDER_STRING}^2`} reference={reference}/>
         <VirtualKey symbol="^" display={`A^${PLACEHOLDER_STRING}`} tooltip="Ctrl+u OR ^"  reference={reference}/>
         <VirtualKey symbol="_" display={`A_${PLACEHOLDER_STRING}`} tooltip="Ctrl+d OR _"  reference={reference}/>
         <SymbolVirtualKey symbol="\frac" reference={reference} className="x-small-text"/>
         <SymbolVirtualKey symbol="\sqrt" reference={reference} className="small-text"/>
-        <NodeVirtualKey nodeName="nsqrt" tooltip={getShortcut("nsqrt")} display={MathNodes.getFormula(MathNodes.getNode("nsqrt",false,true))}  reference={reference} className="small-text"/>
+        <VirtualKey symbol="nsqrt" tooltip={getShortcut("nsqrt")} display={MathNodes.getFormula(MathNodes.getNode("nsqrt",false,true))}  reference={reference} className="small-text"/>
         <VirtualKey symbol="\not" display={`/`} tooltip={getShortcut("\\not")}  reference={reference}/>
         </div>
         <div className="key-row">
@@ -105,17 +105,6 @@ const Category = ({title,symbols,reference,threasholdIndex,className,keyClassNam
     </div>
     {threasholdIndex && <button className="drawer-handle" onMouseDown={(e) => e.preventDefault()} onClick={()=>{setShowAll(!showAll)}}>{showAll?"Show less":"Show all"}</button>}
   </div>)
-}
-
-const NodeVirtualKey = ({nodeName,display,tooltip,reference,className}) => {
-  return (
-    <div>
-      <button onMouseDown={(e) => e.preventDefault()} data-tooltip-id={nodeName} data-tooltip-content={tooltip} className={className} onClick={() => reference.current?.addNode(MathNodes.NAMED_NODES[nodeName],true)}>
-            {`\\[${display} \\]`}
-        </button>
-        {tooltip && <Tooltip id={nodeName} />}
-    </div>
-  );
 }
 
 const VirtualKey = ({symbol,display,tooltip,reference,className}) => {
