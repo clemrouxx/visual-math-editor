@@ -8,6 +8,7 @@ const TEXTMODE_ESCAPED_SYMBOLS = "${}";
 const SIMPLE_REPLACEMENT = {"\\":"\\backslash"};
 
 const SHORTCUTS = {
+  // Greek letters
   alp:"\\alpha",
   bet:"\\beta",
   gam:"\\gamma",
@@ -57,6 +58,7 @@ const SHORTCUTS = {
   up:"\\uparrow",
   down:"\\downarrow",
   "=>":"\\Rightarrow",
+  iff:"\\Leftrightarrow",
   "<=>":"\\Leftrightarrow",
   "<==>":"\\Longleftrightarrow",
   Up:"\\Uparrow",
@@ -64,6 +66,8 @@ const SHORTCUTS = {
   map:"\\mapsto",
   "-->":"\\xrightarrow",
   "><":"\\rightleftarrows",
+  "n=>":"\\nRightarrow",
+  niff:"\\nLeftrightarrow",
 
   // Misc symbols
   inf:"\\infty",
@@ -198,7 +202,7 @@ const SHORTCUTS = {
   Res:"\\Res",
   PV:"\\PV",
 
-  // Environments
+  // Multiline environments
   mat:"\\begin{pmatrix}",
   cas:"\\begin{cases}",
   arr:"\\begin{array}{}",
