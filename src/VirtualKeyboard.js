@@ -80,9 +80,9 @@ const MultilineCategory =  ({reference}) => {
     </div>
     <div className="key-row">
       <VirtualKey symbol="\hline" display={`-`} tooltip={getShortcut("\\hline")}  reference={reference}/>
-      <CustomVirtualKey name="array-align-l" display={"| \\leftarrow"} reference={reference}/>
-      <CustomVirtualKey name="array-align-c" display={"\\rightarrow | \\leftarrow"} reference={reference}/>
-      <CustomVirtualKey name="array-align-r" display={"\\rightarrow |"} reference={reference}/>
+      <CustomVirtualKey name="array-align-l" display={"| \\! \\leftarrow"} reference={reference}/>
+      <CustomVirtualKey name="array-align-c" display={"\\rightarrow \\!\\! |\\!\\! \\leftarrow"} reference={reference}/>
+      <CustomVirtualKey name="array-align-r" display={"\\rightarrow \\! |"} reference={reference}/>
     </div>
   </div>);
 }

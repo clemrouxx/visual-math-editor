@@ -11,6 +11,7 @@
 - Shortcuts (and buttons) for node lists
 - Allow for more than 2 fixed children (ex for \eval, \dv)
 - Vertical separators in arrays
+- Possible commands to add : \substack, aligned (right-side brace...), hdotsfor, spacings, boxed, xrightarrow (with 2 arguments), overunderset, binom, operatorname, boldsymbol
 
 ## Visual improvements
 - Better visuals (in particular buttons), that for the moment depend on the browser
