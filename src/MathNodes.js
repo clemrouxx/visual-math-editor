@@ -2,15 +2,15 @@
 
 // The following lists / dictionnaries determine the propesrties of the inserted node (regarding selection, cursor placement, deletion...)
 // Includes the core and AMS commands (as well as a few commands from the physics package)
-const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\xleftarrow","\\xrightarrow","\\bra","\\ket","\\Bra","\\Ket","\\abs","\\norm","\\order","\\stackrel{!}","\\stackrel{?}"];
+const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\bra","\\ket","\\Bra","\\Ket","\\abs","\\norm","\\order","\\stackrel{!}","\\stackrel{?}","\\boxed","\\substack"];
 const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","\\vu","\\check","\\tilde","\\breve","\\acute","\\grave","\\mathring"];
-const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf","\\vb","\\va"];
+const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf","\\vb","\\va","\\boldsymbol","\\pmb"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\lvert":"\\rvert","\\lVert":"\\rVert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil","\\ulcorner":"\\urcorner","\\llcorner":"\\lrcorner"};
 const MODIFIERS = ["\\mathrm","\\text","\\textrm","\\textbf","\\textit"];
-const FRAC_LIKE = ["\\frac","\\overbrace","\\underbrace","\\overset","\\underset","\\dv","\\pdv","\\fdv","\\braket","\\ketbra","\\dyad","\\comm","\\acomm","\\pb","\\ip","\\op","\\expval","\\ev"]; // Symbols that have strictly 2 children (other than sum-like)
+const FRAC_LIKE = ["\\frac","\\overbrace","\\underbrace","\\overset","\\underset","\\dv","\\pdv","\\fdv","\\braket","\\ketbra","\\dyad","\\comm","\\acomm","\\pb","\\ip","\\op","\\expval","\\ev","\\dfrac","\\tfrac","\\cfrac","\\binom","\\dbinom","\\tbinom","\\sideset","\\xleftarrow","\\xrightarrow"]; // Symbols that have strictly 2 children (other than sum-like)
 const SUM_LIKE = ["\\sum","\\int","\\bigcap","\\bigcup","\\bigodot","\\bigoplus","\\bigotimes","\\bigsqcup","\\biguplus","\\bigvee","\\bigwedge","\\coprod","\\prod"]; // Also strictly 2 children, but displayed differently as fractions
 const LIM_LIKE = ["\\lim","\\iint","\\iiint","\\iiiint","\\oint","\\idotsint"];
-const THREE_CHILDREN = ["\\eval","\\matrixel","\\mel","\\mel**"];
+const THREE_CHILDREN = ["\\eval","\\matrixel","\\mel","\\mel**","\\overunderset"];
 const ENVIRONMENTS_NAMES = ["align","cases","matrix","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
 var ENVIRONMENTS = ENVIRONMENTS_NAMES.reduce((acc, name) => {
     acc[`\\begin{${name}}`] = `\\end{${name}}`;
@@ -42,6 +42,7 @@ const FracLike = (symbol) => {
   else if (symbol === "\\underbrace") childrenstring = "{§0}_{§1}";
   else if (symbol === "\\overbrace") {childrenstring = "{§0}^{§1}"; verticalorientation="up";}
   else if (symbol === "\\sqrt") childrenstring = "[§0]{§1}";
+  else if (["\\xleftarrow","\\xrightarrow"].includes(symbol)) {childrenstring = "[§0]{§1}"; verticalorientation="up";}
   else if (symbol==="\\underset") verticalorientation="up";
   return {symbol,verticalorientation,children:[{children:[],nodeletion:true},{children:[],nodeletion:true}],fixedchildren:true,implodes:true,childrenstring}
 };

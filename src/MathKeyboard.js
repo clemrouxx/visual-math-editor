@@ -201,6 +201,7 @@ const SHORTCUTS = {
   erf:"\\erf",
   Res:"\\Res",
   PV:"\\PV",
+  mod:"\\mod",
 
   // Multiline environments
   mat:"\\begin{pmatrix}",
