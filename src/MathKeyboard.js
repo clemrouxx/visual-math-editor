@@ -63,6 +63,7 @@ const SHORTCUTS = {
   Down:"\\Downarrow",
   map:"\\mapsto",
   "-->":"\\xrightarrow",
+  "><":"\\rightleftarrows",
 
   // Misc symbols
   inf:"\\infty",
@@ -85,10 +86,12 @@ const SHORTCUTS = {
   div:"\\div",
   curl:"\\curl",
   lapl:"\\laplacian",
-  ll:"\\ell",
+  l:"\\ell",
   dd:"\\dd",
   squ:"\\square",
   tfr:"\\therefore",
+  compl:"\\complement",
+  star:"\\bigstar",
 
   // Operations, binaries
   x:"\\times",
@@ -138,6 +141,8 @@ const SHORTCUTS = {
   mod:"\\lvert",
   "||":"\\lVert",
   norm:"\\lVert",
+  floor:"\\lfloor",
+  ceil:"\\lceil",
 
   // Accents
   dot:"\\dot",
@@ -173,6 +178,7 @@ const SHORTCUTS = {
   atan:"\\arctan",
   cot:"\\cot",
   sec:"\\sec",
+  csc:"\\csc",
   ch:"\\cosh",
   sh:"\\sinh",
   th:"\\tanh",
@@ -182,21 +188,39 @@ const SHORTCUTS = {
   Tr:"\\Tr",
   tr:"\\tr",
   lim:"\\lim",
+  dim:"\\dim",
+  gcd:"\\gcd",
+  hom:"\\hom",
+  lg:"\\lg",
+  Pr:"\\Pr",
+  rk:"\\rank",
+  erf:"\\erf",
+  Res:"\\Res",
+  PV:"\\PV",
 
   // Environments
   mat:"\\begin{pmatrix}",
   cas:"\\begin{cases}",
-  arr:"\\begin{array}",
+  arr:"\\begin{array}{}",
+  bmat:"\\begin{bmatrix}",
+  Bmat:"\\begin{Bmatrix}",
+  vmat:"\\begin{vmatrix}",
+  Vmat:"\\begin{Vmatrix}",
   "--":"\\hline",
 
   // Constructions
   sum:"\\sum",
   prod:"\\prod",
   int:"\\int",
+  iint:"\\iint",
+  iiint:"\\iiint",
+  oint:"\\oint",
   fr:"\\frac",
   over:"\\overset",
   dv:"\\dv",
+  dvn:"dvn",
   pdv:"\\pdv",
+  pdvn:"pdvn",
   ket:"\\ket",
   bra:"\\bra",
   brk:"\\braket",
@@ -208,6 +232,7 @@ const SHORTCUTS = {
   inv:"inverse",
   T:"transpose",
   dag:"updagger",
+  nsr:"nsqrt",
 };
 
 
