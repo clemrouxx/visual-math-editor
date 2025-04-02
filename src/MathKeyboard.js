@@ -165,6 +165,7 @@ const SHORTCUTS = {
   b:"\\mathbf",
   S:"\\mathsf",
   te:"\\text",
+  bld:"\\boldsymbol",
   
   // Named functions
   exp:"\\exp",
@@ -231,6 +232,8 @@ const SHORTCUTS = {
   brk:"\\braket",
   kbr:"\\ketbra",
   mel:"\\mel**",
+  boxed:"\\boxed",
+  nck:"\\binom",
 
   // Named nodes
   sq:"squared",
