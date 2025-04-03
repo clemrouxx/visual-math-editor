@@ -2,7 +2,7 @@
 
 // The following lists / dictionnaries determine the propesrties of the inserted node (regarding selection, cursor placement, deletion...)
 // Includes the core and AMS commands (as well as a few commands from the physics package)
-const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\bra","\\ket","\\Bra","\\Ket","\\abs","\\norm","\\order","\\stackrel{!}","\\stackrel{?}","\\boxed","\\substack"];
+const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\bra","\\ket","\\Bra","\\Ket","\\abs","\\norm","\\order","\\stackrel{!}","\\stackrel{?}","\\boxed","\\substack","\\operatorname"];
 const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","\\vu","\\check","\\tilde","\\breve","\\acute","\\grave","\\mathring"];
 const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf","\\vb","\\va","\\boldsymbol","\\pmb"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\lvert":"\\rvert","\\lVert":"\\rVert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil","\\ulcorner":"\\urcorner","\\llcorner":"\\lrcorner"};
@@ -21,9 +21,6 @@ ENVIRONMENTS[`\\begin{array}{}`] = "\\end{array}";
 const INVISIBLE_SYMBOLS = ["_","^","\\\\","&","\\hline"]; // Don't have classes attached. Unfortunately seems necessary for hline
 
 const CURSOR = {iscursor:true,symbol:"|"};
-const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"};
-const SMALLLETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"};
-const BIGLETTERPLACEHOLDER = {symbol:"A"};// Removed the placeholder flag so that it is not transluscent
 
 const DEFAULT_TREE = {isroot:true,nodeletion:true,children:[CURSOR]};
 
@@ -65,13 +62,19 @@ const NAMED_NODES = {
   rbrace : {leftsymbol:".",rightsymbol:"\\rbrace",children:[getNode("\\begin{array}{}")],adptative:true},
 }
 
+const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"};
+const SMALLLETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"};
+const BIGLETTERPLACEHOLDER = {symbol:"A"};// Removed the placeholder flag so that it is not transluscent
+const MULTILINEPLACEHOLDER = {symbol:".&.\\\\.&."};
+
 function includePlaceholders(node){
   if (!node.children) return node;
   if (ACCENTS.includes(node.symbol)) return {...node,children:[SMALLLETTERPLACEHOLDER]};
   if (STYLES.includes(node.symbol)) return {...node,children:[BIGLETTERPLACEHOLDER]};
   if (node.fixedchildren) return {...node,children:node.children.map(c=>{return c.children?{...c,children:[PLACEHOLDER]}:c;})};
-  if (node.children.length===0) return {...node,children:[PLACEHOLDER]};
-  return node;
+  if (node.children.length===0) return {...node,children:[node.ismultiline?MULTILINEPLACEHOLDER:PLACEHOLDER]};
+  // Parent node, we do this recursively (should be the case also for fixedchildren...)
+  return {...node,children:node.children.map(includePlaceholders)};
 }
 
 // Automatically create node for a given symbol

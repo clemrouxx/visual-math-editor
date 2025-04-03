@@ -10,7 +10,7 @@ const ARROWS = ["\\rightarrow","\\mapsto","\\Rightarrow","\\leftarrow","\\Leftar
 const ACCENTS = MathNodes.ACCENTS;
 
 const ENVIRONMENT_NAMES = ["cases","pmatrix","bmatrix","Bmatrix","vmatrix","Vmatrix"];
-const ENVIRONMENT_DISPLAY_INNER = ". & . \\\\ . & .";
+const MULTILINES = ["\\begin{array}{}","rbrace"].concat(...ENVIRONMENT_NAMES.map(n=>`\\begin{${n}}`));
 
 const BINARY_OPERATORS = ["\\times","\\cdot","\\circ","\\pm","\\mp","\\oplus","\\otimes","\\cap","\\cup","\\sqcap","\\sqcup","\\wedge","\\vee","\\amalg","\\ast","\\bigcirc","\\bigtriangledown","\\bigtriangleup","\\bullet","\\odot","\\ominus","\\oslash","\\star","\\triangleleft","\\triangleright","\\uplus","\\wr","\\barwedge","\\doublebarwedge","\\veebar","\\boxdot","\\boxminus","\\boxplus","\\boxtimes","\\Cap","\\Cup","\\circledast","\\circledcirc","\\circleddash","\\curlyvee","\\curlywedge","\\divideontimes","\\dotplus","\\intercal","\\leftthreetimes","\\rightthreetimes","\\ltimes","\\rtimes","\\smallsetminus"];
 const RELATIONS = ["\\neq","\\equiv","\\not\\equiv","\\cong","\\ncong","\\sim","\\nsim","\\simeq","\\approx","\\propto","\\perp","\\parallel","\\nparallel","\\triangleq","\\stackrel{!}{=}","\\stackrel{?}{=}","\\asymp","\\bowtie","\\doteq","\\frown","\\smile","\\not\\simeq","\\approxeq","\\backsim","\\backsimeq","\\between","\\bumpeq","\\Bumpeq","\\circeq","\\doteqdot","\\eqcirc","\\fallingdotseq","\\risingdotseq","\\pitchfork","\\shortparallel","\\nshortparallel","\\smallfrown","\\smallsmile","\\thickapprox","\\thicksim","\\varpropto"];
@@ -73,10 +73,8 @@ const MultilineCategory =  ({reference}) => {
   <div className="wide-category">
     <h3>Multiline environments</h3>
     <div className="key-row">
-      <VirtualKey symbol={`\\begin{array}{}`} display={`\\begin{array}{}${ENVIRONMENT_DISPLAY_INNER}\\end{array}`} tooltip={getShortcut(`\\begin{array}{}`)} reference={reference} className="x-small-text larger-button"/>
-      <VirtualKey symbol={"rbrace"} display={`\\left . \\begin{array}{}${ENVIRONMENT_DISPLAY_INNER}\\end{array} \\right \\rbrace`} tooltip={getShortcut(`rbrace`)} reference={reference} className="x-small-text larger-button"/>
-      {ENVIRONMENT_NAMES.map((name, index) => (
-        <VirtualKey symbol={`\\begin{${name}}`} display={`\\begin{${name}}${ENVIRONMENT_DISPLAY_INNER}\\end{${name}}`} tooltip={getShortcut(`\\begin{${name}}`)} reference={reference} key={index} className="x-small-text larger-button"/>
+      {MULTILINES.map((symbol, index) => (
+        <VirtualKey symbol={symbol} display={MathNodes.getFormula(MathNodes.getNode(symbol,false,true))} tooltip={getShortcut(symbol)} reference={reference} key={index} className="x-small-text larger-button"/>
       ))}
     </div>
     <div className="key-row">

@@ -9,7 +9,6 @@
 ## Typing improvements
 - Multi-symbol selection
 - Shortcuts (and buttons) for node lists
-- Allow for more than 2 fixed children (ex for \eval, \dv)
 - Vertical separators in arrays
 - Possible commands to add : \substack, hdotsfor, spacings, operatorname
 
