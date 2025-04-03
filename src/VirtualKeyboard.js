@@ -73,7 +73,8 @@ const MultilineCategory =  ({reference}) => {
   <div className="wide-category">
     <h3>Multiline environments</h3>
     <div className="key-row">
-    <VirtualKey symbol={`\\begin{array}{}`} display={`\\begin{array}{}${ENVIRONMENT_DISPLAY_INNER}\\end{array}`} tooltip={getShortcut(`\\begin{array}`)} reference={reference} className="x-small-text larger-button"/>
+      <VirtualKey symbol={`\\begin{array}{}`} display={`\\begin{array}{}${ENVIRONMENT_DISPLAY_INNER}\\end{array}`} tooltip={getShortcut(`\\begin{array}{}`)} reference={reference} className="x-small-text larger-button"/>
+      <VirtualKey symbol={"rbrace"} display={`\\left . \\begin{array}{}${ENVIRONMENT_DISPLAY_INNER}\\end{array} \\right \\rbrace`} tooltip={getShortcut(`rbrace`)} reference={reference} className="x-small-text larger-button"/>
       {ENVIRONMENT_NAMES.map((name, index) => (
         <VirtualKey symbol={`\\begin{${name}}`} display={`\\begin{${name}}${ENVIRONMENT_DISPLAY_INNER}\\end{${name}}`} tooltip={getShortcut(`\\begin{${name}}`)} reference={reference} key={index} className="x-small-text larger-button"/>
       ))}

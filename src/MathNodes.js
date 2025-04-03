@@ -62,6 +62,7 @@ const NAMED_NODES = {
   dvn : {...ThreeChildren("\\dv"),childrenstring:"[§0]{§1}{§2}"},
   pdvn : {...ThreeChildren("\\pdv"),childrenstring:"[§0]{§1}{§2}"},
   pdvmixed : ThreeChildren("\\pdv"),
+  rbrace : {leftsymbol:".",rightsymbol:"\\rbrace",children:[getNode("\\begin{array}{}")],adptative:true},
 }
 
 function includePlaceholders(node){

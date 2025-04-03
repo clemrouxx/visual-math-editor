@@ -241,6 +241,7 @@ const SHORTCUTS = {
   T:"transpose",
   dag:"updagger",
   nsr:"nsqrt",
+  rbr:"rbrace",
 };
 
 
