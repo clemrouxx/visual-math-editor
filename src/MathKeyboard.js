@@ -3,9 +3,9 @@
 // valid characters (including some that can have children) that can be typed directly
 const DIRECT_INPUT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+=*,.'`<>/_^([|!?\";:";
 
-const ESCAPED_SYMBOLS = "%{$#"; // Will be automatically preceded by a backslash
 const TEXTMODE_ESCAPED_SYMBOLS = "${}"; // Escaped symbol inside \text{...}
-const SIMPLE_REPLACEMENT = {"\\":"\\backslash","µ":"\\mu","£":"\\pounds"};
+const ESCAPED_SYMBOLS = "%{$#"; // Will be automatically preceded by a backslash
+const SIMPLE_REPLACEMENT = {"\\":"\\backslash","µ":"\\mu","£":"\\pounds",...Object.fromEntries([...ESCAPED_SYMBOLS].map(char => [char,"\\"+char]))};
 
 const SHORTCUTS = {
   // Greek letters
@@ -251,6 +251,6 @@ const SHORTCUTS = {
   rbr:"rbrace",
 };
 
-const MathKeyboard =  {DIRECT_INPUT,ESCAPED_SYMBOLS,TEXTMODE_ESCAPED_SYMBOLS,SIMPLE_REPLACEMENT,SHORTCUTS};
+const MathKeyboard =  {DIRECT_INPUT,TEXTMODE_ESCAPED_SYMBOLS,SIMPLE_REPLACEMENT,SHORTCUTS};
 
 export default MathKeyboard;

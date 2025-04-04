@@ -104,10 +104,160 @@ const MathEditor = forwardRef((props,ref) => {
         setMathTree(newtree);
     };
 
+    const handleCtrlShortcut = (event) => {
+        switch (event.key){
+            case "i":
+                setCommand("\\");
+                break;
+            case "z":
+                const undoResult = undo();
+                if (undoResult) setMathTree(undoResult);
+                break;
+            case "y":
+                const redoResult = redo();
+                if (redoResult) setMathTree(redoResult);
+                break;
+            case "u":
+                event.preventDefault();
+                addSymbol("^");
+                break;
+            case "d":
+                addSymbol("_");
+                break;
+            case "a":
+                event.preventDefault();
+                // Maybe select all nodes (as a list ?)
+                break;
+            case "c":
+                if (editMode==="selection"){
+                    const selectedNode = MathTree.unselect(MathTree.findSelectedNode(mathTree).node);
+                    const string = JSON.stringify(selectedNode);
+                    navigator.clipboard.writeText(string);
+                }
+                break;
+            case "x":
+                if (editMode==="selection"){
+                    const selection = MathTree.findSelectedNode(mathTree);
+                    const string = JSON.stringify(MathTree.unselect(selection.node));
+                    navigator.clipboard.writeText(string);
+                    setEditMode("cursor");
+                    changeMathTree(MathTree.deleteSelectedNode(mathTree,true));
+                }
+                break;
+            case "v":
+                navigator.clipboard.readText().then((string)=>{
+                    if ([...string].length===1){
+                        addSymbol(string);
+                    }
+                    else{
+                        try{
+                            addNode(JSON.parse(string));
+                        }
+                        catch{
+                            alert("Could not paste text. Only valid imputs are single-character strings or formula parts directly copied.")
+                            return;// Invalid JSON input
+                        }
+                    }// This code is hideous
+                })
+                break;
+        }
+    };
+
+    const handleCursormodeKeyDown = (event,parent,cursorPath) => {
+        event.preventDefault();
+        switch (event.key){
+            case "Tab":
+                if (parent.ismultiline) addSymbol("&");
+                else if (parent.isroot) addSymbol("\\quad");
+                else setMathTree(MathTree.shiftCursor(mathTree,"right"));
+                break;
+            case "Enter":
+                if (parent.ismultiline) addSymbol("\\\\");
+                else if (parent.isroot){//AutoAlign
+                    changeMathTree(MathTree.alignAll(mathTree));
+                    addSymbol("\\\\");
+                }
+                break;
+            case "ArrowRight":
+            case "Tab":
+                setMathTree(MathTree.shiftCursor(mathTree,"right"));
+                break;
+            case "ArrowLeft":
+                setMathTree(MathTree.shiftCursor(mathTree,"left"));
+                break;
+            case "ArrowDown":
+                if (cursorPath.length>=1){ // In a frac-like sub-element. We need to go up two levels
+                    var path = cursorPath.slice(0,-1);
+                    const grandParent = MathTree.pathToNode(mathTree,path);
+                    if ((cursorPath.at(-1)===0 && grandParent.verticalorientation==="down") || (cursorPath.at(-1)===1 && grandParent.verticalorientation==="up")){
+                        path.push(1-cursorPath.at(-1));// Switch to the "down" part
+                        var newtree = MathTree.removeCursor(mathTree);
+                        newtree = MathTree.pushCursorAtPath(newtree,path);
+                        setMathTree(newtree);
+                    }
+                }
+                break;
+            case "ArrowUp":
+                if (cursorPath.length>=1){
+                    var path = cursorPath.slice(0,-1);
+                    const grandParent = MathTree.pathToNode(mathTree,path);
+                    if ((cursorPath.at(-1)===0 && grandParent.verticalorientation==="up") || (cursorPath.at(-1)===1 && grandParent.verticalorientation==="down")){
+                        path.push(1-cursorPath.at(-1));// Switch to the "up" part
+                        var newtree = MathTree.removeCursor(mathTree);
+                        newtree = MathTree.pushCursorAtPath(newtree,path);
+                        setMathTree(newtree);
+                    }
+                }
+                break;
+            case "Backspace":
+                var deletionResult = MathTree.deleteNextToCursor(mathTree,"left");
+                if (deletionResult) changeMathTree(deletionResult);
+                break;
+            case "Delete":
+                var deletionResult = MathTree.deleteNextToCursor(mathTree,"right");
+                if (deletionResult) changeMathTree(deletionResult);
+                break;
+            case " ": // Space
+                let replacementResult = MathTree.applyReplacementShortcut(mathTree);
+                if (replacementResult.symbol){
+                    setMathTree(replacementResult.tree);// This removes the previously added characters
+                    addSymbol(replacementResult.symbol);// This adds the new symbol (and updates the tree for Undo/Redo)
+                }
+                break;
+            default:
+                if (Object.values(MathNodes.DELIMITERS).includes(event.key)){
+                    if (parent.rightsymbol===event.key && parent.children[parent.children.length-1].iscursor){
+                        // Close the delimiter
+                        setMathTree(MathTree.shiftCursor(mathTree,"right"));
+                    }
+                }
+                break;
+        }
+    };
+
+    const handleSelectionmodeKeyDown = (event) => {
+        event.preventDefault();
+        switch (event.key){
+            case "Delete":
+            case "Backspace":
+                changeMathTree(MathTree.deleteSelectedNode(mathTree,true));
+                setEditMode("cursor");
+                break;
+            case "ArrowRight":
+                setMathTree(MathTree.selectedToCursor(mathTree,"right"));
+                setEditMode("cursor");
+                break;
+            case "ArrowLeft":
+                setMathTree(MathTree.selectedToCursor(mathTree,"left"));
+                setEditMode("cursor");
+                break;
+        }
+    }
+
     const handleKeyDown = (event) => {
         if (editMode==="none") return;
 
-        console.log(event);
+        //console.log(event);
 
         // We need to check if we are in a "raw text" area and in cursor mode
         // I also keep a copy of the parent
@@ -127,185 +277,30 @@ const MathEditor = forwardRef((props,ref) => {
 
         if (command===""){// Not writing a command
             if (event.ctrlKey){ // All control-based shortcuts
-                switch (event.key){
-                    case "i":
-                        setCommand("\\");
-                        break;
-                    case "z":
-                        const undoResult = undo();
-                        if (undoResult) setMathTree(undoResult);
-                        break;
-                    case "y":
-                        const redoResult = redo();
-                        if (redoResult) setMathTree(redoResult);
-                        break;
-                    case "u":
-                        event.preventDefault();
-                        addSymbol("^");
-                        break;
-                    case "d":
-                        addSymbol("_");
-                        break;
-                    case "a":
-                        event.preventDefault();
-                        // Maybe select all nodes (as a list ?)
-                        break;
-                    case "c":
-                        if (editMode==="selection"){
-                            const selectedNode = MathTree.unselect(MathTree.findSelectedNode(mathTree).node);
-                            const string = JSON.stringify(selectedNode);
-                            navigator.clipboard.writeText(string);
-                        }
-                        break;
-                    case "x":
-                        if (editMode==="selection"){
-                            const selection = MathTree.findSelectedNode(mathTree);
-                            const string = JSON.stringify(MathTree.unselect(selection.node));
-                            navigator.clipboard.writeText(string);
-                            setEditMode("cursor");
-                            changeMathTree(MathTree.deleteSelectedNode(mathTree,true));
-                        }
-                        break;
-                    case "v":
-                        navigator.clipboard.readText().then((string)=>{
-                            if ([...string].length===1){
-                                addSymbol(string);
-                            }
-                            else{
-                                try{
-                                    addNode(JSON.parse(string));
-                                }
-                                catch{
-                                    alert("Could not paste text. Only valid imputs are single-character strings or formula parts directly copied.")
-                                    return;// Invalid JSON input
-                                }
-                            }
-                        })
-                        break;
-                }
+                handleCtrlShortcut(event);
             }
-            else if (MathKeyboard.DIRECT_INPUT.includes(event.key))// Can be directly included
+            else if (MathKeyboard.DIRECT_INPUT.includes(event.key))// Can be included as-is
             {
                 event.preventDefault();
                 addSymbol(event.key);
             }
-            else if (event.key in MathKeyboard.SIMPLE_REPLACEMENT){
+            else if (event.key in MathKeyboard.SIMPLE_REPLACEMENT){// Mostly for escaped characters that can be typed (ex. '{')
                 event.preventDefault();
                 addSymbol(MathKeyboard.SIMPLE_REPLACEMENT[event.key]);
             }
-            else if (MathKeyboard.ESCAPED_SYMBOLS.includes(event.key)){
-                event.preventDefault();
-                addSymbol("\\"+event.key);
-            }
             else if (editMode==="cursor"){
-                switch (event.key){
-                    case "Tab":
-                        event.preventDefault();
-                        if (parentCopy.ismultiline) addSymbol("&");
-                        else if (parentCopy.isroot) addSymbol("\\quad");
-                        else setMathTree(MathTree.shiftCursor(mathTree,"right"));
-                        break;
-                    case "Enter":
-                        if (parentCopy.ismultiline){
-                            event.preventDefault();
-                            addSymbol("\\\\");
-                        }
-                        else if (parentCopy.isroot){//AutoAlign
-                            changeMathTree(MathTree.alignAll(mathTree));
-                            addSymbol("\\\\");
-                        }
-                        break;
-                    case "ArrowRight":
-                    case "Tab":
-                        event.preventDefault();
-                        setMathTree(MathTree.shiftCursor(mathTree,"right"));
-                        break;
-                    case "ArrowLeft":
-                        event.preventDefault();
-                        setMathTree(MathTree.shiftCursor(mathTree,"left"));
-                        break;
-                    case "ArrowDown":
-                        event.preventDefault();
-                        if (cursorPath.length>=1){ // In a frac-like sub-element. We need to go up two levels
-                            var path = cursorPath.slice(0,-1);
-                            const grandParent = MathTree.pathToNode(mathTree,path);
-                            if ((cursorPath.at(-1)===0 && grandParent.verticalorientation==="down") || (cursorPath.at(-1)===1 && grandParent.verticalorientation==="up")){
-                                path.push(1-cursorPath.at(-1));// Switch to the "down" part
-                                var newtree = MathTree.removeCursor(mathTree);
-                                newtree = MathTree.pushCursorAtPath(newtree,path);
-                                setMathTree(newtree);
-                            }
-                        }
-                        break;
-                    case "ArrowUp":
-                        // Essentially the same as "ArrowDown"
-                        event.preventDefault();
-                        if (cursorPath.length>=1){
-                            var path = cursorPath.slice(0,-1);
-                            const grandParent = MathTree.pathToNode(mathTree,path);
-                            if ((cursorPath.at(-1)===0 && grandParent.verticalorientation==="up") || (cursorPath.at(-1)===1 && grandParent.verticalorientation==="down")){
-                                path.push(1-cursorPath.at(-1));// Switch to the "up" part
-                                var newtree = MathTree.removeCursor(mathTree);
-                                newtree = MathTree.pushCursorAtPath(newtree,path);
-                                setMathTree(newtree);
-                            }
-                        }
-                        break;
-                    case "Backspace":
-                        event.preventDefault();
-                        var deletionResult = MathTree.deleteNextToCursor(mathTree,"left");
-                        if (deletionResult) changeMathTree(deletionResult);
-                        break;
-                    case "Delete":
-                        event.preventDefault();
-                        var deletionResult = MathTree.deleteNextToCursor(mathTree,"right");
-                        if (deletionResult) changeMathTree(deletionResult);
-                        break;
-                    case " ": // Space
-                        event.preventDefault();
-                        let replacementResult = MathTree.applyReplacementShortcut(mathTree);
-                        if (replacementResult.symbol){
-                            setMathTree(replacementResult.tree);
-                            addSymbol(replacementResult.symbol);
-                        }
-                        break;
-                    default:
-                        if (Object.values(MathNodes.DELIMITERS).includes(event.key)){
-                            if (parentCopy.rightsymbol===event.key && parentCopy.children[parentCopy.children.length-1].iscursor){
-                                // Close the delimiter
-                                setMathTree(MathTree.shiftCursor(mathTree,"right"));
-                            }
-                        }
-                        break;
-                }
+                handleCursormodeKeyDown(event,parentCopy,cursorPath);
             }
             else if (editMode==="selection"){
-                switch (event.key){
-                    case "Delete":
-                    case "Backspace":
-                        event.preventDefault();
-                        changeMathTree(MathTree.deleteSelectedNode(mathTree,true));
-                        setEditMode("cursor");
-                        break;
-                    case "ArrowRight":
-                        event.preventDefault();
-                        setMathTree(MathTree.selectedToCursor(mathTree,"right"));
-                        setEditMode("cursor");
-                        break;
-                    case "ArrowLeft":
-                        event.preventDefault();
-                        setMathTree(MathTree.selectedToCursor(mathTree,"left"));
-                        setEditMode("cursor");
-                        break;
-                }
+                handleSelectionmodeKeyDown(event);
             }
         }
         else{ // Writing a command
-            if (MathKeyboard.DIRECT_INPUT.includes(event.key) || "{}".includes(event.key)){
+            if (event.key.length===1){
                 event.preventDefault();
                 setCommand(command+event.key);
             }
-            else if (event.key==="Enter" || event.key===" "){
+            else if (event.key==="Enter"){
                 event.preventDefault();
                 addSymbol(command);
                 setCommand("");
@@ -337,8 +332,7 @@ const MathEditor = forwardRef((props,ref) => {
         return () => removeListeners();
     }, [mathTree,command,focused]);
 
-    useEffect(() => {
-        //console.log(mathTree,MathTree.getFormula(mathTree,true));
+    useEffect(() => { // Updates the formula and thus the displayed equation
         setFormula(MathNodes.getFormula(mathTree,true));
     }, [mathTree]);
 
@@ -349,7 +343,7 @@ const MathEditor = forwardRef((props,ref) => {
         }
     }
 
-    const unfocus = () => {
+    const unfocus = () => { // Unused for now
         if (focused) { // Prevent redundant updates
             setMathTree(MathTree.unselect(MathTree.removeCursor(mathTree)));
             setFocused(false);
@@ -358,7 +352,7 @@ const MathEditor = forwardRef((props,ref) => {
 
     useEffect(() => {
         const handleFocusClick = (event) => {
-            if (domRef.current && domRef.current.contains(event.target)) focus()
+            // if (domRef.current && domRef.current.contains(event.target)) focus()
             //else unfocus(); Removed for now, until proven useful
         };
         document.addEventListener("click", handleFocusClick);
