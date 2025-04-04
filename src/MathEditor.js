@@ -107,9 +107,10 @@ const MathEditor = forwardRef((props,ref) => {
     const handleKeyDown = (event) => {
         if (editMode==="none") return;
 
+        console.log(event);
+
         // We need to check if we are in a "raw text" area and in cursor mode
         // I also keep a copy of the parent
-        //console.log(event);
         var parentCopy = {};
         var cursorPath = [];
         if (editMode==="cursor"){

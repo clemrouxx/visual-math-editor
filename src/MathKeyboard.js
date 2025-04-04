@@ -5,7 +5,7 @@ const DIRECT_INPUT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 
 const ESCAPED_SYMBOLS = "%{$#"; // Will be automatically preceded by a backslash
 const TEXTMODE_ESCAPED_SYMBOLS = "${}"; // Escaped symbol inside \text{...}
-const SIMPLE_REPLACEMENT = {"\\":"\\backslash"};
+const SIMPLE_REPLACEMENT = {"\\":"\\backslash","µ":"\\mu","£":"\\pounds"};
 
 const SHORTCUTS = {
   // Greek letters
@@ -65,9 +65,16 @@ const SHORTCUTS = {
   Down:"\\Downarrow",
   map:"\\mapsto",
   "-->":"\\xrightarrow",
+  "<--":"\\xleftarrow",
   "><":"\\rightleftarrows",
   "n=>":"\\nRightarrow",
   niff:"\\nLeftrightarrow",
+  "<---":"\\longleftarrow",
+  "--->":"\\longrightarrow",
+  "<-->":"\\longleftrightarrow",
+  "<==":"\\Longleftarrow",
+  "==>":"\\Longrightarrow",
+  maap:"\\longmapsto",
 
   // Misc symbols
   inf:"\\infty",
