@@ -174,6 +174,7 @@ function insertCursorInNode(node){// Insert cursor at the "right place", assumin
   // No success
   return false;
 }
-  
 
-export default {DEFAULT_TREE,CURSOR,getNode,getFormula,isValidRawText,FracLike,nChildren,insertCursorInNode,NAMED_NODES,PARENT_SYMBOLS,ACCENTS,STYLES,DELIMITERS,MODIFIERS,FRAC_LIKE,LIM_LIKE,SUM_LIKE};
+const MathNodes = {DEFAULT_TREE,CURSOR,getNode,getFormula,isValidRawText,nChildren,insertCursorInNode,ACCENTS,STYLES,DELIMITERS};
+
+export default MathNodes;

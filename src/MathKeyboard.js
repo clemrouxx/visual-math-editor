@@ -1,10 +1,10 @@
-// Defines some constants for typing / keyboard control
+// Defines some constants for typing / shortcuts
 
 // valid characters (including some that can have children) that can be typed directly
 const DIRECT_INPUT = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+=*,.'`<>/_^([|!?\";:";
 
-const ESCAPED_SYMBOLS = "%{$#"; // Will be automatically preceded by a backlash
-const TEXTMODE_ESCAPED_SYMBOLS = "${}";
+const ESCAPED_SYMBOLS = "%{$#"; // Will be automatically preceded by a backslash
+const TEXTMODE_ESCAPED_SYMBOLS = "${}"; // Escaped symbol inside \text{...}
 const SIMPLE_REPLACEMENT = {"\\":"\\backslash"};
 
 const SHORTCUTS = {
@@ -244,6 +244,6 @@ const SHORTCUTS = {
   rbr:"rbrace",
 };
 
+const MathKeyboard =  {DIRECT_INPUT,ESCAPED_SYMBOLS,TEXTMODE_ESCAPED_SYMBOLS,SIMPLE_REPLACEMENT,SHORTCUTS};
 
-export default {DIRECT_INPUT,ESCAPED_SYMBOLS,TEXTMODE_ESCAPED_SYMBOLS,SIMPLE_REPLACEMENT,SHORTCUTS};
-
+export default MathKeyboard;
