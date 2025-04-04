@@ -142,7 +142,6 @@ const SHORTCUTS = {
   avg:"\\langle",
   abs:"\\lvert",
   "|":"\\lvert",
-  mod:"\\lvert",
   "||":"\\lVert",
   norm:"\\lVert",
   floor:"\\lfloor",
@@ -202,7 +201,7 @@ const SHORTCUTS = {
   erf:"\\erf",
   Res:"\\Res",
   PV:"\\PV",
-  mod:"\\mod",
+  mod:"\\bmod",
 
   // Multiline environments
   mat:"\\begin{pmatrix}",
@@ -223,6 +222,7 @@ const SHORTCUTS = {
   oint:"\\oint",
   fr:"\\frac",
   over:"\\overset",
+  under:"\\underset",
   dv:"\\dv",
   dvn:"dvn",
   pdv:"\\pdv",
