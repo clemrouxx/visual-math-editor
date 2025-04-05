@@ -65,15 +65,27 @@ const MathEditor = forwardRef((props,ref) => {
     };
 
     const customAction = (name) => {
-        console.log(name);
+        //console.log(name);
         const splitname = name.split("-");
-        if (splitname[0]==="array"){
-            if (editMode==="cursor" || editMode==="selection"){
-                const path = MathTree.findCurrentPath(mathTree,editMode);
-                if (splitname[1]==="align"){
-                    changeMathTree(MathTree.alignCol(mathTree,path,splitname[2]));
+        switch (splitname[0]){
+            case "array":
+                if (editMode==="cursor" || editMode==="selection"){
+                    const path = MathTree.findCurrentPath(mathTree,editMode);
+                    if (splitname[1]==="align"){
+                        changeMathTree(MathTree.alignCol(mathTree,path,splitname[2]));
+                    }
                 }
-            }
+                break;
+            case "delimiter":
+                if (editMode === "selection"){
+                    const selection = MathTree.findSelectedNode(mathTree);
+                    if (!selection.node.size) return; // Not a delimiter
+                    if (splitname[1]==="size"){
+                        const direction = splitname[2];
+                        const result = MathTree.applyAtPath(mathTree,selection.path,n=>MathNodes.changeDelimiterSize(n,direction));
+                        if (result) changeMathTree(result);
+                    }
+                }
         }
     }
 
@@ -159,6 +171,22 @@ const MathEditor = forwardRef((props,ref) => {
                         }
                     }// This code is hideous
                 })
+                break;
+            case "ArrowUp":
+                if (editMode==="selection"){
+                    customAction("delimiter-size-bigger");
+                }
+                break;
+            case "ArrowDown":
+                if (editMode==="selection"){
+                    customAction("delimiter-size-smaller");
+                }
+                break;
+            case "r":
+                event.preventDefault();
+                if (editMode==="selection"){
+                    customAction("delimiter-size-auto");
+                }
                 break;
         }
     };

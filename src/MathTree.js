@@ -53,6 +53,13 @@ function insertAtPath(tree,path,node,replace=false){
   return newnode;
 }
 
+function applyAtPath(tree,path,f){
+  const previousNode = pathToNode(tree,path);
+  const newNode = f(previousNode);
+  if (newNode) return insertAtPath(tree,path,newNode,true);
+  return false;
+}
+
 function adoptAtPath(tree,path,parent){// The target node is replaced by the node 'parent', which adopts the previously present node.
   var previousnode = pathToNode(tree,path);
   parent.children = [previousnode];
@@ -364,4 +371,4 @@ function selectedToCursor(tree,side){ // Add cursor next to selected, and unsele
   return unselect(insertAtPath(tree,path,MathNodes.CURSOR,false));
 }
 
-export default {pathToNode,getPositionInArray,findCurrentPath,alignCol,pushCursorAtPath,deleteSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll,findSelectedNode,canReplace,replaceAndAdopt}
+export default {pathToNode,getPositionInArray,findCurrentPath,alignCol,pushCursorAtPath,deleteSelectedNode,deleteNextToCursor,insertAtCursor,adoptNodeBeforeCursor,adoptSelectedNode,removeCursor,appendCursor,shiftCursor,setSelectedNode,selectedToCursor,unselect,findCursorParent,applyReplacementShortcut,alignAll,findSelectedNode,canReplace,replaceAndAdopt,applyAtPath}

@@ -64,20 +64,6 @@ const NAMED_NODES = {
   rbrace : {leftsymbol:".",rightsymbol:"\\rbrace",children:[getNode("\\begin{array}{}")],size:"auto"},
 }
 
-const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"};
-const SMALLLETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"};
-const BIGLETTERPLACEHOLDER = {symbol:"A"};// Removed the placeholder flag so that it is not transluscent
-const MULTILINEPLACEHOLDER = {symbol:".&.\\\\.&."};
-
-function includePlaceholders(node){
-  if (!node.children) return node;
-  if (ACCENTS.includes(node.symbol)) return {...node,children:[SMALLLETTERPLACEHOLDER]};
-  if (STYLES.includes(node.symbol)) return {...node,children:[BIGLETTERPLACEHOLDER]};
-  if (node.fixedchildren) return {...node,children:node.children.map(c=>{return c.children?{...c,children:[PLACEHOLDER]}:c;})};
-  if (node.children.length===0) return {...node,children:[node.ismultiline?MULTILINEPLACEHOLDER:PLACEHOLDER]};
-  // Parent node, we do this recursively (should be the case also for fixedchildren...)
-  return {...node,children:node.children.map(includePlaceholders)};
-}
 
 // Automatically create node for a given symbol
 function getNode(symbol,rawtext=false,addplaceholders=false){
@@ -96,6 +82,37 @@ function getNode(symbol,rawtext=false,addplaceholders=false){
   else node = Symbol(symbol);
   if (addplaceholders) return includePlaceholders(node);
   else return node;
+}
+
+const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"};
+const SMALLLETTERPLACEHOLDER = {isplaceholder:true,symbol:"x"};
+const BIGLETTERPLACEHOLDER = {symbol:"A"};// Removed the placeholder flag so that it is not transluscent
+const MULTILINEPLACEHOLDER = {symbol:".&.\\\\.&."};
+
+function includePlaceholders(node){
+  if (!node.children) return node;
+  if (ACCENTS.includes(node.symbol)) return {...node,children:[SMALLLETTERPLACEHOLDER]};
+  if (STYLES.includes(node.symbol)) return {...node,children:[BIGLETTERPLACEHOLDER]};
+  if (node.fixedchildren) return {...node,children:node.children.map(c=>{return c.children?{...c,children:[PLACEHOLDER]}:c;})};
+  if (node.children.length===0) return {...node,children:[node.ismultiline?MULTILINEPLACEHOLDER:PLACEHOLDER]};
+  // Parent node, we do this recursively (should be the case also for fixedchildren...)
+  return {...node,children:node.children.map(includePlaceholders)};
+}
+
+const DELIMITER_SIZES_ORDER = ["default","big","Big","bigg","Bigg"];
+
+function changeDelimiterSize(node,direction){// direction : "bigger","smaller" or "auto"
+  var size = node.size;
+  if (size==="auto"){
+    if (direction==="bigger") return {...node,size:"big"};
+    else if (direction==="smaller") return {...node,size:"default"};
+    else return false;
+  }
+  if (direction==="auto") return {...node,size:"auto"};
+  const i = DELIMITER_SIZES_ORDER.indexOf(size);
+  const shift = (direction==="bigger")?1:-1;
+  if (i+shift<0 || i+shift>=DELIMITER_SIZES_ORDER.length) return false; // Already at min or max size
+  return {...node,size:DELIMITER_SIZES_ORDER[i+shift]};
 }
 
 // LaTeX formula
@@ -177,6 +194,6 @@ function insertCursorInNode(node){// Insert cursor at the "right place", assumin
   return false;
 }
 
-const MathNodes = {DEFAULT_TREE,CURSOR,getNode,getFormula,isValidRawText,nChildren,insertCursorInNode,ACCENTS,STYLES,DELIMITERS};
+const MathNodes = {DEFAULT_TREE,CURSOR,ACCENTS,STYLES,DELIMITERS,getNode,getFormula,isValidRawText,nChildren,insertCursorInNode,changeDelimiterSize};
 
 export default MathNodes;
