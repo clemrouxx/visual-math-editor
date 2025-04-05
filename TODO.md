@@ -10,6 +10,7 @@
 - Multi-symbol selection
 - Shortcuts (and buttons) for node lists
 - Vertical separators in arrays
+- Changes in delimiter sizes
 - Possible commands to add : \substack, hdotsfor, spacings, operatorname
 
 ## Visual improvements

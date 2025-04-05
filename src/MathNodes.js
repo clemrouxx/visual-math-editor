@@ -20,6 +20,8 @@ ENVIRONMENTS[`\\begin{array}{}`] = "\\end{array}";
 
 const INVISIBLE_SYMBOLS = ["_","^","\\\\","&","\\hline"]; // Don't have classes attached. Unfortunately seems necessary for hline
 
+const DELIMITER_SIZES = {auto:["\\left","\\right"],default:["",""],big:["\\bigl","\\bigr"],Big:["\\Bigl","\\Bigr"],bigg:["\\biggl","\\biggr"],Bigg:["\\Biggl","\\Biggr"]};
+
 const CURSOR = {iscursor:true,symbol:"|"};
 
 const DEFAULT_TREE = {isroot:true,nodeletion:true,children:[CURSOR]};
@@ -30,7 +32,7 @@ const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright
 const LimLike = (symbol) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
 const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Style = (symbol) => {return {symbol,children:[],hassinglechild:true,implodes:true}}
-const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:DELIMITERS[symbol],children:[],adptative:true}};
+const Delimiter = (symbol) => {return {leftsymbol:symbol,rightsymbol:DELIMITERS[symbol],children:[],size:"auto"}};
 const Modifier = (symbol) => {return {symbol,children:[],ismodifier:true,parseastext:true,implodes:true}};
 const FracLike = (symbol) => {
   var childrenstring = "{§0}{§1}";
@@ -59,7 +61,7 @@ const NAMED_NODES = {
   dvn : {...ThreeChildren("\\dv"),childrenstring:"[§0]{§1}{§2}"},
   pdvn : {...ThreeChildren("\\pdv"),childrenstring:"[§0]{§1}{§2}"},
   pdvmixed : ThreeChildren("\\pdv"),
-  rbrace : {leftsymbol:".",rightsymbol:"\\rbrace",children:[getNode("\\begin{array}{}")],adptative:true},
+  rbrace : {leftsymbol:".",rightsymbol:"\\rbrace",children:[getNode("\\begin{array}{}")],size:"auto"},
 }
 
 const PLACEHOLDER = {isplaceholder:true,symbol:"\\square"};
@@ -105,7 +107,7 @@ function getFormula(node,forEditor){
     // First / main symbol
     if (node.symbol) string += node.symbol + " ";
     else if (node.leftsymbol){
-      if (node.adptative) string += "\\left";
+      if (node.size) string += DELIMITER_SIZES[node.size][0];
       if (node.colparams) string += node.leftsymbol.replace("{}",`{${node.colparams}}`);
       else string += node.leftsymbol;
       string += " ";
@@ -131,7 +133,7 @@ function getFormula(node,forEditor){
 
     // Second symbol if it exists (ex closing delimiter)
     if (node.rightsymbol){
-      if (node.adptative) string += "\\right ";
+      if (node.size) string += DELIMITER_SIZES[node.size][1];
       string += node.rightsymbol;
       string += " "; // Ensures good separation
     }

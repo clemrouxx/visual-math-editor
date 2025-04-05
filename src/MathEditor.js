@@ -16,7 +16,7 @@ const MathEditor = forwardRef((props,ref) => {
     const { setNewState, undo, redo } = useUndoRedo(MathNodes.DEFAULT_TREE);
 
     useImperativeHandle(ref, () => ({ // Functions that can be called by an 'outside' element, VirtualKeyboard for example
-        addSymbol,addNode,customAction
+        addSymbol,customAction
     }));
 
     const changeMathTree = (newtree) => { // 'Real' changes (ie not just cursor movement or selection) to the math tree. Relevant for the undo-redo functionnality
@@ -255,7 +255,7 @@ const MathEditor = forwardRef((props,ref) => {
     }
 
     const handleKeyDown = (event) => {
-        if (editMode==="none") return;
+        if (editMode!=="cursor" && editMode!=="selection") return;
 
         //console.log(event);
 
@@ -288,10 +288,10 @@ const MathEditor = forwardRef((props,ref) => {
                 event.preventDefault();
                 addSymbol(MathKeyboard.SIMPLE_REPLACEMENT[event.key]);
             }
-            else if (editMode==="cursor"){
+            else if (editMode==="cursor"){ // Controls that are specific to cursor mode (moving the cursor,...)
                 handleCursormodeKeyDown(event,parentCopy,cursorPath);
             }
-            else if (editMode==="selection"){
+            else if (editMode==="selection"){ // Controls that are specific to selection mode
                 handleSelectionmodeKeyDown(event);
             }
         }
