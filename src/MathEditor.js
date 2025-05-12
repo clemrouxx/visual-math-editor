@@ -202,7 +202,15 @@ const MathEditor = forwardRef((props,ref) => {
             case "Enter":
                 if (parent.ismultiline) addSymbol("\\\\");
                 else if (parent.isroot){//AutoAlign
-                    changeMathTree(MathTree.alignAll(mathTree));
+                    setMathTree(MathTree.alignAll(mathTree));
+                    addSymbol("\\\\");
+                }
+                // Add \substack if needed
+                else if (parent.nodeletion || parent.childrenaredown){
+                    const substack = MathNodes.getNode("\\substack");
+                    substack.children = structuredClone(parent.children);
+                    parent.children = [substack];
+                    setMathTree(MathTree.insertAtPath(mathTree,cursorPath,parent,true));
                     addSymbol("\\\\");
                 }
                 break;

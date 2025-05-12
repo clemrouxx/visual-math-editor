@@ -2,7 +2,8 @@
 
 // The following lists / dictionnaries determine the propesrties of the inserted node (regarding selection, cursor placement, deletion...)
 // Includes the core and AMS commands (as well as a few commands from the physics package)
-const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\bra","\\ket","\\Bra","\\Ket","\\abs","\\norm","\\order","\\stackrel{!}","\\stackrel{?}","\\boxed","\\substack","\\operatorname","\\mod","\\bmod","\\pmod"];
+const PARENT_SYMBOLS = ["_","^","\\sqrt","\\overline","\\underline","\\widehat","\\widetilde","\\overrightarrow","\\overleftarrow","\\overleftrightarrow","\\underleftarrow","\\underrightarrow","\\underleftrightarrow","\\bra","\\ket","\\Bra","\\Ket","\\abs","\\norm","\\order","\\stackrel{!}","\\stackrel{?}","\\boxed","\\operatorname","\\mod","\\bmod","\\pmod","\\substack"];
+const MULTILINE_PARENT_SYMBOLS = ["\\substack"];
 const ACCENTS = ["\\vec","\\bar","\\dot","\\ddot","\\dddot","\\ddddot","\\hat","\\vu","\\check","\\tilde","\\breve","\\acute","\\grave","\\mathring"];
 const STYLES = ["\\mathcal","\\mathbb","\\mathfrak","\\mathbf","\\mathsf","\\vb","\\va","\\boldsymbol","\\pmb"];
 const DELIMITERS = {"(":")","[":"]","\\{":"\\}","\\lvert":"\\rvert","\\lVert":"\\rVert","\\langle":"\\rangle","\\lfloor":"\\rfloor","\\lceil":"\\rceil","\\ulcorner":"\\urcorner","\\llcorner":"\\lrcorner"};
@@ -28,7 +29,7 @@ const DEFAULT_TREE = {isroot:true,nodeletion:true,children:[CURSOR]};
 
 // Functions that act like node constructors
 const Symbol = (symbol) => {return {symbol}};
-const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright:true}};
+const ParentSymbol = (symbol) => {return {symbol,children:[],nodeletionfromright:true,ismultiline:MULTILINE_PARENT_SYMBOLS.includes(symbol)}};
 const LimLike = (symbol) => {return {symbol,children:[],childrenaredown:true,implodes:true}};
 const Accent = (symbol) => {return {symbol,children:[],hassinglechild:true}}
 const Style = (symbol) => {return {symbol,children:[],hassinglechild:true,implodes:true}}
