@@ -34,6 +34,10 @@ h1{
   margin: 1rem;
 }
 
+h1 > *{
+  display: inline-block;
+}
+
 .menu button{
   margin: 0;
 }
