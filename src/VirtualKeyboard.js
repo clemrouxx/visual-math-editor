@@ -83,6 +83,12 @@ const MultilineCategory =  ({reference}) => {
       <CustomVirtualKey name="array-align-c" display={"\\rightarrow \\!\\! |\\!\\! \\leftarrow"} reference={reference}/>
       <CustomVirtualKey name="array-align-r" display={"\\rightarrow \\! |"} reference={reference}/>
     </div>
+    <h3>Delimiter size</h3>
+    <div className="key-row">
+      <CustomVirtualKey name="delimiter-size-auto" display={"\\text{auto}"} reference={reference}/>
+      <CustomVirtualKey name="delimiter-size-smaller" display={"-"} reference={reference}/>
+      <CustomVirtualKey name="delimiter-size-bigger" display={"+"} reference={reference}/>
+    </div>
   </div>);
 }
 
