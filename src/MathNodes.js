@@ -123,7 +123,8 @@ function getFormula(node,forEditor){
     var string =  "";
     
     // First / main symbol
-    if (node.symbol) string += node.symbol + " ";
+    if (node.symbol) string += node.symbol;
+    if (!node.children && node.symbol.startsWith("\\")) string += " ";// Add space after commands with no children
     else if (node.leftsymbol){
       if (node.size) string += DELIMITER_SIZES[node.size][0];
       if (node.colparams) string += node.leftsymbol.replace("{}",`{${node.colparams}}`);

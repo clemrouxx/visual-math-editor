@@ -18,4 +18,3 @@
 - Better visuals (in particular buttons), that for the moment depend on the browser
 
 ## Exports improvements
-- Extra spaces in LaTeX output without effect in its compilation
