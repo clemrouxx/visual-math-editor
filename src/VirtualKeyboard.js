@@ -55,7 +55,7 @@ const FirstRow = ({reference}) => {
         <SymbolVirtualKey symbol="\frac" reference={reference} className="x-small-text"/>
         <SymbolVirtualKey symbol="\sqrt" reference={reference} className="small-text"/>
         <VirtualKey symbol="nsqrt" tooltip={getShortcut("nsqrt")} display={MathNodes.getFormula(MathNodes.getNode("nsqrt",false,true))}  reference={reference} className="small-text"/>
-        <VirtualKey symbol="\not" display={`/`} tooltip={getShortcut("\\not")}  reference={reference}/>
+        <VirtualKey symbol="\not" display={`\\not ${PLACEHOLDER_STRING}`} tooltip={getShortcut("\\not")}  reference={reference}/>
         </div>
       <h3>Styles</h3>
       <div className="key-row">
