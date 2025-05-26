@@ -242,7 +242,6 @@ const SHORTCUTS = {
   boxed:"\\boxed",
   nck:"\\binom",
   eva:"\\eval",
-  "|":"\\eval",
 
   // Named nodes
   sq:"squared",
