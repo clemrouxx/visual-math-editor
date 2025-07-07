@@ -92,17 +92,18 @@ const SHORTCUTS = {
   ale:"\\aleph",
   sr:"\\sqrt",
   not:"\\not",
-  hbar:"\\hbar",
-  grad:"\\grad",
+  hba:"\\hbar",
+  gra:"\\grad",
   div:"\\div",
-  curl:"\\curl",
-  lapl:"\\laplacian",
+  cur:"\\curl",
+  lap:"\\laplacian",
   l:"\\ell",
   dd:"\\dd",
   squ:"\\square",
   tfr:"\\therefore",
   compl:"\\complement",
   star:"\\bigstar",
+  bo:"k_B", // Boltzmann constant... the problem is that kb and kB are already taken and useful
 
   // Operations, binaries
   x:"\\times",
@@ -180,6 +181,7 @@ const SHORTCUTS = {
   min:"\\min",
   max:"\\max",
   arg:"\\arg",
+  infm:"\\inf", // Kept "inf" for infinity symbol, as it is probably more common
   sup:"\\sup",
   cos:"\\cos",
   sin:"\\sin",
@@ -250,6 +252,8 @@ const SHORTCUTS = {
   dag:"updagger",
   nsr:"nsqrt",
   rbr:"rbrace",
+  dv2:"dv2",
+  pdv2:"pdv2",
 };
 
 const MathKeyboard =  {DIRECT_INPUT,TEXTMODE_ESCAPED_SYMBOLS,SIMPLE_REPLACEMENT,SHORTCUTS};

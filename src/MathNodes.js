@@ -61,6 +61,8 @@ const NAMED_NODES = {
   updagger: {...getNode("^"),children:[{symbol:"\\dagger"}]},
   dvn : {...ThreeChildren("\\dv"),childrenstring:"[§0]{§1}{§2}"},
   pdvn : {...ThreeChildren("\\pdv"),childrenstring:"[§0]{§1}{§2}"},
+  dv2: {...FracLike("\\dv"),childrenstring:"[2]{§0}{§1}"},
+  pdv2: {...FracLike("\\pdv"),childrenstring:"[2]{§0}{§1}"},
   pdvmixed : ThreeChildren("\\pdv"),
   rbrace : {leftsymbol:".",rightsymbol:"\\rbrace",children:[getNode("\\begin{array}{}")],size:"auto"},
 }
@@ -96,6 +98,7 @@ function includePlaceholders(node){
   if (STYLES.includes(node.symbol)) return {...node,children:[BIGLETTERPLACEHOLDER]};
   if (node.fixedchildren) return {...node,children:node.children.map(c=>{return c.children?{...c,children:[PLACEHOLDER]}:c;})};
   if (node.children.length===0) return {...node,children:[node.ismultiline?MULTILINEPLACEHOLDER:PLACEHOLDER]};
+  if (node.symbol==="^") return {symbol:"",children:[PLACEHOLDER,node]};
   // Parent node, we do this recursively (should be the case also for fixedchildren...)
   return {...node,children:node.children.map(includePlaceholders)};
 }
